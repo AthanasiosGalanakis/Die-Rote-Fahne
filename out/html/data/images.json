@@ -1,1 +1,7 @@
-{}
+{
+  "leader:right": "img/leaders/right.jpg?v=mvo7c7ks",
+  "leader:center": "img/leaders/center.jpg?v=mvo7cel9",
+  "leader:left": "img/leaders/left.jpg?v=mvo7cidr",
+  "leader:ultra": "img/leaders/ultra.jpg?v=mvo7cmfl",
+  "leader:stalin": "img/leaders/stalin.jpg?v=mvo7cq0i"
+}
