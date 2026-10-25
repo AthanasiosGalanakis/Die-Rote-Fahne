@@ -3,6 +3,15 @@
 // Scenes call these through window.RF with the quality object Q.
 (function() {
   var FACTIONS = ['right', 'center', 'left', 'ultra', 'stalin'];
+  // who would chair the party for each faction. Brandler and Thälmann
+  // chaired it historically; the others are the faction's best-known leader.
+  var PERSONS = {
+    right: 'Heinrich Brandler',
+    center: 'Ernst Meyer',
+    left: 'Ruth Fischer',
+    ultra: 'Werner Scholem',
+    stalin: 'Ernst Thälmann'
+  };
   var NAMES = {
     right: 'Brandler Right',
     center: 'Middle Group',
@@ -81,6 +90,7 @@
 
     updateNames: function(Q) {
       Q.leader_name = NAMES[Q.leader];
+      Q.leader_person = PERSONS[Q.leader];
       Q.favourite = RF.moscowFavourite(Q);
       Q.favourite_name = NAMES[Q.favourite];
       Q.leader_dissent = Q[Q.leader + '_dissent'];
@@ -158,6 +168,7 @@
         Q.autonomy -= 3;
       }
       Q.leader_name = NAMES[Q.leader];
+      Q.leader_person = PERSONS[Q.leader];
     },
 
     // Obeying Moscow pleases the Thälmann circle; defying it feeds the
@@ -325,6 +336,25 @@
       score += 5;
     }
     return score;
+  };
+
+  // Exact numbers next to the words in the sidebar, when the player has
+  // turned them on in the options. Each value V gets a string n_V.
+  var NUMBERED = ['right_strength', 'center_strength', 'left_strength', 'ultra_strength',
+                  'stalin_strength', 'right_dissent', 'center_dissent', 'left_dissent',
+                  'ultra_dissent', 'stalin_dissent', 'party_dissent', 'repression',
+                  'moscow_trust', 'autonomy', 'overrule_risk', 'readiness', 'rev_situation',
+                  'union_influence', 'spd_relation', 'rising_chance', 'uspd_relation',
+                  'z_relation', 'ddp_relation', 'dvp_relation', 'dnvp_relation',
+                  'nsdap_relation'];
+  var PERCENT = {right_strength: 1, center_strength: 1, left_strength: 1, ultra_strength: 1,
+                 stalin_strength: 1, overrule_risk: 1, rising_chance: 1};
+
+  RF.numbers = function(Q) {
+    for (var v of NUMBERED) {
+      Q['n_' + v] = Q.show_numbers ?
+          '&nbsp;(' + Math.round(Q[v] || 0) + (PERCENT[v] ? '%' : '') + ')' : '<span></span>';
+    }
   };
 
   // ---- Polls ------------------------------------------------------------

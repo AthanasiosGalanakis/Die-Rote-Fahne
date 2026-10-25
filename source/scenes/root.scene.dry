@@ -10,16 +10,12 @@ go-to: start_menu_2
 
 @start_menu_2
 
-- @rf_start: Begin (January 1923)
-- @rf_start_four: Begin with four cards in hand
+{!<blockquote class="rf-quote">"Order prevails in Berlin!" You foolish lackeys! Your "order" is built on sand. Tomorrow the revolution will "rise up again, clashing its weapons," and to your horror it will proclaim with trumpets blazing: I was, I am, I shall be!<span class="rf-quote-source">Rosa Luxemburg, in <i>Die Rote Fahne</i>, 14 January 1919</span></blockquote>!}
+
+- @rf_start: Start Game
+- @rf_changelog: Changelog
+- @rf_achievements: Achievements
 - @credits: Credits
-
-@rf_start_four
-title: Begin with four cards in hand
-subtitle: Draw up to four cards each month instead of three. An easier game.
-on-arrival: rf_four_cards = 1
-go-to: rf_start
-
 
 @start
 on-arrival: {!

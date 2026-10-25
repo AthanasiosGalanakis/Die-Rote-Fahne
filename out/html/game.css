@@ -702,18 +702,46 @@ body.dark-mode .p-dvp { color: #e0c070; }
 body.dark-mode .bg-z { background: #8a8a8a; }
 body.dark-mode .bg-kpd { background: #b03030; }
 
-/* a hand of four cards fits on one row */
-ul.hand:has(> li:nth-child(4)) .card-in-hand {
-  max-width: 118px;
-  margin-right: 0.6em;
+/* a hand of four cards: three on the first row, the fourth below */
+ul.hand li.card-in-hand:nth-child(4) {
+  display: block;
 }
-ul.hand:has(> li:nth-child(4)) a.card,
-ul.hand:has(> li:nth-child(4)) div.blank-card,
-ul.hand:has(> li:nth-child(4)) .card-img {
-  width: 98px;
-  height: 122px;
+
+/* title screen quote */
+.rf-quote {
+  margin: 1em 2em 1.5em 2em;
+  font-style: italic;
+  line-height: 1.5;
 }
-ul.hand:has(> li:nth-child(4)) a.card,
-ul.hand:has(> li:nth-child(4)) div.blank-card {
-  border-width: 8px;
+.rf-quote-source {
+  display: block;
+  margin-top: 0.5em;
+  font-style: normal;
+  font-size: 0.9em;
+  text-align: right;
+}
+
+/* the party leader above the decks; the portrait is a placeholder */
+.rf-portrait {
+  text-align: center;
+  margin: 0.5em auto 1em auto;
+}
+.rf-portrait-img {
+  width: 140px;
+  height: 175px;
+  margin: 0 auto 0.5em auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--unavailable-color, #888);
+  background-color: var(--card-bg-color);
+  border: 8px solid var(--card-border-color);
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
+}
+.rf-portrait-name {
+  font-weight: bold;
+  font-size: 1.1em;
+}
+.rf-portrait-role {
+  font-size: 0.9em;
 }

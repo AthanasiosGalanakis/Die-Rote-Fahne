@@ -1,0 +1,15 @@
+title: Changelog
+new-page: true
+is-special: true
+
+= Changelog
+
+**Version 0.4**: a new title screen with a changelog and achievements; the game starts straight away with a hand of four cards; the party leader's portrait sits above the decks; exact numbers can be turned on in the options.
+
+**Version 0.3**: the sidebar has four tabs (Main, Party, Politics, Polls) and focuses on the Republic, the other parties and the revolution; advisor slots; hover boxes always fit on the screen.
+
+**Version 0.2**: a standalone game. You play the whole KPD, and your decisions strengthen or anger its five factions. Party colours.
+
+**Version 0.1**: the first prototype of Act I, January 1923 to April 1924.
+
+- @backSpecialScene: Back.

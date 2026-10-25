@@ -25,106 +25,6 @@
       ui.loadGame(url);
   };
 
-  window.loadGerman = function() {
-      ui.loadGame('game-de.json');
-      dendryUI.language = "de";
-      localStorage[game.title + '_language'] = "de";
-      var text_label_map_ids = {
-          // top-level
-          'main_tab': "Haupt",
-          'party_tab': "Partei",
-          'politics_tab': "Politik",
-          'poll_tab': "Wahl",
-          'stats-link': "Bibliothek",
-          'save-link': "Speichern/Laden",
-          'options-link': "Einstellungen",
-          // options
-          "currently_playing_text": "Momentan spielt:",
-          "music_header_text": "Musik",
-          "next_song_text": "Nächstes Lied",
-          "settings_text": "Einstellung",
-          "backgrounds_text": "Hintergründe:",
-          "event_images_text": "Ereignisbilder:",
-          "animations_text": "Animationen:",
-          "music_text": "Musik:",
-          "color_scheme_text": "Farbschema:",
-          "light_mode_label": "Hell",
-          "dark_mode_label": "Dunkel",
-          "font_size_text": "Schriftgröße:",
-          "decrease_font_button": "- verkleinern",
-          "increase_font_button": "+ vergrößern",
-          // save/load menu
-          "import_save_label": "Importiere Speicherstand:"
-      };
-      var text_label_map_classes = {
-          //"save_button":"Speichern",
-          "delete_button": "Löschen",
-          "export_button": "Exportieren",
-          "load_button": "Laden",
-          "label_on": "An",
-          "label_off": "Aus",
-          "close_button": "Schließen"
-      }
-      for (var elementId in text_label_map_ids) {
-          document.getElementById(elementId).textContent = text_label_map_ids[elementId];
-      }
-      for (var className in text_label_map_classes) {
-          for (var element of document.getElementsByClassName(className)) {
-              element.textContent = text_label_map_classes[className];
-          }
-      }
-  };
-
-  window.loadEnglish = function() {
-      ui.loadGame('game.json');
-      dendryUI.language = "en";
-      localStorage[game.title + '_language'] = "en";
-      var text_label_map_ids = {
-          // top-level
-          'main_tab': "Main",
-          'party_tab': "Party",
-          'politics_tab': "Politics",
-          'poll_tab': "Polls",
-          'stats-link': "Library",
-          'save-link': "Save/Load",
-          'options-link': "Options",
-          // options
-          "currently_playing_text": "Currently playing:",
-          "music_header_text": "Music",
-          "next_song_text": "Next song",
-          "settings_text": "Settings",
-          "backgrounds_text": "Backgrounds:",
-          "event_images_text": "Event images:",
-          "animations_text": "Animations:",
-          "music_text": "Music:",
-          "color_scheme_text": "Color scheme:",
-          "light_mode_label": "Light mode",
-          "dark_mode_label": "Dark mode",
-          "font_size_text": "Font size:",
-          "decrease_font_button": "- decrease",
-          "increase_font_button": "+ increase",
-          // save/load menu
-          "import_save_label": "Import save file:"
-      };
-      var text_label_map_classes = {
-          //"save_button":"Save",
-          "delete_button": "Delete",
-          "export_button": "Export",
-          "load_button": "Load",
-          "label_on": "On",
-          "label_off": "Off",
-          "close_button": "Close"
-      }
-      for (var elementId in text_label_map_ids) {
-          document.getElementById(elementId).textContent = text_label_map_ids[elementId];
-      }
-      for (var className in text_label_map_classes) {
-          for (var element of document.getElementsByClassName(className)) {
-              element.textContent = text_label_map_classes[className];
-          }
-      }
-  };
-
   // save/load buttons
   window.updateSaveButtons = function() {
       if (window.dendryUI.language && window.dendryUI.language == "de") {
@@ -161,6 +61,39 @@
     } else {
         window.dendryUI.dendryEngine.goToScene('library');
     }
+  };
+
+  window.showAchievements = function() {
+    window.hideOptions();
+    if (window.dendryUI.dendryEngine.state.sceneId.startsWith('rf_achievements')) {
+        window.dendryUI.dendryEngine.goToScene('backSpecialScene');
+    } else {
+        window.dendryUI.dendryEngine.goToScene('rf_achievements');
+    }
+  };
+
+  // Exact numbers in the sidebar: a per-browser setting. Turning it on
+  // during a game disables achievements for that game.
+  try {
+      window.rfShowNumbers = localStorage['rf_show_numbers'] == '1';
+  } catch (e) {
+      window.rfShowNumbers = false;
+  }
+  window.enableNumbers = function() {
+      var Q = window.dendryUI.dendryEngine.state.qualities;
+      if (Q.started && !Q.numbers_shown &&
+          !window.confirm('Showing exact numbers disables achievements for this game. Continue?')) {
+          $('#numbers_no')[0].checked = true;
+          return;
+      }
+      window.rfShowNumbers = true;
+      try { localStorage['rf_show_numbers'] = '1'; } catch (e) {}
+      window.updateSidebar();
+  };
+  window.disableNumbers = function() {
+      window.rfShowNumbers = false;
+      try { localStorage['rf_show_numbers'] = '0'; } catch (e) {}
+      window.updateSidebar();
   };
 
   window.showMods = function() {
@@ -332,14 +265,10 @@
     } else {
         $('#light_mode')[0].checked = true;
     }
-    if (window.dendryUI.language) {
-        if (window.dendryUI.language == "de") {
-            $('#german')[0].checked = true;
-        } else {
-            $('#english')[0].checked = true;
-        }
+    if (window.rfShowNumbers) {
+        $('#numbers_yes')[0].checked = true;
     } else {
-        $('#english')[0].checked = true;
+        $('#numbers_no')[0].checked = true;
     }
   };
 
@@ -368,6 +297,14 @@
   // TODO: have some code for tabbed sidebar browsing.
   window.updateSidebar = function() {
       $('#qualities').empty();
+      var Q = dendryUI.dendryEngine.state.qualities;
+      // the sidebar only makes sense once a game is under way
+      $('#stats_sidebar').toggle(!!Q.started);
+      Q.show_numbers = window.rfShowNumbers ? 1 : 0;
+      if (window.rfShowNumbers && Q.started) {
+          // a game that has seen the exact numbers earns no achievements
+          Q.numbers_shown = 1;
+      }
       var scene = dendryUI.game.scenes[window.statusTab];
       dendryUI.dendryEngine._runActions(scene.onArrival);
       var displayContent = dendryUI.dendryEngine._makeDisplayContent(scene.content, true);
@@ -520,43 +457,11 @@
   window.dendryModifyUI = main;
   console.log("Modifying stats: see dendryUI.dendryEngine.state.qualities");
 
-  window.increaseFontSize = function() {
-        window.dendryUI.font_size += 0.1;
-        var fs = window.dendryUI.font_size;
-        var sidebar_fs = fs - 0.1;
-        document.getElementById("content").setAttribute("style", "font-size: " + fs + "em;");
-        document.getElementById("stats_sidebar").setAttribute("style", "font-size: " + sidebar_fs + "em;");
-        document.getElementById('font_size_value').textContent = window.dendryUI.font_size.toFixed(1) + "em";
-        window.dendryUI.saveSettings();
-  }
-
-  window.decreaseFontSize = function() {
-        window.dendryUI.font_size -= 0.1;
-        var fs = window.dendryUI.font_size;
-        var sidebar_fs = fs - 0.1;
-        document.getElementById("content").setAttribute("style", "font-size: " + fs + "em;");
-        document.getElementById("stats_sidebar").setAttribute("style", "font-size: " + sidebar_fs + "em;");
-        document.getElementById('font_size_value').textContent = window.dendryUI.font_size.toFixed(1) + "em";
-        window.dendryUI.saveSettings();
-  }
-
   window.onload = function() {
     window.dendryUI.loadSettings({show_portraits: false});
-    if (localStorage[game.title + '_language']) {
-        if (localStorage[game.title + '_language'] == "de") {
-            window.loadGerman();
-        }
-    }
     if (window.dendryUI.dark_mode) {
         document.body.classList.add('dark-mode');
     }
-    if (window.dendryUI.font_size != 1.1) {
-        var fs = window.dendryUI.font_size;
-        var sidebar_fs = fs - 0.1;
-        document.getElementById("content").setAttribute("style", "font-size: " + fs + "em;");
-        document.getElementById("stats_sidebar").setAttribute("style", "font-size: " + sidebar_fs + "em;");
-    }
-    document.getElementById('font_size_value').textContent = window.dendryUI.font_size.toFixed(1) + "em";
     window.pinnedCardsDescription = "Advisor cards - actions are only usable once per 6 months.";
   };
 

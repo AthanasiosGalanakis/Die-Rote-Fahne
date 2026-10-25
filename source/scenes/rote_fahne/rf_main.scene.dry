@@ -1,22 +1,12 @@
 title: Next month
-is-hand: true
-max-cards: 3
-on-arrival: {! Q.pinnedCardsDescription = "Advisors: the slots are in place. Advisors arrive in a later version."; !}
-
-#The three decks of the Die Rote Fahne mode. Clicking a deck draws a card into the hand.
-
-- @rf_party
-- @rf_mass
-- @rf_moscow
-- #rf_advisor
-
-@four
-title: Next month
+new-page: true
 is-hand: true
 max-cards: 4
 on-arrival: {! Q.pinnedCardsDescription = "Advisors: the slots are in place. Advisors arrive in a later version."; !}
 
-#The same decks with a hand of four cards, chosen on the title screen.
+#The three decks of the Die Rote Fahne mode. Clicking a deck draws a card into the hand; the hand holds four cards.
+
+{!<div class="rf-portrait"><div class="rf-portrait-img">Portrait</div><div class="rf-portrait-name">!}[+ leader_person +]{!</div><div class="rf-portrait-role">!}Leads the <span class="p-kpd">KPD</span> · <span class="f-[+ leader +]">[+ leader_name +]</span>{!</div></div>!}
 
 - @rf_party
 - @rf_mass

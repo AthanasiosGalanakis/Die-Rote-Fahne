@@ -9,8 +9,7 @@ Q.month = 1;
 Q.month_actions = 0;
 // the base game's difficulty switches; this game uses normal rules
 Q.difficulty = 0;
-// three cards in hand, or four if chosen on the title screen
-Q.hand_size = Q.rf_four_cards ? 4 : 3;
+Q.hand_size = 4;
 
 // factions inside the KPD; starting strengths are gameplay estimates,
 // not delegate counts

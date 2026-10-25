@@ -14,7 +14,7 @@ You play the party as a whole, not one faction. Every card and event you choose 
 
 Strong factions take the leadership at congresses. Angry factions can break away. A leadership pushed too far can resign. Moscow can overturn any result, more easily the less autonomy the party has kept.
 
-The sidebar has four tabs: Main (the party's status, the Reich government, the Reichstag, the next election, the currency), Party (factions, Moscow, armed formations, support for the revolution), Politics (relations with and leaders of the other parties) and Polls (projected results, support for the Republic and for nationalism, results by group). The title screen offers a hand of three or four cards. The advisor slots are placeholders for now.
+The sidebar has four tabs: Main (the party's status, the Reich government, the Reichstag, the next election, the currency), Party (factions, Moscow, armed formations, support for the revolution), Politics (relations with and leaders of the other parties) and Polls (projected results, support for the Republic and for nationalism, results by group). You hold four cards each month. Words replace numbers in the sidebar; Options can turn exact numbers on, which disables achievements for that game. The advisor slots, the leader's portrait and the achievements page are placeholders for now.
 
 The current version covers Act I, the revolutionary year: January 1923 to the Frankfurt party congress of April 1924. It ends with a successful German October (rare, by design), a graded verdict on the party at Frankfurt, or the party's collapse. Acts II to V (1924 to 1934) are not built yet.
 
@@ -25,6 +25,7 @@ The current version covers Act I, the revolutionary year: January 1923 to the Fr
 - `source/scenes/rote_fahne/events/`: events, tagged `rf_event`.
 - `source/scenes/rote_fahne/rf_status.scene.dry`: the sidebar tabs. Charts (Reichstag, polls) are drawn by `RF.renderSidebar` into placeholder divs.
 - `source/scenes/rote_fahne/rf_advisors.scene.dry`: empty advisor slots.
+- `source/scenes/rote_fahne/rf_changelog.scene.dry` and `rf_achievements.scene.dry`: the title-screen pages. The title screen itself is `source/scenes/root.scene.dry`.
 - `source/qdisplays/rf_*.qdisplay.dry`: the words the sidebar uses instead of numbers.
 - `out/html/rote_fahne.js`: shared rules (faction leanings, congresses, Moscow verdicts, the rising, the Reich calendar, polls).
 - `out/html/game.css`: party colours (`p-kpd`, `p-spd`, ...) and faction colours (`f-right`, `f-left`, ...), after the Dynamic Social Democracy mod.

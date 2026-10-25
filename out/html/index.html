@@ -47,24 +47,6 @@
             <h3 id="settings_text">Settings</h3>
             <table>
                 <tr>
-                    <td id="language_text">Language (will restart game):</td>
-                    <td>
-                        <label id="english_label" for="english">English</label>
-                    </td>
-                    <td>
-                        <input type="radio" id="english" name="language" value="1" onclick="window.loadEnglish();">
-                    </td>
-                    <td>
-                        <label id="german_label" for="german">Deutsch</label>
-                    </td>
-                    <td>
-                        <input type="radio" id="german" name="language" value="0" onclick="window.loadGerman();">
-                    </td>
-                </tr>
-                <tr>
-                    <td> <hr> </td>
-                </tr>
-                <tr>
                     <td id="backgrounds_text">
                         Backgrounds:
                     </td>
@@ -165,19 +147,24 @@
                     <td> <hr> </td>
                 </tr>
                 <tr>
-                    <td id="font_size_text">
-                        Font size:
-                    </td>
-
-                    <td colspan=2>
-                        <button onclick="window.decreaseFontSize();" id="decrease_font_button"><b>-</b> Decrease font size</button>
-                    </td>
-                    <td colspan=2>
-                        <button onclick="window.increaseFontSize();" id="increase_font_button"><b>+</b> Increase font size</button>
+                    <td id="numbers_text">
+                        Exact numbers:
                     </td>
                     <td>
-                        <span id="font_size_value"></span>
+                        <label class="label_on" for="numbers_yes">On</label>
                     </td>
+                    <td>
+                        <input type="radio" id="numbers_yes" name="numbers" value="1" onclick="window.enableNumbers();">
+                    </td>
+                    <td>
+                        <label class="label_off" for="numbers_no">Off</label>
+                    </td>
+                    <td>
+                        <input type="radio" id="numbers_no" name="numbers" value="0" onclick="window.disableNumbers();">
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan=5><small>Turning exact numbers on disables achievements for the current game.</small></td>
                 </tr>
                 <tr>
                     <td> <hr> </td>
@@ -364,6 +351,7 @@
                 <div id="header-links">
                     <a id="save-link" onclick="dendryUI.showSaveSlots();" href="#">Save/Load</a>
                     <a id="options-link"  onclick="window.showOptions();" href="#">Options</a>
+                    <a id="achievements-link" onclick="window.showAchievements();" href="#">Achievements</a>
                 </div>
             </header>
             <div id="tools_wrapper">
