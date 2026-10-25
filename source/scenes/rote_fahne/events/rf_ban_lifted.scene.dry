@@ -1,0 +1,14 @@
+title: The Ban Lifted
+subtitle: The KPD is legal again.
+new-page: true
+tags: rf_event
+view-if: year = 1924 and month >= 3 and party_banned = 1
+max-visits: 1
+on-arrival: {!
+Q.party_banned = 0;
+Q.repression -= 15;
+!}
+
+= The Ban Lifted
+
+The state of emergency ends and the KPD is legal again from 1 March 1924. Reichstag elections are called for May. Delegates for a new party congress are being chosen in the districts, and the factions are fighting over every seat.

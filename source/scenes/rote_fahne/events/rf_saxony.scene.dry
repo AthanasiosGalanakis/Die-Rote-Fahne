@@ -1,0 +1,69 @@
+title: Workers' Government in Saxony
+subtitle: The left SPD in Saxony offers the KPD seats in the state government.
+new-page: true
+tags: rf_event
+view-if: year = 1923 and month >= 10
+max-visits: 1
+on-arrival: saxony_seen = 1
+
+= Workers' Government in Saxony
+
+Erich Zeigner, the left SPD minister-president of Saxony, invites the KPD into his government. In neighbouring Thuringia a similar offer is on the table. The plan for October counts on these states: KPD ministers could open police arsenals to the Proletarian Hundreds. The Reichswehr is watching.
+
+[? if player_leads : You decide whether the party enters. ?][? if player_leads = 0 : The leadership will decide. You can back the decision or fight it. ?]
+
+- @enter: Enter the government.
+- @stay_out: Stay out of a coalition with reformists.
+- @back_entry: Support entry.
+- @oppose_entry: Oppose entry.
+
+@enter
+view-if: player_leads = 1
+on-arrival: {!
+Q.workers_govt = 1;
+Q.readiness += 8;
+Q.spd_relation += 8;
+Q.left_dissent += 6;
+Q.right_strength += 3;
+!}
+go-to: entered
+
+@stay_out
+view-if: player_leads = 1
+on-arrival: {!
+Q.workers_govt = 0;
+Q.spd_relation -= 6;
+Q.right_dissent += 8;
+Q[Q.player + '_moscow'] -= 4;
+!}
+
+The party stays out. Zeigner governs alone, and Moscow's planners lose their base in central Germany.
+
+@back_entry
+view-if: player_leads = 0
+on-arrival: {!
+Q[Q.player + '_moscow'] += 2;
+Q.right_strength += 2;
+if (Q.player == 'left') { Q.left_dissent += 5; Q.left_strength -= 3; }
+Q.workers_govt = (Q.leader == 'left') ? 0 : 1;
+if (Q.workers_govt) { Q.readiness += 8; Q.spd_relation += 8; }
+!}
+go-to: entered if workers_govt = 1; not_entered if workers_govt = 0
+
+@oppose_entry
+view-if: player_leads = 0
+on-arrival: {!
+Q[Q.player + '_strength'] += 3;
+Q[Q.player + '_dissent'] += 4;
+Q.workers_govt = (Q.leader == 'left') ? 0 : 1;
+if (Q.workers_govt) { Q.readiness += 8; Q.spd_relation += 8; }
+!}
+go-to: entered if workers_govt = 1; not_entered if workers_govt = 0
+
+@entered
+
+On 10 October, KPD ministers join the Saxon government[? if leader == "right" : , Brandler himself among them ?]. Thuringia follows a few days later. The Proletarian Hundreds are legal in both states. In Berlin, the Reich government and the army command begin to discuss intervention.
+
+@not_entered
+
+The party stays out of the Saxon government. Zeigner governs alone, and Moscow's planners lose their base in central Germany.

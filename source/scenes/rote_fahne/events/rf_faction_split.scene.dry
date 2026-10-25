@@ -1,0 +1,18 @@
+title: A Faction Breaks Away
+subtitle: A faction's quarrel with the leadership ends in a split.
+new-page: true
+tags: rf_event
+view-if: split_pending = 1 and rf_over = 0
+on-arrival: {!
+var f = Q.split_faction;
+Q.split_name = window.RF.names[f];
+Q.members -= Math.round(Q[f + '_strength'] * 1.2);
+Q.union_influence -= 4;
+Q[f + '_expelled'] = 1;
+Q.split_pending = 0;
+window.RF.normalize(Q);
+!}
+
+= The [+ split_name +] leaves the party
+
+The leadership has had enough, and so has the [+ split_name +]. Its leaders are expelled for factional activity, and a share of the membership follows them out. They will form a small group of their own, as the KAPD did in 1920 and as the KPO and the Leninbund would later.

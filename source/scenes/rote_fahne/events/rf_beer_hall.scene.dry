@@ -1,0 +1,13 @@
+title: The Beer Hall Putsch
+subtitle: In Munich, Hitler tries to seize power.
+new-page: true
+tags: rf_event
+view-if: year = 1923 and month >= 11
+max-visits: 1
+on-arrival: beer_hall_seen = 1
+
+= The Beer Hall Putsch
+
+On the night of 8 November, Adolf Hitler and General Ludendorff proclaim a national revolution in a Munich beer hall. The next day police fire on their march at the Feldherrnhalle. The putsch collapses and Hitler is arrested.
+
+The far right has failed too. For now.

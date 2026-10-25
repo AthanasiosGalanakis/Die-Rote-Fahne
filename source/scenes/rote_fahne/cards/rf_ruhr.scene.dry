@@ -1,0 +1,43 @@
+title: Agitation in the Occupied Ruhr
+subtitle: French troops in the mines, nationalists in the streets, prices doubling every week.
+new-page: true
+is-card: true
+tags: rf_mass
+view-if: rf_ruhr_timer <= 0 and year = 1923 and month <= 10
+on-arrival: month_actions += 1; rf_ruhr_timer = 3
+
+= Agitation in the Occupied Ruhr
+
+The party's slogan is "Beat Poincaré on the Ruhr and Cuno on the Spree": fight the French occupation and the German government that profits from it at the same time. How to say it is another question.
+
+- @both: Against Poincaré and Cuno alike.
+- @french: Work with the French Communists among the occupying soldiers.
+- @national: Speak the nationalists' language to win their followers.
+
+@both
+on-arrival: {!
+Q.members += 10;
+Q.rev_situation += 3;
+Q.repression += 3;
+!}
+
+Communist speakers denounce both governments at pit-head meetings. Membership in the Ruhr grows.
+
+@french
+on-arrival: {!
+Q.members += 3;
+Q[Q.player + '_moscow'] += 4;
+Q.repression += 2;
+!}
+
+KPD and French Communist (PCF) activists hand out leaflets to French soldiers urging them not to fire on German workers. It is internationalism in practice, and the Comintern approves. German nationalists call it treason.
+
+@national
+on-arrival: {!
+Q.members += 8;
+Q.spd_relation -= 4;
+Q.left_dissent += 3;
+Q.right_dissent += 2;
+!}
+
+Your speakers attack the occupation in national terms and court young nationalists. Some are won over. Many old members are uneasy, and the SPD says the Communists now sound like the Freikorps.

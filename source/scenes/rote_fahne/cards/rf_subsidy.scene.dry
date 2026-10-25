@@ -1,0 +1,32 @@
+title: Comintern Subsidy
+subtitle: The party's papers, offices and organisers depend on money from Moscow.
+new-page: true
+is-card: true
+tags: rf_moscow
+view-if: rf_subsidy_timer <= 0
+on-arrival: month_actions += 1; rf_subsidy_timer = 4
+
+= Comintern Subsidy
+
+Members' dues are worth nothing in a hyperinflation. The International's representatives can supply hard currency.
+
+- @accept: Accept the subsidy.
+- @refuse: Rely on the members.
+
+@accept
+on-arrival: {!
+Q.funds += 3;
+Q.autonomy -= 4;
+Q[Q.player + '_moscow'] += 2;
+!}
+
+The money arrives in dollars. With it come reports, instructions and representatives.
+
+@refuse
+on-arrival: {!
+Q.funds += 1;
+Q.autonomy += 2;
+Q[Q.player + '_moscow'] -= 2;
+!}
+
+You raise what you can at home. The party stays poorer and a little freer.

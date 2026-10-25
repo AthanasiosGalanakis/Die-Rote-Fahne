@@ -1,0 +1,43 @@
+title: The Schlageter Speech
+subtitle: Radek praises a dead nationalist saboteur before the International.
+new-page: true
+tags: rf_event
+view-if: year = 1923 and month >= 7
+max-visits: 1
+
+= The Schlageter Speech
+
+On 20 June, at a session of the Comintern's Executive, Karl Radek gave a speech on Albert Leo Schlageter, a Freikorps veteran shot by the French for sabotage in the Ruhr. Radek called him a "wanderer into the void" and invited German nationalists to find their way to the workers' side against the Entente.
+
+The "Schlageter course" now runs through the party press. Communist speakers debate with nationalist students and völkisch groups. Many members are confused.
+
+- @amplify: Take the course seriously: debate the nationalists and win their youth.
+- @tolerate: Repeat the line in the paper but keep it away from the factories.
+- @oppose: Object to the course, inside the party.
+
+@amplify
+on-arrival: {!
+Q.members += 8;
+Q.spd_relation -= 6;
+Q.right_moscow += 3;
+Q[Q.player + '_moscow'] += 4;
+!}
+
+Communist and nationalist speakers share platforms. A few young nationalists join the party. The SPD press is delighted to quote the Rote Fahne next to the völkisch papers.
+
+@tolerate
+on-arrival: {!
+Q.members += 3;
+Q.spd_relation -= 2;
+!}
+
+The party prints the speeches and goes on with its factory work. The episode passes without much effect either way.
+
+@oppose
+on-arrival: {!
+Q[Q.player + '_moscow'] -= 6;
+Q.spd_relation += 3;
+Q[Q.player + '_dissent'] += 4;
+!}
+
+You argue that a workers' party cannot borrow the nationalists' heroes. Radek takes it personally.

@@ -1,0 +1,35 @@
+title: The Proletarian Hundreds
+subtitle: Workers' defence units, a hundred men each. Who arms them, and how openly?
+new-page: true
+is-card: true
+tags: rf_mass
+view-if: rf_hundreds_timer <= 0 and party_banned = 0 and year = 1923
+on-arrival: month_actions += 1; rf_hundreds_timer = 3
+
+= The Proletarian Hundreds
+
+Since 1922 the party has organised Proletarian Hundreds: workers' units for defending meetings and factories against the right-wing leagues. In Saxony and Thuringia they are tolerated, even legal. Elsewhere the police break them up.
+
+- @open: Build them openly, together with SPD workers.
+- @secret: Arm them in secret through the party's military apparatus.
+
+@open
+on-arrival: {!
+Q.readiness += 5;
+Q.spd_relation += 3;
+Q.repression += 3;
+!}
+
+Joint units of KPD and SPD workers drill in Saxon factory yards. They have few weapons but real numbers.
+
+@secret
+choose-if: funds >= 1
+unavailable-subtitle: Weapons cost money the party does not have.
+on-arrival: {!
+Q.funds -= 1;
+Q.readiness += 8;
+Q.repression += 6;
+Q.left_strength += 2;
+!}
+
+The party's military apparatus buys rifles where it can and hides them in allotment sheds. There are never as many as the reports to Moscow claim.

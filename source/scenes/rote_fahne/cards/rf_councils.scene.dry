@@ -1,0 +1,33 @@
+title: The Factory Councils Movement
+subtitle: Elected councils in the workplaces are where Communist and Social Democratic workers meet.
+new-page: true
+is-card: true
+tags: rf_mass
+view-if: rf_councils_timer <= 0
+on-arrival: month_actions += 1; rf_councils_timer = 3
+
+= The Factory Councils Movement
+
+The factory councils elected under the 1920 law give Communists a foothold in plants where the unions are run by Social Democrats. Councils also run price-control committees as the mark collapses.
+
+- @councils: Build a national congress of factory councils.
+- @unions: Work patiently inside the ADGB unions.
+
+@councils
+on-arrival: {!
+Q.union_influence += 4;
+Q.rev_situation += 3;
+Q.spd_relation += 2;
+Q.right_strength += 2;
+!}
+
+Factory council delegates from across the country meet under Communist leadership. The union leaders call it a rival organisation, but SPD members attend.
+
+@unions
+on-arrival: {!
+Q.union_influence += 7;
+Q.spd_relation += 3;
+Q.left_dissent += 3;
+!}
+
+Communists run for union posts and win some. The Left complains that the party is serving the union bureaucracy instead of fighting it.

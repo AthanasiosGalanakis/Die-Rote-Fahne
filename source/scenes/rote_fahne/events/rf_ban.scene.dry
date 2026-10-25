@@ -1,0 +1,16 @@
+title: The KPD Banned
+subtitle: General von Seeckt, holding emergency powers, bans the party.
+new-page: true
+tags: rf_event
+view-if: year = 1923 and month >= 11 and beer_hall_seen = 1 and party_banned = 0
+max-visits: 1
+on-arrival: {!
+Q.party_banned = 1;
+Q.repression += 10;
+!}
+
+= The KPD Banned
+
+On 23 November, General Hans von Seeckt, who holds executive power under the state of emergency, bans the KPD across Germany. The Rote Fahne is suppressed and party offices are closed. The ban will last until the end of February 1924.
+
+On 15 November the new Rentenmark began to replace the worthless paper mark. Prices are starting to hold. The revolutionary year is ending.

@@ -1,0 +1,124 @@
+title: Moscow's Verdict
+subtitle: The International decides who is to blame for the German October.
+new-page: true
+tags: rf_event
+view-if: year = 1924 and rf_over = 0
+max-visits: 1
+on-arrival: {!
+Q.line = 'bolshevization';
+Q.verdict_seen = 1;
+var blamed = Q.october_leader || Q.leader;
+Q.blamed = blamed;
+Q.blamed_name = window.RF.names[blamed];
+var hit = Q.october_outcome == 'crushed' ? 35 : 25;
+var loss = Q.october_outcome == 'crushed' ? 20 : 15;
+Q[blamed + '_moscow'] -= hit;
+var target = blamed == 'left' ? 'center' : 'left';
+window.RF.shift(Q, blamed, target, loss);
+Q.player_blamed = Q.player == blamed ? 1 : 0;
+window.RF.normalize(Q);
+!}
+
+= Moscow's Verdict
+
+In January 1924 the Presidium of the International meets on the German question. Zinoviev needs the October defeat to be someone else's fault: his own rivals in Moscow are already using it against him. The verdict is that the German revolution was lost by the opportunism of the party leadership.
+
+The blame falls on the [+ blamed_name +]. [? if october_outcome == "crushed" : The rising was crushed, and the punishment is harsh. ?][? if october_outcome == "retreat" : The retreat at Chemnitz is called a capitulation without a fight. ?]
+
+The Comintern's line turns left. The new watchword is "Bolshevization": the national parties are to be rebuilt on the Russian model, under Moscow's discipline.
+
+[? if player_blamed : You are the scapegoat. ?][? if player_blamed = 0 : The scapegoat is someone else. The question is what you do with that. ?]
+
+- @submit: Submit, and publish a self-criticism.
+- @appeal: Appeal to the ECCI: the plan was Moscow's, not yours.
+- @defy: Refuse the verdict.
+- @attack: Join the attack on the old leadership.
+- @defend: Defend the old leadership in the name of unity.
+- @quiet: Say nothing, and see who comes out on top.
+
+@submit
+view-if: player_blamed = 1
+on-arrival: {!
+Q[Q.player + '_moscow'] += 10;
+Q[Q.player + '_dissent'] -= 10;
+Q[Q.player + '_strength'] -= 4;
+!}
+go-to: caretaker
+
+@appeal
+view-if: player_blamed = 1
+choose-if: funds >= 2
+unavailable-subtitle: A delegation to Moscow needs money the party does not have (2 funds).
+on-arrival: {!
+Q.funds -= 2;
+Q.appeal_worked = Q[Q.player + '_moscow'] >= 35 ? 1 : 0;
+if (Q.appeal_worked) {
+    Q[Q.player + '_strength'] += 6;
+    Q[Q.player + '_moscow'] += 5;
+} else {
+    Q[Q.player + '_moscow'] -= 5;
+}
+!}
+go-to: appeal_result
+
+@appeal_result
+go-to: caretaker
+
+[? if appeal_worked : Your friends in Moscow soften the resolution. You are criticised, not destroyed. ?][? if appeal_worked = 0 : The ECCI hears your delegation and confirms the verdict. Arguing has made it worse. ?]
+
+@defy
+view-if: player_blamed = 1
+on-arrival: {!
+Q[Q.player + '_moscow'] -= 30;
+Q[Q.player + '_dissent'] += 30;
+Q[Q.player + '_strength'] += 3;
+Q.autonomy -= 5;
+!}
+go-to: caretaker
+
+@attack
+view-if: player_blamed = 0
+on-arrival: {!
+window.RF.shift(Q, Q.blamed, Q.player, 8);
+Q[Q.blamed + '_dissent'] += 15;
+Q[Q.player + '_moscow'] += 5;
+!}
+go-to: caretaker
+
+@defend
+view-if: player_blamed = 0
+on-arrival: {!
+for (var f of window.RF.factions) { Q[f + '_dissent'] -= 6; }
+Q[Q.player + '_moscow'] -= 6;
+Q[Q.blamed + '_moscow'] += 5;
+!}
+go-to: caretaker
+
+@quiet
+view-if: player_blamed = 0
+on-arrival: {!
+Q[Q.player + '_moscow'] += 2;
+!}
+go-to: caretaker
+
+@caretaker
+on-arrival: {!
+var RF = window.RF;
+RF.normalize(Q);
+// Moscow names a caretaker leadership; the Middle Group is the safe choice
+var best = null, bestScore = -1;
+for (var f of RF.factions) {
+    if (f == Q.blamed || Q[f + '_expelled']) { continue; }
+    var score = RF.moscowScore(Q, f) + (f == 'center' ? 10 : 0);
+    if (score > bestScore) { bestScore = score; best = f; }
+}
+Q.leader = best;
+Q.autonomy -= 8;
+RF.normalize(Q);
+!}
+
+= A new Zentrale
+
+Moscow does not wait for a congress. The ECCI names a new leadership: the [+ leader_name +]. A congress will meet in the spring to confirm it, or not.
+
+[? if player_leads : The Zentrale is yours. Hold it until Frankfurt. ?][? if player_leads = 0 : You are not in charge. The congress is your chance. ?]

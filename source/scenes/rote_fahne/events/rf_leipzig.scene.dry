@@ -1,0 +1,105 @@
+title: The Leipzig Congress
+subtitle: The Eighth Party Congress meets. The Left wants the leadership.
+new-page: true
+tags: rf_event
+view-if: time >= 2 and year = 1923
+max-visits: 1
+
+= The Eighth Party Congress, Leipzig
+
+The congress meets in Leipzig at the turn of January and February. The main fight is over the "workers' government". The leadership says joint governments with the left SPD, as in Saxony, can lead the working class toward power. The Berlin and Hamburg Left says they are coalitions with reformists that will disarm the revolution.
+
+[? if player == "right" : The majority is yours if you can hold it. ?][? if player == "left" : You do not have the votes to win, but you can make the leadership pay. ?][? if player == "center" : Neither side can live with the other's resolution. Both need you. ?][? if player == "stalin" : Thälmann speaks for Hamburg on the Left's side. You can make your name here. ?]
+
+- @right_bridge: Defend the workers' government as a bridge to SPD workers.
+- @right_concede: Concede that a workers' government is only a step toward the dictatorship of the proletariat.
+- @left_fight: Run a full slate against the leadership.
+- @left_accept: Accept a compromise resolution and wait.
+- @center_compromise: Draft the compromise resolution both sides can vote for.
+- @center_side: Side quietly with the stronger faction.
+- @stalin_speak: Give the fiercest speech of the congress for the Left.
+- @stalin_moscow: Spend the congress with the Comintern's representatives.
+
+@right_bridge
+view-if: player == "right"
+on-arrival: {!
+Q.right_strength += 5;
+Q.spd_relation += 3;
+Q.left_dissent += 8;
+!}
+go-to: result
+
+@right_concede
+view-if: player == "right"
+on-arrival: {!
+Q.left_dissent -= 8;
+Q.right_strength -= 2;
+Q.right_moscow += 3;
+!}
+go-to: result
+
+@left_fight
+view-if: player == "left"
+on-arrival: {!
+Q.left_strength += 5;
+Q.right_dissent += 6;
+Q.center_dissent += 3;
+Q.left_moscow -= 3;
+!}
+go-to: result
+
+@left_accept
+view-if: player == "left"
+on-arrival: {!
+Q.left_dissent -= 8;
+Q.left_moscow += 5;
+!}
+go-to: result
+
+@center_compromise
+view-if: player == "center"
+on-arrival: {!
+Q.center_strength += 4;
+for (var f of window.RF.factions) { Q[f + '_dissent'] -= 6; }
+!}
+go-to: result
+
+@center_side
+view-if: player == "center"
+on-arrival: {!
+Q.center_strength += 2;
+Q.right_strength += 3;
+Q.left_dissent += 4;
+!}
+go-to: result
+
+@stalin_speak
+view-if: player == "stalin"
+on-arrival: {!
+Q.stalin_strength += 4;
+Q.left_strength += 2;
+Q.right_dissent += 4;
+!}
+go-to: result
+
+@stalin_moscow
+view-if: player == "stalin"
+on-arrival: {!
+Q.stalin_moscow += 7;
+Q.stalin_strength += 1;
+!}
+go-to: result
+
+@result
+on-arrival: {!
+window.RF.normalize(Q);
+window.RF.congress(Q);
+!}
+
+= The vote
+
+[? if congress_compromise : No faction can command a majority. The delegates settle on the Middle Group as a compromise leadership. ?][? if congress_compromise = 0 : The delegates give the [+ congress_winner_name +] the majority. ?]
+
+[? if moscow_overruled : Then the Comintern's representatives intervene. Moscow will not accept the [+ overruled_name +] as leadership, and the new Zentrale is formed from the [+ leader_name +]. ?]
+
+The party leadership is now the [+ leader_name +]. [? if player_leads : It is yours. ?][? if player_leads = 0 : You are in opposition. ?]

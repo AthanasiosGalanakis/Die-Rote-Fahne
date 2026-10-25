@@ -1,0 +1,50 @@
+title: The Strike Wave
+subtitle: Wages are worth nothing by the time they are paid. Workers walk out.
+new-page: true
+is-card: true
+tags: rf_mass
+view-if: rf_strike_timer <= 0 and party_banned = 0
+on-arrival: month_actions += 1; rf_strike_timer = 2
+
+= The Strike Wave
+
+Wildcat strikes break out over wages that lose their value between payday and the shop. The party can support them, or try to turn them into something larger.
+
+- @support: Support the strikers with money and speakers.
+- @politicise: Raise political demands: a workers' government.
+- @general: Call for a general strike now.
+
+@support
+choose-if: funds >= 1
+unavailable-subtitle: The strike fund is empty.
+on-arrival: {!
+Q.funds -= 1;
+Q.members += 8;
+Q.union_influence += 3;
+Q.rev_situation += 2;
+!}
+
+Communist collections keep the strikers fed for another week. The strikers remember who helped.
+
+@politicise
+on-arrival: {!
+Q.rev_situation += 5;
+Q.right_strength += 2;
+Q.spd_relation -= 2;
+!}
+
+The strike meetings adopt resolutions for a workers' government. Some SPD workers vote for them.
+
+@general
+choose-if: rev_situation >= 60
+unavailable-subtitle: The mood is not yet there (revolutionary situation 60 or more).
+on-arrival: {!
+Q.rev_situation += 8;
+Q.readiness += 2;
+Q.repression += 8;
+Q.spd_relation -= 6;
+Q.left_strength += 3;
+Q.strike_pressure += 1;
+!}
+
+The call goes out. In some cities the factories empty; in others the unions keep their members at work. The police are ready.
