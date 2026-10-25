@@ -300,6 +300,7 @@
       var Q = dendryUI.dendryEngine.state.qualities;
       // the sidebar only makes sense once a game is under way
       $('#stats_sidebar').toggle(!!Q.started);
+      $('#mid_panel').toggleClass('rf-no-sidebar', !Q.started);
       Q.show_numbers = window.rfShowNumbers ? 1 : 0;
       if (window.rfShowNumbers && Q.started) {
           // a game that has seen the exact numbers earns no achievements
@@ -331,6 +332,9 @@
 
   window.onDisplayContent = function() {
       window.updateSidebar();
+      if (window.RF) {
+          window.RF.decorate(dendryUI.dendryEngine.state.qualities);
+      }
   };
 
   /*
@@ -406,6 +410,78 @@
           tip.style.display = 'none';
       }
   };
+  var escHtml = function(text) {
+      var div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+  };
+  // A hover card: an optional logo or picture, a title, a subtitle and text.
+  var tipCard = function(o) {
+      var html = '<div class="rf-tip-head">';
+      if (o.logo !== undefined) {
+          html += '<div class="rf-tip-logo ' + (o.logoClass || '') + '">' +
+              (o.logo ? '<img src="' + escHtml(o.logo) + '" alt="">' : escHtml(o.badge || '')) + '</div>';
+      }
+      html += '<div><div class="rf-tip-title ' + (o.titleClass || '') + '">' + o.title + '</div>';
+      if (o.subtitle) {
+          html += '<div class="rf-tip-sub">' + o.subtitle + '</div>';
+      }
+      html += '</div></div>';
+      if (o.body) {
+          html += '<div class="rf-tip-body">' + o.body + '</div>';
+      }
+      return html;
+  };
+  var matchClass = function(el, prefix) {
+      for (var c of el.classList) {
+          if (c.indexOf(prefix) == 0) {
+              return c.slice(prefix.length);
+          }
+      }
+      return null;
+  };
+  var partyTip = function(el, p) {
+      var RF = window.RF;
+      var info = RF && RF.partyInfo[p];
+      if (!info) {
+          return null;
+      }
+      var Q = window.dendryUI.dendryEngine.state.qualities;
+      var lead = RF.partyLeadership(Q, p);
+      var extra = el.getAttribute('data-tip') || el.getAttribute('title');
+      if (el.getAttribute('title')) {
+          el.setAttribute('data-tip', el.getAttribute('title'));
+          el.removeAttribute('title');
+      }
+      return tipCard({
+          logo: RF.image('party:' + p) || '', badge: info.name, logoClass: 'bg-' + p,
+          title: escHtml(info.full), titleClass: 'p-' + p,
+          subtitle: lead && lead.name ? 'Led by ' + escHtml(lead.name) : '',
+          body: escHtml(info.ideology) +
+              (extra && extra != info.full ? '<div class="rf-tip-extra">' + escHtml(extra) + '</div>' : '')
+      });
+  };
+  var FACTION_TEXT = {
+      right: 'United front with the SPD, workers\' governments in the states.',
+      center: 'Party unity above any line.',
+      left: 'No coalitions with reformists; prepare the offensive. Zinoviev\'s favourites.',
+      ultra: 'Suspicious of the unions, of parliament, and increasingly of Moscow.',
+      stalin: 'Follows whoever rules in Moscow.'
+  };
+  var factionTip = function(f) {
+      var RF = window.RF;
+      if (!RF || !RF.names[f]) {
+          return null;
+      }
+      var Q = window.dendryUI.dendryEngine.state.qualities;
+      return tipCard({
+          logo: RF.image('leader:' + f) || '', badge: RF.factionPersons[f].split(' ').pop().slice(0, 1),
+          logoClass: 'b-' + f,
+          title: escHtml(RF.names[f]), titleClass: 'f-' + f,
+          subtitle: escHtml(RF.factionPersons[f]) + (Q.leader == f ? ' · leads the party' : ''),
+          body: escHtml(FACTION_TEXT[f])
+      });
+  };
   var tipFor = function(el) {
       var card = el.closest('a.card');
       if (card) {
@@ -415,8 +491,25 @@
               card.setAttribute('data-title', card.getAttribute('title'));
               card.removeAttribute('title');
           }
+          if (!inner) {
+              return null;
+          }
+          var img = card.querySelector('img.card-img');
           // the engine stores the subtitle as text; it is our own markup, so render it
-          return inner ? {target: card, html: inner.textContent} : null;
+          return {target: card, html: tipCard({
+              logo: img ? img.getAttribute('src') : undefined,
+              title: escHtml(card.getAttribute('data-title') || ''),
+              body: inner.textContent
+          })};
+      }
+      var named = el.closest('[class*="p-"], [class*="f-"]');
+      if (named && named.closest('#content, #qualities, #rf-tip') && !named.closest('#rf-tip')) {
+          var p = matchClass(named, 'p-');
+          var f = matchClass(named, 'f-');
+          var html = p ? partyTip(named, p) : (f ? factionTip(f) : null);
+          if (html) {
+              return {target: named, html: html};
+          }
       }
       var t = el.closest('[title], [data-tip]');
       if (!t) {
@@ -427,9 +520,7 @@
           t.removeAttribute('title');
       }
       var text = t.getAttribute('data-tip');
-      var div = document.createElement('div');
-      div.textContent = text;
-      return text ? {target: t, html: div.innerHTML} : null;
+      return text ? {target: t, html: tipCard({title: escHtml(t.textContent.trim()), body: escHtml(text)})} : null;
   };
   document.addEventListener('mouseover', function(evt) {
       if (!(evt.target instanceof Element)) {
@@ -459,6 +550,12 @@
 
   window.onload = function() {
     window.dendryUI.loadSettings({show_portraits: false});
+    // images and achievements edited in the admin panel
+    if (window.RF) {
+        window.RF.loadData(function() {
+            window.onDisplayContent();
+        });
+    }
     if (window.dendryUI.dark_mode) {
         document.body.classList.add('dark-mode');
     }

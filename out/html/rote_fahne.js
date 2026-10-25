@@ -131,6 +131,10 @@
         if (f == Q.leader) {
           weight += 5 + Q.apparatus / 10;
         }
+        // a faction that prepared its challenge since the last congress
+        if (f == Q.congress_challenger) {
+          weight += 5;
+        }
         if (weight > best) {
           best = weight;
           winner = f;
@@ -141,6 +145,7 @@
         winner = 'center';
         Q.congress_compromise = 1;
       }
+      Q.congress_challenger = '';
       Q.congress_winner = winner;
       Q.congress_winner_name = NAMES[winner];
       Q.leader = winner;
@@ -528,10 +533,295 @@
     el.innerHTML = html + '</table>';
   };
 
+
+  // ---- Leadership, congresses and colours -------------------------------
+  // The KPD's leadership changes only at party congresses. The congresses
+  // of the other parties are listed for later use but not played yet.
+
+  var KPD_CONGRESSES = [
+    {year: 1923, month: 1, name: '8th congress', place: 'Leipzig'},
+    {year: 1924, month: 4, name: '9th congress', place: 'Frankfurt am Main'},
+    {year: 1925, month: 7, name: '10th congress', place: 'Berlin'},
+    {year: 1927, month: 3, name: '11th congress', place: 'Essen'},
+    {year: 1929, month: 6, name: '12th congress', place: 'Berlin-Wedding'}
+  ];
+  RF.kpdCongresses = KPD_CONGRESSES;
+
+  RF.nextCongress = function(Q) {
+    var t = Q.year * 12 + Q.month;
+    for (var c of KPD_CONGRESSES) {
+      if (c.year * 12 + c.month >= t) {
+        return c;
+      }
+    }
+    return null;
+  };
+
+  // The KPD's colour follows the faction in the Zentrale.
+  var KPD_COLOURS = {
+    right: ['#b5452a', '#f07a5a'],
+    center: ['#8b3a2e', '#d98a7a'],
+    left: ['#b00020', '#ff5c6e'],
+    ultra: ['#4a0d0d', '#c86a6a'],
+    stalin: ['#700000', '#e05050']
+  };
+
+  // Other parties: leaders, outlook and colour. A party's colour belongs
+  // to its leadership, so a new leadership can bring a new colour.
+  var PARTY_INFO = {
+    kpd: {name: 'KPD', full: 'Communist Party of Germany',
+          ideology: 'Revolutionary Marxism, section of the Communist International.'},
+    spd: {name: 'SPD', full: 'Social Democratic Party of Germany',
+          ideology: 'Reformist social democracy: defend the Republic, work with the bourgeois centre. The largest party of the working class.',
+          leaders: [{until: null, name: 'Otto Wels, Hermann Müller', colours: ['#c00000', '#ff5c5c']}]},
+    uspd: {name: 'USPD', full: 'Independent Social Democratic Party of Germany',
+           ideology: 'Left socialists who stayed out of both the KPD (1920) and the reunited SPD (1922). A small group by now.',
+           leaders: [{until: null, name: 'Georg Ledebour, Theodor Liebknecht', colours: ['#9B0000', '#ff7070']}]},
+    z: {name: 'Z', full: 'Centre Party',
+        ideology: 'The Catholic party of the centre, with its Bavarian sister the BVP. A partner in almost every Reich government.',
+        leaders: [{until: null, name: 'Wilhelm Marx', colours: ['#1A1A1A', '#d0d0d0']}]},
+    bvp: {name: 'BVP', full: 'Bavarian People\'s Party',
+          ideology: 'Bavarian Catholic conservatives, federalist and further right than the Centre.',
+          leaders: [{until: null, name: '', colours: ['#4a6fa5', '#8fb0e0']}]},
+    ddp: {name: 'DDP', full: 'German Democratic Party',
+          ideology: 'Left liberals, one of the founding parties of the Republic.',
+          leaders: [{until: null, name: 'Carl Petersen', colours: ['#B8A000', '#f0d64a']}]},
+    dvp: {name: 'DVP', full: 'German People\'s Party',
+          ideology: 'National liberals close to industry. Stresemann is moving them towards accepting the Republic.',
+          leaders: [{until: null, name: 'Gustav Stresemann', colours: ['#C0A054', '#e0c070']}]},
+    dnvp: {name: 'DNVP', full: 'German National People\'s Party',
+           ideology: 'Monarchist conservatives of the landowners, the officer corps and the old elites.',
+           leaders: [{until: null, name: 'Oskar Hergt', colours: ['#3E88B3', '#6fb3dc']}]},
+    nsdap: {name: 'NSDAP', full: 'National Socialist German Workers\' Party',
+            ideology: 'Völkisch nationalists, strongest in Bavaria.',
+            leaders: [
+              {until: 'beer_hall_seen', name: 'Adolf Hitler', colours: ['#7A3C00', '#c8874a']},
+              {until: null, name: 'banned; Hitler in prison', colours: ['#8c6a4f', '#b89a7f']}
+            ]},
+    other: {name: 'Others', full: 'Other parties',
+            ideology: 'Regional, agrarian and splinter parties, and the rump USPD.',
+            leaders: [{until: null, name: '', colours: ['#777777', '#b0b0b0']}]},
+    comintern: {name: 'Comintern', full: 'Communist International',
+                ideology: 'The world party of revolution, run from Moscow by its Executive Committee (ECCI).',
+                leaders: [{until: null, name: 'Grigory Zinoviev', colours: ['#b8000f', '#ff6060']}]},
+    reichswehr: {name: 'Reichswehr', full: 'The Reichswehr',
+                 ideology: 'The army of the Republic, limited to 100,000 men by the Treaty of Versailles. Loyal to its generals more than to the Republic.',
+                 leaders: [{until: null, name: 'General Hans von Seeckt', colours: ['#555555', '#aaaaaa']}]},
+    kapd: {name: 'KAPD', full: 'Communist Workers\' Party of Germany',
+           ideology: 'Council communists who left the KPD in 1920 rejecting parliament and the unions.',
+           leaders: [{until: null, name: '', colours: ['#3a3a3a', '#b0b0b0']}]},
+    pcf: {name: 'PCF', full: 'French Communist Party',
+          ideology: 'The French section of the International, campaigning against the Ruhr occupation.',
+          leaders: [{until: null, name: '', colours: ['#b3004b', '#ff5c9a']}]}
+  };
+  RF.partyInfo = PARTY_INFO;
+
+  // The current leadership of a party: its leader names and colours.
+  RF.partyLeadership = function(Q, p) {
+    if (p == 'kpd') {
+      var lead = Q.leader || 'right';
+      return {name: Q.leader_person ? Q.leader_person + ' (' + NAMES[lead] + ')' : '',
+              colours: KPD_COLOURS[lead]};
+    }
+    var info = PARTY_INFO[p];
+    if (!info || !info.leaders) {
+      return null;
+    }
+    for (var l of info.leaders) {
+      if (l.until === null || !Q[l.until]) {
+        return l;
+      }
+    }
+    return info.leaders[info.leaders.length - 1];
+  };
+
+  // Party colours live in CSS variables so every coloured name follows
+  // the party's current leadership.
+  RF.applyColours = function(Q) {
+    var root = document.documentElement;
+    for (var p in PARTY_INFO) {
+      var l = RF.partyLeadership(Q, p);
+      if (l && l.colours) {
+        root.style.setProperty('--c-' + p, l.colours[0]);
+        root.style.setProperty('--c-' + p + '-dark', l.colours[1]);
+      }
+    }
+  };
+
+  RF.renderLeaders = function(Q) {
+    var el = document.getElementById('rf-leaders');
+    if (!el) {
+      return;
+    }
+    var html = '';
+    for (var p of ['kpd', 'spd', 'uspd', 'z', 'ddp', 'dvp', 'dnvp', 'nsdap']) {
+      var l = RF.partyLeadership(Q, p);
+      html += '<p><span class="p-' + p + '">' + PARTY_INFO[p].name + '</span>: ' +
+          esc(l && l.name ? l.name : '') + '</p>';
+    }
+    el.innerHTML = html;
+  };
+
+  // ---- Data files: images and achievements --------------------------------
+  // Edited from the admin panel (admin/). Missing files leave the game as it is.
+
+  RF.data = {images: {}, achievements: []};
+
+  RF.loadData = function(done) {
+    var bust = '?v=' + Date.now();
+    var pending = 2;
+    var finish = function() {
+      pending -= 1;
+      if (pending == 0 && done) {
+        done();
+      }
+    };
+    var load = function(url, key) {
+      fetch(url + bust).then(function(r) {
+        return r.ok ? r.json() : null;
+      }).then(function(json) {
+        if (json) {
+          RF.data[key] = json;
+        }
+      }).catch(function() {}).then(finish);
+    };
+    load('data/images.json', 'images');
+    load('data/achievements.json', 'achievements');
+  };
+
+  // Image keys: card:<scene>, event:<scene>, advisor:<scene>, leader:<faction>,
+  // party:<party>, achievement:<id>.
+  RF.image = function(key) {
+    return RF.data.images[key] || null;
+  };
+
+  var unlockedKey = 'rf_achievements_unlocked';
+  RF.unlocked = function() {
+    try {
+      return JSON.parse(localStorage[unlockedKey] || '{}');
+    } catch (e) {
+      return {};
+    }
+  };
+
+  // Achievement conditions are JavaScript expressions over Q, for example
+  // "Q.rf_ending == 'revolution'". "end" ones are checked when the game
+  // ends, "anytime" ones every month.
+  RF.checkAchievements = function(Q, when) {
+    if (Q.numbers_shown) {
+      return;
+    }
+    var unlocked = RF.unlocked();
+    var fresh = [];
+    for (var a of RF.data.achievements) {
+      if (unlocked[a.id] || (a.when || 'end') != when && when != 'end') {
+        continue;
+      }
+      var ok = false;
+      try {
+        ok = !!(new Function('Q', 'return (' + a.condition + ');'))(Q);
+      } catch (e) {
+        console.warn('Achievement ' + a.id + ': ' + e.message);
+      }
+      if (ok) {
+        unlocked[a.id] = new Date().toISOString().slice(0, 10);
+        fresh.push(a);
+      }
+    }
+    if (fresh.length) {
+      try {
+        localStorage[unlockedKey] = JSON.stringify(unlocked);
+      } catch (e) {}
+      for (var f of fresh) {
+        RF.toast(f);
+      }
+    }
+  };
+
+  RF.toast = function(a) {
+    var box = document.createElement('div');
+    box.className = 'rf-toast';
+    var icon = RF.image('achievement:' + a.id);
+    box.innerHTML = (icon ? '<img src="' + esc(icon) + '" alt="">' : '<span class="rf-toast-star">★</span>') +
+        '<div><div class="rf-toast-head">Achievement unlocked</div><div class="rf-toast-name">' +
+        esc(a.name) + '</div></div>';
+    document.body.appendChild(box);
+    setTimeout(function() {
+      box.classList.add('rf-toast-out');
+    }, 4000);
+    setTimeout(function() {
+      box.remove();
+    }, 5000);
+  };
+
+  RF.renderAchievements = function() {
+    var el = document.getElementById('rf-achievements');
+    if (!el) {
+      return;
+    }
+    var list = RF.data.achievements;
+    if (!list.length) {
+      el.innerHTML = '<p>There are no achievements yet.</p>';
+      return;
+    }
+    var unlocked = RF.unlocked();
+    var count = 0;
+    var html = '<div class="rf-ach-grid">';
+    for (var a of list) {
+      var got = !!unlocked[a.id];
+      count += got ? 1 : 0;
+      var secret = a.hidden && !got;
+      var icon = RF.image('achievement:' + a.id);
+      html += '<div class="rf-ach' + (got ? ' rf-ach-got' : '') + '">' +
+          '<div class="rf-ach-icon">' + (icon && !secret ? '<img src="' + esc(icon) + '" alt="">' : (got ? '★' : '?')) + '</div>' +
+          '<div class="rf-ach-text"><div class="rf-ach-name">' + esc(secret ? 'Hidden achievement' : a.name) + '</div>' +
+          '<div class="rf-ach-desc">' + esc(secret ? 'Keep playing to find out.' : a.description || '') + '</div>' +
+          (got ? '<div class="rf-ach-date">Unlocked ' + esc(unlocked[a.id]) + '</div>' : '') +
+          '</div></div>';
+    }
+    el.innerHTML = '<p class="rf-ach-count">' + count + ' of ' + list.length + ' unlocked</p>' + html + '</div>';
+  };
+
+  // Images from the data file: card art, event pictures, the leader's portrait.
+  RF.decorate = function(Q) {
+    $('#content a.card').each(function() {
+      var id = this.getAttribute('card-id');
+      if (!id || this.querySelector('img.card-img')) {
+        return;
+      }
+      var base = id.split('.')[0];
+      var src = RF.image('card:' + id) || RF.image('card:' + base) ||
+          RF.image('advisor:' + id) || RF.image('advisor:' + base);
+      if (src) {
+        $(this).prepend($('<img>').addClass('card-img').attr({src: src, alt: ''}));
+      }
+    });
+    var portrait = document.querySelector('#content .rf-portrait-img');
+    if (portrait && Q.leader) {
+      var p = RF.image('leader:' + Q.leader);
+      if (p && !portrait.querySelector('img')) {
+        portrait.innerHTML = '<img src="' + esc(p) + '" alt="">';
+        portrait.classList.add('rf-has-img');
+      }
+    }
+    var scene = (window.dendryUI.dendryEngine.state.sceneId || '').split('.')[0];
+    var ev = RF.image('event:' + scene);
+    var heading = document.querySelector('#content h1');
+    if (ev && heading && !document.querySelector('#content .rf-event-img[data-scene="' + scene + '"]')) {
+      $(heading).after($('<figure>').addClass('rf-event-img').attr('data-scene', scene)
+          .append($('<img>').attr({src: ev, alt: ''})));
+    }
+    RF.renderAchievements();
+  };
+
+  RF.factionPersons = PERSONS;
+
   RF.renderSidebar = function(Q) {
+    RF.applyColours(Q);
     if (!Q.rf_mode) {
       return;
     }
+    RF.renderLeaders(Q);
     RF.renderReichstag();
     RF.renderPolls(Q);
   };

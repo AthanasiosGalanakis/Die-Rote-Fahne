@@ -78,17 +78,22 @@ for (var f of RF.factions) {
     var score = RF.moscowScore(Q, f) + (f == 'center' ? 10 : 0) + Q.moscow_trust / 10;
     if (score > bestScore) { bestScore = score; best = f; }
 }
-// a party that defies Moscow may keep its own choice
+// the leadership only changes at a congress, so Moscow can only name
+// its candidate and strengthen it before Frankfurt
+Q.caretaker_defied = 0;
 if (Q.moscow_trust < 30 && Q.autonomy >= 60) {
     Q.caretaker_defied = 1;
-    best = Q.leader == Q.blamed ? 'center' : Q.leader;
-    if (Q[best + '_expelled']) { best = RF.moscowFavourite(Q, Q.blamed); }
+} else if (best != Q.leader) {
+    Q[best + '_strength'] += 8;
+    Q[best + '_moscow'] += 10;
+    Q.congress_challenger = best;
 }
-Q.leader = best;
+Q.moscow_candidate = best;
+Q.moscow_candidate_name = RF.names[best];
 Q.autonomy -= 8;
 RF.normalize(Q);
 !}
 
-= A new Zentrale
+= Moscow's Candidate
 
-[? if caretaker_defied : Moscow demands a new leadership, but the German party has drifted too far from it to obey. The Central Committee names its own: ?][? if caretaker_defied = 0 : Moscow does not wait for a congress. The ECCI names a new leadership: ?] the <span class="f-[+ leader +]">[+ leader_name +]</span>. A congress will meet in the spring to confirm it, or not.
+[? if caretaker_defied : Moscow demands a new leadership, but the German party has drifted too far from it to obey. The Central Committee answers that only a party congress can elect the Zentrale. ?][? if caretaker_defied = 0 : The ECCI names its candidate for the next Zentrale: the <span class="f-[+ moscow_candidate +]">[+ moscow_candidate_name +]</span>. Under the statutes only a party congress can elect it. ?] Until the congress meets in Frankfurt in April, the <span class="f-[+ leader +]">[+ leader_name +]</span> stays in office.

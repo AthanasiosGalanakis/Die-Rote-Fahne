@@ -57,6 +57,7 @@ if (Q.month_actions >= 1) {
         Q.members -= 6;
         Q.repression -= 2;
     }
+    window.RF.checkAchievements(Q, 'anytime');
     // dues
     Q.funds += Q.members >= 150 ? 1 : 0;
     RF.normalize(Q);

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Die Rote Fahne · Admin</title>
+  <link rel="stylesheet" href="admin.css">
+  <script src="../rote_fahne.js"></script>
+  <script src="admin.js" defer></script>
+</head>
+<body>
+  <!-- Sign-in -->
+  <div id="login" class="login hidden">
+    <form class="login-card" id="login-form">
+      <div class="brand big"><span class="flag"></span>Die Rote Fahne <small>Admin</small></div>
+      <p class="muted">Changes you make here are committed to GitHub. The site rebuilds itself a minute or two after each publish.</p>
+      <label>GitHub token
+        <input type="password" id="login-token" autocomplete="off" placeholder="github_pat_…" required>
+      </label>
+      <div class="row2">
+        <label>Owner <input id="login-owner" required></label>
+        <label>Repository <input id="login-repo" required></label>
+      </div>
+      <label>Branch <input id="login-branch" value="main" required></label>
+      <button class="btn primary wide" type="submit">Sign in</button>
+      <p class="error" id="login-error"></p>
+      <details class="help">
+        <summary>How do I get a token?</summary>
+        <ol>
+          <li>On GitHub open <b>Settings → Developer settings → Personal access tokens → Fine-grained tokens</b> and choose <b>Generate new token</b>.</li>
+          <li>Under <b>Repository access</b> pick <b>Only select repositories</b> and choose this game's repository.</li>
+          <li>Under <b>Permissions</b> set <b>Contents</b> to <b>Read and write</b> and <b>Actions</b> to <b>Read-only</b>.</li>
+          <li>Generate it and paste it above. It is kept only in this browser.</li>
+        </ol>
+      </details>
+    </form>
+  </div>
+
+  <!-- App -->
+  <div id="app" class="app hidden">
+    <aside class="nav">
+      <div class="brand"><span class="flag"></span>Die Rote Fahne <small>Admin</small></div>
+      <nav>
+        <a href="#dashboard" data-view="dashboard"><span class="ico">◧</span>Dashboard</a>
+        <a href="#achievements" data-view="achievements"><span class="ico">★</span>Achievements</a>
+        <a href="#images" data-view="images"><span class="ico">▣</span>Images</a>
+        <a href="#texts" data-view="texts"><span class="ico">¶</span>Texts</a>
+        <a href="#settings" data-view="settings"><span class="ico">⚙</span>Settings</a>
+      </nav>
+      <div class="nav-foot">
+        <a id="site-link" href="../" target="_blank" rel="noopener">Open the game ↗</a>
+        <div id="who" class="muted small"></div>
+      </div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <h1 id="view-title">Dashboard</h1>
+        <div class="topbar-right">
+          <span id="deploy-pill" class="pill">…</span>
+          <button id="publish-btn" class="btn primary" disabled>Publish</button>
+        </div>
+      </header>
+
+      <section id="view-dashboard" class="view"></section>
+      <section id="view-achievements" class="view"></section>
+      <section id="view-images" class="view"></section>
+      <section id="view-texts" class="view"></section>
+      <section id="view-settings" class="view"></section>
+    </main>
+  </div>
+
+  <!-- Publish dialog -->
+  <dialog id="publish-dialog" class="dialog">
+    <form method="dialog" class="dialog-body">
+      <h2>Publish changes</h2>
+      <p class="muted">These changes go into one commit on <b id="publish-branch"></b>. The site redeploys automatically.</p>
+      <div id="publish-list" class="publish-list"></div>
+      <label>Commit message
+        <input id="publish-message" required>
+      </label>
+      <div class="dialog-actions">
+        <button class="btn" value="cancel" formnovalidate>Cancel</button>
+        <button class="btn danger-ghost" id="discard-all" type="button">Discard all</button>
+        <button class="btn primary" id="publish-confirm" value="ok">Publish</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toasts" class="toasts"></div>
+</body>
+</html>

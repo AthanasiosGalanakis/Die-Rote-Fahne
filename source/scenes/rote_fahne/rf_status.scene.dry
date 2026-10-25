@@ -67,6 +67,8 @@ if (t < 1923 * 12 + 3) {
 }
 Q.hundreds_strength = Math.round(15 + 0.8 * Q.readiness);
 Q.rfb_strength = Math.round(40 + Q.readiness);
+var next = RF.nextCongress(Q);
+Q.next_congress = next ? next.place + ', ' + RF.monthName(next.month) + ' ' + next.year : 'none planned';
 RF.numbers(Q);
 !}
 
@@ -74,15 +76,17 @@ RF.numbers(Q);
 
 Leadership: <span class="f-[+ leader +]">[+ leader_name +]</span>
 
-[? if right_expelled = 0 : <span class="f-right">Brandler Right</span>: [+ right_strength : strength +][+ n_right_strength +], [+ right_dissent : rf_dissent +][+ n_right_dissent +][? if leader == "right" : , leads the party ?] {!<div class="rf-bar"><span class="b-right" style="width: !}[+ right_strength +]{!%"></span></div>!} ?][? if right_expelled : <span class="f-right">Brandler Right</span>: left the party ?]
+{!<span class="tooltip-text" title="The leadership only changes at a party congress, where the delegates elect a new Zentrale and Moscow may overturn their choice.">Next party congress</span>!}: [+ next_congress +]
 
-[? if center_expelled = 0 : <span class="f-center">Middle Group</span>: [+ center_strength : strength +][+ n_center_strength +], [+ center_dissent : rf_dissent +][+ n_center_dissent +][? if leader == "center" : , leads the party ?] {!<div class="rf-bar"><span class="b-center" style="width: !}[+ center_strength +]{!%"></span></div>!} ?][? if center_expelled : <span class="f-center">Middle Group</span>: left the party ?]
+[? if right_expelled = 0 : {!<div class="rf-faction">!}<span class="f-right">Brandler Right</span>[? if leader == "right" : {!<span class="rf-lead">!}leads the party{!</span>!} ?]{!<div class="rf-stat">!}Strength: [+ right_strength : strength +][+ n_right_strength +]{!</div><div class="rf-stat">!}Dissent: [+ right_dissent : rf_dissent +][+ n_right_dissent +]{!</div>!}{!<div class="rf-bar"><span class="b-right" style="width: !}[+ right_strength +]{!%"></span></div></div>!} ?][? if right_expelled : <span class="f-right">Brandler Right</span>: left the party ?]
 
-[? if left_expelled = 0 : <span class="f-left">Fischer–Maslow Left</span>: [+ left_strength : strength +][+ n_left_strength +], [+ left_dissent : rf_dissent +][+ n_left_dissent +][? if leader == "left" : , leads the party ?] {!<div class="rf-bar"><span class="b-left" style="width: !}[+ left_strength +]{!%"></span></div>!} ?][? if left_expelled : <span class="f-left">Fischer–Maslow Left</span>: left the party ?]
+[? if center_expelled = 0 : {!<div class="rf-faction">!}<span class="f-center">Middle Group</span>[? if leader == "center" : {!<span class="rf-lead">!}leads the party{!</span>!} ?]{!<div class="rf-stat">!}Strength: [+ center_strength : strength +][+ n_center_strength +]{!</div><div class="rf-stat">!}Dissent: [+ center_dissent : rf_dissent +][+ n_center_dissent +]{!</div>!}{!<div class="rf-bar"><span class="b-center" style="width: !}[+ center_strength +]{!%"></span></div></div>!} ?][? if center_expelled : <span class="f-center">Middle Group</span>: left the party ?]
 
-[? if ultra_expelled = 0 : <span class="f-ultra">Ultra-Left</span>: [+ ultra_strength : strength +][+ n_ultra_strength +], [+ ultra_dissent : rf_dissent +][+ n_ultra_dissent +][? if leader == "ultra" : , leads the party ?] {!<div class="rf-bar"><span class="b-ultra" style="width: !}[+ ultra_strength +]{!%"></span></div>!} ?][? if ultra_expelled : <span class="f-ultra">Ultra-Left</span>: left the party ?]
+[? if left_expelled = 0 : {!<div class="rf-faction">!}<span class="f-left">Fischer–Maslow Left</span>[? if leader == "left" : {!<span class="rf-lead">!}leads the party{!</span>!} ?]{!<div class="rf-stat">!}Strength: [+ left_strength : strength +][+ n_left_strength +]{!</div><div class="rf-stat">!}Dissent: [+ left_dissent : rf_dissent +][+ n_left_dissent +]{!</div>!}{!<div class="rf-bar"><span class="b-left" style="width: !}[+ left_strength +]{!%"></span></div></div>!} ?][? if left_expelled : <span class="f-left">Fischer–Maslow Left</span>: left the party ?]
 
-[? if stalin_expelled = 0 : <span class="f-stalin">Thälmann circle</span>: [+ stalin_strength : strength +][+ n_stalin_strength +], [+ stalin_dissent : rf_dissent +][+ n_stalin_dissent +][? if leader == "stalin" : , leads the party ?] {!<div class="rf-bar"><span class="b-stalin" style="width: !}[+ stalin_strength +]{!%"></span></div>!} ?][? if stalin_expelled : <span class="f-stalin">Thälmann circle</span>: left the party ?]
+[? if ultra_expelled = 0 : {!<div class="rf-faction">!}<span class="f-ultra">Ultra-Left</span>[? if leader == "ultra" : {!<span class="rf-lead">!}leads the party{!</span>!} ?]{!<div class="rf-stat">!}Strength: [+ ultra_strength : strength +][+ n_ultra_strength +]{!</div><div class="rf-stat">!}Dissent: [+ ultra_dissent : rf_dissent +][+ n_ultra_dissent +]{!</div>!}{!<div class="rf-bar"><span class="b-ultra" style="width: !}[+ ultra_strength +]{!%"></span></div></div>!} ?][? if ultra_expelled : <span class="f-ultra">Ultra-Left</span>: left the party ?]
+
+[? if stalin_expelled = 0 : {!<div class="rf-faction">!}<span class="f-stalin">Thälmann circle</span>[? if leader == "stalin" : {!<span class="rf-lead">!}leads the party{!</span>!} ?]{!<div class="rf-stat">!}Strength: [+ stalin_strength : strength +][+ n_stalin_strength +]{!</div><div class="rf-stat">!}Dissent: [+ stalin_dissent : rf_dissent +][+ n_stalin_dissent +]{!</div>!}{!<div class="rf-bar"><span class="b-stalin" style="width: !}[+ stalin_strength +]{!%"></span></div></div>!} ?][? if stalin_expelled : <span class="f-stalin">Thälmann circle</span>: left the party ?]
 
 = Moscow
 
@@ -151,19 +155,7 @@ window.RF.numbers(Q);
 
 = Party Leadership
 
-{!<span class="tooltip-text" title="Reformist social democracy: defend the Republic, work with the bourgeois centre. The largest party of the working class.">!}<span class="p-spd">SPD</span>{!</span>!}: Otto Wels, Hermann Müller
-
-{!<span class="tooltip-text" title="Left socialists who stayed out of both the KPD (1920) and the reunited SPD (1922). A small group by now.">!}<span class="p-uspd">USPD</span>{!</span>!}: Georg Ledebour, Theodor Liebknecht
-
-{!<span class="tooltip-text" title="The Catholic party of the centre, with its Bavarian sister the BVP. A partner in almost every Reich government.">!}<span class="p-z">Z</span>{!</span>!}: Wilhelm Marx
-
-{!<span class="tooltip-text" title="Left liberals, one of the founding parties of the Republic.">!}<span class="p-ddp">DDP</span>{!</span>!}: Carl Petersen
-
-{!<span class="tooltip-text" title="National liberals close to industry. Stresemann is moving them towards accepting the Republic.">!}<span class="p-dvp">DVP</span>{!</span>!}: Gustav Stresemann
-
-{!<span class="tooltip-text" title="Monarchist conservatives of the landowners, the officer corps and the old elites.">!}<span class="p-dnvp">DNVP</span>{!</span>!}: Oskar Hergt
-
-[? if beer_hall_seen = 0 : {!<span class="tooltip-text" title="Völkisch nationalists, strongest in Bavaria. Banned in Prussia and several other states since late 1922.">!}<span class="p-nsdap">NSDAP</span>{!</span>!}: Adolf Hitler ?][? if beer_hall_seen = 1 : {!<span class="tooltip-text" title="Banned across the Reich after the Munich putsch of 8–9 November 1923. Hitler is in prison; völkisch politicians carry on under other names.">!}<span class="p-nsdap">NSDAP</span>{!</span>!}: banned; Hitler in prison ?]
+{!<div id="rf-leaders"></div>!}
 
 @polls
 title: Polls

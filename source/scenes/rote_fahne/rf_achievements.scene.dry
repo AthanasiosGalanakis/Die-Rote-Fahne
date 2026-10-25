@@ -4,7 +4,7 @@ is-special: true
 
 = Achievements
 
-There are no achievements yet.
+{!<div id="rf-achievements"></div>!}
 
 [? if numbers_shown = 1 : Achievements are off for this game, because exact numbers were turned on in the options. ?]
 
