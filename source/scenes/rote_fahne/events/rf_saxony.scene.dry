@@ -8,62 +8,32 @@ on-arrival: saxony_seen = 1
 
 = Workers' Government in Saxony
 
-Erich Zeigner, the left SPD minister-president of Saxony, invites the KPD into his government. In neighbouring Thuringia a similar offer is on the table. The plan for October counts on these states: KPD ministers could open police arsenals to the Proletarian Hundreds. The Reichswehr is watching.
+Erich Zeigner, the left <span class="p-spd">SPD</span> minister-president of Saxony, invites the <span class="p-kpd">KPD</span> into his government. In neighbouring Thuringia a similar offer is on the table. [? if october_plan : The plan for October counts on these states: Communist ministers could open police arsenals to the Proletarian Hundreds. ?] The <span class="p-reichswehr">Reichswehr</span> is watching.
 
-[? if player_leads : You decide whether the party enters. ?][? if player_leads = 0 : The leadership will decide. You can back the decision or fight it. ?]
-
-- @enter: Enter the government.
-- @stay_out: Stay out of a coalition with reformists.
-- @back_entry: Support entry.
-- @oppose_entry: Oppose entry.
+- @enter
+- @stay_out
 
 @enter
-view-if: player_leads = 1
+title: Enter the government.
+subtitle: Pleases the <span class="f-right">Right</span> and Moscow. Angers the <span class="f-left">Left</span> and <span class="f-ultra">Ultra-Left</span>. Legal arms for the Hundreds.
 on-arrival: {!
 Q.workers_govt = 1;
+window.RF.lean(Q, {right: 4, left: -3, ultra: -4});
+Q.moscow_trust += 3;
 Q.readiness += 8;
 Q.spd_relation += 8;
-Q.left_dissent += 6;
-Q.right_strength += 3;
 !}
-go-to: entered
+
+On 10 October, Communist ministers join the Saxon government[? if leader == "right" : , Brandler himself among them ?]. Thuringia follows a few days later. The Proletarian Hundreds are legal in both states. In Berlin, the Reich government and the army command begin to discuss intervention.
 
 @stay_out
-view-if: player_leads = 1
+title: Stay out of a coalition with reformists.
+subtitle: Pleases the <span class="f-left">Left</span> and <span class="f-ultra">Ultra-Left</span>. Angers the <span class="f-right">Right</span>. Moscow is displeased.
 on-arrival: {!
 Q.workers_govt = 0;
+window.RF.lean(Q, {left: 3, ultra: 3, right: -5});
 Q.spd_relation -= 6;
-Q.right_dissent += 8;
-Q[Q.player + '_moscow'] -= 4;
+Q.moscow_trust -= 4;
 !}
 
 The party stays out. Zeigner governs alone, and Moscow's planners lose their base in central Germany.
-
-@back_entry
-view-if: player_leads = 0
-on-arrival: {!
-Q[Q.player + '_moscow'] += 2;
-Q.right_strength += 2;
-if (Q.player == 'left') { Q.left_dissent += 5; Q.left_strength -= 3; }
-Q.workers_govt = (Q.leader == 'left') ? 0 : 1;
-if (Q.workers_govt) { Q.readiness += 8; Q.spd_relation += 8; }
-!}
-go-to: entered if workers_govt = 1; not_entered if workers_govt = 0
-
-@oppose_entry
-view-if: player_leads = 0
-on-arrival: {!
-Q[Q.player + '_strength'] += 3;
-Q[Q.player + '_dissent'] += 4;
-Q.workers_govt = (Q.leader == 'left') ? 0 : 1;
-if (Q.workers_govt) { Q.readiness += 8; Q.spd_relation += 8; }
-!}
-go-to: entered if workers_govt = 1; not_entered if workers_govt = 0
-
-@entered
-
-On 10 October, KPD ministers join the Saxon government[? if leader == "right" : , Brandler himself among them ?]. Thuringia follows a few days later. The Proletarian Hundreds are legal in both states. In Berlin, the Reich government and the army command begin to discuss intervention.
-
-@not_entered
-
-The party stays out of the Saxon government. Zeigner governs alone, and Moscow's planners lose their base in central Germany.

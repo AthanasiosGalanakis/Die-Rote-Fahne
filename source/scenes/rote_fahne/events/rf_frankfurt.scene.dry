@@ -9,34 +9,44 @@ max-visits: 1
 
 The congress meets in Frankfurt in April 1924. The party has lost members, money and its illusions. Most delegates are angry, and the anger runs to the left. Zinoviev's representatives are in the hall.
 
-[? if player_leads : You hold the Zentrale. Your opponents have spent the winter organising against you. ?][? if player_leads = 0 : This is your chance to take the party. ?]
+What should the congress be about?
 
-- @fight: Throw everything into the delegate fight.
-- @deal: Make a deal with another faction for a shared leadership.
-- @moscow: Let Moscow's representatives know you will follow the ECCI's line.
+- @revolution
+- @unity
+- @moscow
+- @independence
 
-@fight
+@revolution
+title: The lessons of October: a revolutionary party, purged of opportunists.
+subtitle: Strongly pleases the <span class="f-left">Left</span>. Angers the <span class="f-right">Right</span>.
 on-arrival: {!
-Q[Q.player + '_strength'] += 6;
-for (var f of window.RF.factions) {
-    if (f != Q.player) { Q[f + '_dissent'] += 4; }
-}
+window.RF.lean(Q, {left: 6, ultra: 2, right: -6});
 !}
 go-to: result
 
-@deal
+@unity
+title: Unity: no purges, a shared leadership.
+subtitle: Strongly pleases the <span class="f-center">Middle Group</span>. Calms every faction.
 on-arrival: {!
-Q[Q.player + '_strength'] += 3;
-Q.center_strength += 3;
-for (var f of window.RF.factions) { Q[f + '_dissent'] -= 5; }
-Q.shared_leadership = 1;
+window.RF.lean(Q, {center: 6});
+for (var f of window.RF.factions) { Q[f + '_dissent'] -= 6; }
 !}
 go-to: result
 
 @moscow
+title: Bolshevization: the party will follow the ECCI's line in everything.
+subtitle: Strongly pleases Moscow and <span class="f-stalin">Thälmann</span>. Angers the <span class="f-ultra">Ultra-Left</span>.
 on-arrival: {!
-Q[Q.player + '_moscow'] += 10;
-Q.autonomy -= 5;
+window.RF.obey(Q, 12);
+!}
+go-to: result
+
+@independence
+title: A German party for German workers: Moscow advises, it does not command.
+subtitle: Strongly pleases the <span class="f-ultra">Ultra-Left</span>. Enrages <span class="f-stalin">Thälmann</span>. Moscow may intervene.
+on-arrival: {!
+window.RF.defy(Q, 14);
+window.RF.lean(Q, {ultra: 3});
 !}
 go-to: result
 
@@ -50,6 +60,6 @@ Q.rf_ending = 'frankfurt';
 
 = The vote
 
-[? if congress_compromise : No faction commands a majority. The congress elects the Middle Group as a compromise leadership. ?][? if congress_compromise = 0 : The delegates give the [+ congress_winner_name +] the majority. ?]
+[? if congress_compromise : No faction commands a majority. The congress elects the <span class="f-center">Middle Group</span> as a compromise leadership. ?][? if congress_compromise = 0 : The delegates give the <span class="f-[+ congress_winner +]">[+ congress_winner_name +]</span> the majority. ?]
 
-[? if moscow_overruled : The Comintern's representatives refuse to accept the result. Moscow's choice, the [+ leader_name +], forms the new Zentrale. ?]
+[? if moscow_overruled : The <span class="p-comintern">Comintern</span>'s representatives refuse to accept the result. Moscow's choice, the <span class="f-[+ leader +]">[+ leader_name +]</span>, forms the new Zentrale. ?]

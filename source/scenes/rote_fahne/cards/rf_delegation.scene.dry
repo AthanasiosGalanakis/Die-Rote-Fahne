@@ -1,5 +1,5 @@
 title: Delegation to Moscow
-subtitle: The Executive Committee of the International hears the German factions in person.
+subtitle: The <span class="p-comintern">Comintern</span> Executive hears the German party in person.
 new-page: true
 is-card: true
 tags: rf_moscow
@@ -8,26 +8,27 @@ on-arrival: month_actions += 1; rf_delegation_timer = 3
 
 = Delegation to Moscow
 
-You can send your best speakers to the ECCI in Moscow. The International settles German disputes there, often before the German party has discussed them.
+You can send a delegation to the Executive Committee of the International (ECCI). It settles German questions there, often before the German party has discussed them.
 
-- @argue: Argue your faction's line.
-- @listen: Listen, and promise to carry out the ECCI's decisions.
+- @argue
+- @listen
 
 @argue
+title: Argue the German party's own view.
+subtitle: Keeps some independence. Pleases the <span class="f-ultra">Ultra-Left</span>. Angers <span class="f-stalin">Thälmann</span>.
 on-arrival: {!
 Q.funds -= 1;
-Q[Q.player + '_moscow'] += 6;
-Q.autonomy -= 1;
+window.RF.defy(Q, 4);
 !}
 
-Your delegates argue well. Some of the Russian leaders are impressed; others take note of your independence.
+Your delegates argue well. Some of the Russian leaders are impressed; others take note of German independence.
 
 @listen
+title: Listen, and promise to carry out the ECCI's decisions.
+subtitle: Pleases Moscow and <span class="f-stalin">Thälmann</span>. Angers the <span class="f-ultra">Ultra-Left</span>. Costs party autonomy.
 on-arrival: {!
 Q.funds -= 1;
-Q[Q.player + '_moscow'] += 10;
-Q.autonomy -= 4;
-Q[Q.player + '_dissent'] -= 4;
+window.RF.obey(Q, 10);
 !}
 
 Your delegates promise discipline. Moscow likes obedient Germans. The precedent will outlive you.

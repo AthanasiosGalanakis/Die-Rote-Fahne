@@ -2,35 +2,35 @@ title: The End of the Revolutionary Year
 new-page: true
 on-arrival: {!
 window.RF.normalize(Q);
-// grade: 2 = triumph, 1 = partial, 0 = defeat
+// how strong a party comes out of the year: members, unity, independence, splits
+Q.party_score = Math.round(40 * Q.members / 220 + 0.3 * Q.unity + 0.2 * Q.autonomy
+                           + 0.1 * Q.moscow_trust - 10 * Q.splits);
 if (Q.rf_ending == 'revolution') {
-    Q.grade = Q.player_leads ? 2 : 1;
-} else if (Q.rf_ending == 'frankfurt') {
-    if (Q.player_leads) {
-        Q.grade = 2;
-    } else if (Q.player_strength >= 25 || (Q.shared_leadership && Q.player_strength >= 15)) {
-        Q.grade = 1;
-    } else {
-        Q.grade = 0;
-    }
+    Q.grade = 3;
+} else if (Q.rf_ending == 'collapse') {
+    Q.grade = 0;
+} else if (Q.party_score >= 60) {
+    Q.grade = 2;
+} else if (Q.party_score >= 40) {
+    Q.grade = 1;
 } else {
     Q.grade = 0;
 }
 !}
-go-to: revolution if rf_ending == "revolution"; frankfurt if rf_ending == "frankfurt"; splinter if rf_ending == "splinter"; leave if rf_ending == "leave"
+go-to: revolution if rf_ending == "revolution"; frankfurt if rf_ending == "frankfurt"; collapse if rf_ending == "collapse"
 
 @revolution
 new-page: true
 
 = The German October
 
-[? if grade = 2 : **Triumph.** ?][? if grade = 1 : **A revolution, but not yours.** ?]
+**Victory: the German revolution.**
 
-Germany has a Council Republic. The Reich government has fled south; the Reichswehr is split; Bavaria and the occupied Rhineland are in other hands. Soviet Russia sends grain and advisers across a Poland that may not let them pass. The civil war is only beginning.
+Germany has a council republic. The Reich government has fled south; the <span class="p-reichswehr">Reichswehr</span> is split; Bavaria and the occupied Rhineland are in other hands. Soviet Russia sends grain and advisers across a Poland that may not let them pass. The civil war is only beginning.
 
-[? if grade = 2 : The [+ player_name +] leads the revolution it fought for. ?][? if grade = 1 : The revolution is led by the [+ leader_name +]. Your faction will have to fight for its place in the new state. ?]
+The revolution is led by the <span class="f-[+ leader +]">[+ leader_name +]</span>. [? if leader == "right" : Brandler, who never believed this could work, finds himself at the head of a workers' government that must now win a war. ?][? if leader == "center" : The Middle Group must hold a revolution together the way it held the party together: by compromise, if there is time for compromise. ?][? if leader == "left" : Fischer and Maslow have the revolution they promised, and Zinoviev in Moscow will claim it as his. ?][? if leader == "ultra" : The Ultra-Left wants the councils to rule, not the party, and not Moscow. That will soon be tested. ?][? if leader == "stalin" : Thälmann's people answer to Moscow. The German revolution will be run as a branch of the Russian one. ?]
 
-In our history, almost every historian of 1923 judges that a German October could not have won: the Reichswehr was loyal, the SPD's workers did not follow, and the party's weapons existed mostly in its reports to Moscow. You beat those odds.
+In our history, almost every historian of 1923 judges that a German October could not have won: the <span class="p-reichswehr">Reichswehr</span> was loyal, the <span class="p-spd">SPD</span>'s workers did not follow, and the party's weapons existed mostly in its reports to Moscow. You beat those odds.
 
 - @finish: End game.
 
@@ -39,42 +39,28 @@ new-page: true
 
 = Frankfurt, April 1924
 
-[? if grade = 2 : **Victory: the [+ player_name +] leads the party.** ?][? if grade = 1 : **Survival: the [+ player_name +] remains a force in the party.** ?][? if grade = 0 : **Defeat: the [+ player_name +] is broken.** ?]
+[? if grade = 2 : **A strong party.** The <span class="p-kpd">KPD</span> has come through defeat with its members, its unity and its own mind. ?][? if grade = 1 : **A battered party.** The <span class="p-kpd">KPD</span> has survived the year, weaker and angrier. ?][? if grade = 0 : **A broken party.** The <span class="p-kpd">KPD</span> has come out of the year smaller, divided and dependent. ?]
 
-The revolutionary year is over. The KPD has about [+ members +] thousand members and is led by the [+ leader_name +]. Moscow favours the [+ favourite_name +], and the party's autonomy stands at [+ autonomy +] out of 100.
+The party has about [+ members +] thousand members. Unity stands at [+ unity +], autonomy at [+ autonomy +], and Moscow's trust at [+ moscow_trust +]. [? if splits > 0 : [+ splits +] faction(s) left the party during the year. ?] (Party score: [+ party_score +].)
 
-[? if player == "right" and grade = 2 : Against the current, you have kept the leadership. Zinoviev will not forgive it, and the Left will not stop. But the united front is still the party's policy. ?]
-[? if player == "right" and grade < 2 : In our history, Brandler and Thalheimer were kept in Moscow from 1924 until 1928. When they came home, they opposed the Third Period line, were expelled, and founded the KPO. ?]
-[? if player == "left" and grade = 2 : The party is yours, as it was historically. Zinoviev is your patron, and Zinoviev is losing his struggle in Moscow. The next blow will come from the same International that made you. ?]
-[? if player == "left" and grade < 2 : In our history the Left won at Frankfurt. Here, you have lost the moment when the party's anger was on your side. ?]
-[? if player == "center" and grade = 2 : The party is still whole and you hold it together. Every faction resents you a little, which may be the definition of success. ?]
-[? if player == "center" and grade < 2 : The Middle Group's caretaker moment has passed. In our history its leaders survived by attaching themselves to whoever won. ?]
-[? if player == "stalin" and grade = 2 : Years early, Thälmann's circle controls the party. Moscow has learned it can rely on you. The question for later acts is whether that loyalty will be worth anything when the Nazis come. ?]
-[? if player == "stalin" and grade < 2 : Your time has not come. In our history it came in 1925, when the Comintern's Open Letter removed Fischer and Maslow and made Thälmann chairman. ?]
+The new Zentrale is the <span class="f-[+ leader +]">[+ leader_name +]</span>.
 
-Final standings: Brandler Right [+ right_strength +]%, Left [+ left_strength +]%, Middle Group [+ center_strength +]%, Thälmann circle [+ stalin_strength +]%.
+[? if leader == "right" : Against the current, the Right keeps the party. Zinoviev will not forgive it. In our history Brandler and Thalheimer were kept in Moscow from 1924 to 1928, then expelled for opposing the Third Period and founded the KPO. Here, the united front is still the party's policy. ?][? if leader == "center" : The Middle Group holds the party together. Every faction resents it a little. In our history, its caretaker moment lasted only from January to April 1924. ?][? if leader == "left" : The Left takes the party, as it did historically. Its patron is Zinoviev, and Zinoviev is losing his struggle in Moscow. In our history, the same International that made Fischer and Maslow removed them with its Open Letter of 1925. ?][? if leader == "ultra" : The Ultra-Left takes the party, something that never happened in our history. A <span class="p-kpd">KPD</span> led by Korsch and Scholem will not take orders from Moscow for long, and Moscow will not fund a party that does not. ?][? if leader == "stalin" : Years early, Thälmann's circle controls the party. Moscow has learned it can rely on the German Communists. In our history this came in 1925. Whether that loyalty will be worth anything when the Nazis come is the question for later acts. ?]
 
-This is the end of the prototype. Acts II to V (Bolshevization, stabilisation, the Third Period, and 1930 to 1934) are not built yet.
+Final standings: <span class="f-right">Right</span> [+ right_strength +]%, <span class="f-center">Middle Group</span> [+ center_strength +]%, <span class="f-left">Left</span> [+ left_strength +]%, <span class="f-ultra">Ultra-Left</span> [+ ultra_strength +]%, <span class="f-stalin">Thälmann circle</span> [+ stalin_strength +]%.
+
+This is the end of the first act. Acts II to V (Bolshevization, stabilisation, the Third Period, and 1930 to 1934) are not built yet.
 
 - @finish: End game.
 
-@splinter
+@collapse
 new-page: true
 
-= A new party
+= Collapse
 
-**Expelled.** You and your comrades found a new party. You keep your principles and lose the International, its money and the loyalty that the name "Communist Party" commands among German workers. In our history, the splinters of the KPD (the KAPD, the Leninbund, the KPO) never won more than a small fraction of the party's vote.
+**Defeat: the party has fallen apart.**
 
-In a later version of the game, this would be a playable splinter mode.
-
-- @finish: End game.
-
-@leave
-new-page: true
-
-= Leaving
-
-**Expelled.** You leave the Communist movement. Some who took this road, like Paul Levi in 1921, joined the SPD and spent the rest of their lives arguing that the KPD had wasted the German working class's best chance.
+Splits, bans and defeats have left the <span class="p-kpd">KPD</span> with fewer than sixty thousand members. The groups that broke away fight each other more bitterly than they fight the government. Moscow writes the German party off and looks for new men to rebuild it.
 
 - @finish: End game.
 

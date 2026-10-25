@@ -1,54 +1,57 @@
-title: Factional Work in the Districts
-subtitle: Congress delegates are chosen in the districts. Win the districts and you win the congress.
+title: Organisers for the Districts
+subtitle: Congress delegates are chosen in the districts. Where you send organisers, a faction grows.
 new-page: true
 is-card: true
 tags: rf_party
 view-if: rf_district_timer <= 0
 on-arrival: month_actions += 1; rf_district_timer = 2
 
-= Factional Work in the Districts
+= Organisers for the Districts
 
-Each faction has its strongholds. Your organisers can work where you are already strong, or try to break into a rival's ground.
+The Zentrale has money for a few full-time organisers. Each district has its own politics.
 
-- @berlin: Berlin-Brandenburg, the Left's fortress.
-- @hamburg: The Wasserkante around Hamburg, Thälmann's home ground.
-- @saxony: Saxony, the heartland of the Right.
-- @ruhr: The occupied Ruhr, where the members are new and angry.
+- @berlin
+- @hamburg
+- @saxony
+- @ruhr
 
 @berlin
+title: Berlin-Brandenburg, the Left's fortress.
+subtitle: Strengthens the <span class="f-left">Left</span>.
 on-arrival: {!
-var gain = Q.player == 'left' ? 6 : 3;
-Q[Q.player + '_strength'] += gain;
-if (Q.player != 'left') { Q.left_dissent += 4; }
-!}
-
-[? if player == "left" : Berlin closes ranks behind Fischer and Maslow. ?][? if player != "left" : You win some Berlin cells, and the Left accuses you of poaching. ?]
-
-@hamburg
-on-arrival: {!
-var gain = Q.player == 'stalin' ? 6 : 3;
-Q[Q.player + '_strength'] += gain;
-if (Q.player != 'stalin') { Q.stalin_dissent += 4; }
+window.RF.lean(Q, {left: 5});
 Q.readiness += 1;
 !}
 
-The dockers and shipyard workers of Hamburg are among the most militant in Germany. [? if player == "stalin" : Thälmann is one of them, and they know it. ?]
+Berlin's cells are loud, young and impatient. The new organisers mostly end up working for Fischer and Maslow.
+
+@hamburg
+title: The Wasserkante around Hamburg.
+subtitle: Strengthens <span class="f-stalin">Thälmann</span>.
+on-arrival: {!
+window.RF.lean(Q, {stalin: 5});
+Q.readiness += 2;
+!}
+
+The dockers and shipyard workers of Hamburg are among the most militant in Germany. Ernst Thälmann is one of them, and they know it.
 
 @saxony
+title: Saxony, the industrial heartland.
+subtitle: Strengthens the <span class="f-right">Right</span>. Improves relations with the <span class="p-spd">SPD</span>.
 on-arrival: {!
-var gain = Q.player == 'right' ? 6 : 3;
-Q[Q.player + '_strength'] += gain;
-if (Q.player != 'right') { Q.right_dissent += 4; }
-Q.spd_relation += 1;
+window.RF.lean(Q, {right: 5});
+Q.spd_relation += 2;
 !}
 
-Saxony's KPD works closely with the left-wing SPD of the state. [? if player == "right" : It is your base, and it holds. ?][? if player != "right" : Your people make headway, and Brandler's supporters complain. ?]
+Saxony's Communists work closely with the left-wing <span class="p-spd">SPD</span> of the state. Brandler's people run the district and the organisers join them.
 
 @ruhr
+title: The occupied Ruhr, where the members are new and angry.
+subtitle: Brings in members. Strengthens the <span class="f-ultra">Ultra-Left</span>.
 on-arrival: {!
+window.RF.lean(Q, {ultra: 4});
 Q.members += 10;
 Q.rev_situation += 2;
-Q[Q.player + '_strength'] += 2;
 !}
 
-The occupation and the inflation are bringing thousands of new members into the Ruhr locals. They owe no loyalty to any faction yet.
+The occupation and the inflation are bringing thousands of new members into the Ruhr locals. Many of them think the unions and parliament are a waste of time.

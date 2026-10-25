@@ -12,56 +12,33 @@ Q.october_leader_name = window.RF.names[Q.leader];
 
 = The Chemnitz Conference
 
-On 21 October a conference of factory councils, unions and workers' parties meets in Chemnitz. The plan is for the KPD to propose a general strike there, as the signal for the rising. Without the left SPD, the strike will be a Communist affair alone.
+On 21 October a conference of factory councils, unions and workers' parties meets in Chemnitz. [? if october_plan : The plan is for the <span class="p-kpd">KPD</span> to propose a general strike there, as the signal for the rising. ?][? if october_plan = 0 : Moscow's plan was postponed, but the question of a general strike is on the agenda anyway. ?] Without the left <span class="p-spd">SPD</span>, the strike will be a Communist affair alone.
 
-[? if spd_relation >= 55 : The left SPD delegates are listening. Some of them might follow. ?][? if spd_relation < 55 : The SPD delegates, led by Labour Minister Georg Graupe, make clear they will walk out if the KPD proposes a general strike. ?]
+[? if spd_relation >= 60 : The left <span class="p-spd">SPD</span> delegates are listening. Some of them might follow. ?][? if spd_relation < 60 : The <span class="p-spd">SPD</span> delegates, led by Labour Minister Georg Graupe, make clear they will walk out if the <span class="p-kpd">KPD</span> proposes a general strike. ?]
 
-[? if october_plan = 0 : Moscow's plan was postponed, but the question of a strike is on the agenda anyway. ?]
+Readiness: [+ readiness +]. Revolutionary situation: [+ rev_situation +]. Union influence: [+ union_influence +]. Relations with the <span class="p-spd">SPD</span>: [+ spd_relation +].
 
-Readiness: [+ readiness +]. Revolutionary situation: [+ rev_situation +]. Union influence: [+ union_influence +].
-
-- @call_strike: Call the general strike.
-- @retreat: Withdraw the proposal. Live to fight another day.
-- @demand: Demand that the leadership call the strike.
-- @accept_retreat: Back a retreat.
+- @call_strike
+- @retreat
 
 @call_strike
-view-if: player_leads = 1
-on-arrival: chemnitz_strike = 1
+title: Call the general strike. This is the moment.
+subtitle: Pleases the <span class="f-left">Left</span>, <span class="f-ultra">Ultra-Left</span> and <span class="f-stalin">Thälmann</span>. Angers the <span class="f-right">Right</span>. Everything depends on the rising.
+on-arrival: {!
+Q.chemnitz_strike = 1;
+window.RF.lean(Q, {left: 4, ultra: 3, stalin: 2, right: -4});
+!}
 go-to: rising
 
 @retreat
-view-if: player_leads = 1
-on-arrival: chemnitz_strike = 0
+title: Withdraw the proposal. Live to fight another day.
+subtitle: Pleases the <span class="f-right">Right</span> and <span class="f-center">Middle Group</span>. Angers the <span class="f-left">Left</span>, <span class="f-ultra">Ultra-Left</span> and <span class="f-stalin">Thälmann</span>.
+on-arrival: {!
+Q.chemnitz_strike = 0;
+Q.october_outcome = 'retreat';
+window.RF.lean(Q, {right: 3, center: 3, left: -5, ultra: -5, stalin: -3});
+!}
 go-to: retreated
-
-@demand
-view-if: player_leads = 0
-on-arrival: {!
-Q.strike_pressure += 2;
-Q[Q.player + '_strength'] += 2;
-!}
-go-to: leader_decides
-
-@accept_retreat
-view-if: player_leads = 0
-on-arrival: {!
-Q.strike_pressure -= 2;
-Q[Q.player + '_moscow'] -= 3;
-!}
-go-to: leader_decides
-
-@leader_decides
-on-arrival: {!
-var p = Q.strike_pressure;
-var strike = 0;
-if (Q.leader == 'right') { strike = p >= 4 ? 1 : 0; }
-else if (Q.leader == 'left') { strike = 1; }
-else if (Q.leader == 'center') { strike = (Q.rev_situation >= 75 && p >= 2) ? 1 : 0; }
-else if (Q.leader == 'stalin') { strike = Q.october_plan; }
-Q.chemnitz_strike = strike;
-!}
-go-to: rising if chemnitz_strike = 1; retreated if chemnitz_strike = 0
 
 @rising
 new-page: true
@@ -75,7 +52,7 @@ on-arrival: rf_over = 1; rf_ending = "revolution"
 
 = The general strike
 
-The conference votes for the general strike. Saxony and Thuringia stop. The Proletarian Hundreds take the police stations and arsenals the plan named. In Berlin, the Ruhr and Hamburg the factories empty, and enough of the SPD's members come out that their leaders cannot hold them back. When the Reichswehr marches on Saxony, it finds railwaymen who will not move its trains and soldiers who will not shoot.
+The conference votes for the general strike. Saxony and Thuringia stop. The Proletarian Hundreds take the police stations and arsenals the plan named. In Berlin, the Ruhr and Hamburg the factories empty, and enough of the <span class="p-spd">SPD</span>'s members come out that their leaders cannot hold them back. When the <span class="p-reichswehr">Reichswehr</span> marches on Saxony, it finds railwaymen who will not move its trains and soldiers who will not shoot.
 
 (Rising: [+ rising_score +] against the [+ rising_needed +] needed.)
 
@@ -90,17 +67,17 @@ Q.union_influence -= 15;
 Q.rev_situation -= 25;
 Q.party_banned = 1;
 Q[Q.leader + '_moscow'] -= 10;
+Q[Q.leader + '_dissent'] += 15;
 !}
 
 = The rising fails
 
-The strike is called, but the SPD workers stay at work. Where the Hundreds rise, they are isolated in a few towns. The Reichswehr moves into Saxony and Thuringia. Within days the leaders are arrested or in hiding, the party offices are closed, and the government bans the KPD.
+The strike is called, but the <span class="p-spd">SPD</span>'s workers stay at work. Where the Hundreds rise, they are isolated in a few towns. The <span class="p-reichswehr">Reichswehr</span> moves into Saxony and Thuringia. Within days the leaders are arrested or in hiding, the party offices are closed, and the government bans the <span class="p-kpd">KPD</span>.
 
 (Rising: [+ rising_score +] against the [+ rising_needed +] needed.)
 
 @retreated
-on-arrival: october_outcome = "retreat"
 
 = The retreat
 
-The KPD withdraws its proposal. The conference refers the question to a commission, which is a polite way of burying it. Couriers are sent across the country to call off the rising.
+The <span class="p-kpd">KPD</span> withdraws its proposal. The conference refers the question to a commission, which is a polite way of burying it. Couriers are sent across the country to call off the rising.

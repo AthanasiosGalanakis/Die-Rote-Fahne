@@ -10,14 +10,17 @@ on-arrival: month_actions += 1; rf_strike_timer = 2
 
 Wildcat strikes break out over wages that lose their value between payday and the shop. The party can support them, or try to turn them into something larger.
 
-- @support: Support the strikers with money and speakers.
-- @politicise: Raise political demands: a workers' government.
-- @general: Call for a general strike now.
+- @support
+- @politicise
+- @general
 
 @support
+title: Support the strikers with money and speakers.
+subtitle: Brings in members. Pleases the <span class="f-center">Middle Group</span>. Costs 1 fund.
 choose-if: funds >= 1
 unavailable-subtitle: The strike fund is empty.
 on-arrival: {!
+window.RF.lean(Q, {center: 2});
 Q.funds -= 1;
 Q.members += 8;
 Q.union_influence += 3;
@@ -27,24 +30,27 @@ Q.rev_situation += 2;
 Communist collections keep the strikers fed for another week. The strikers remember who helped.
 
 @politicise
+title: Raise political demands: a workers' government.
+subtitle: Pleases the <span class="f-right">Right</span>.
 on-arrival: {!
+window.RF.lean(Q, {right: 3});
 Q.rev_situation += 5;
-Q.right_strength += 2;
 Q.spd_relation -= 2;
 !}
 
-The strike meetings adopt resolutions for a workers' government. Some SPD workers vote for them.
+The strike meetings adopt resolutions for a workers' government. Some <span class="p-spd">SPD</span> workers vote for them.
 
 @general
+title: Call for a general strike now.
+subtitle: Pleases the <span class="f-left">Left</span> and <span class="f-ultra">Ultra-Left</span>. Angers the <span class="f-right">Right</span>. Draws the police.
 choose-if: rev_situation >= 60
 unavailable-subtitle: The mood is not yet there (revolutionary situation 60 or more).
 on-arrival: {!
+window.RF.lean(Q, {left: 4, ultra: 3, right: -4});
 Q.rev_situation += 8;
 Q.readiness += 2;
 Q.repression += 8;
 Q.spd_relation -= 6;
-Q.left_strength += 3;
-Q.strike_pressure += 1;
 !}
 
 The call goes out. In some cities the factories empty; in others the unions keep their members at work. The police are ready.

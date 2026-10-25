@@ -9,44 +9,32 @@ max-visits: 1
 
 On the morning of 23 October, armed Communists in Hamburg storm police stations in Barmbek, Schiffbek and other districts. The rest of Germany stays quiet. Whether the courier calling off the rising failed to arrive in time, or the Hamburg leaders chose to go ahead, is still argued over by historians.
 
-[? if player == "left" or player == "stalin" : Hamburg is your ground. Word can still reach the fighters. ?]
+Word can still reach the fighters.
 
-- @let_fight: Let Hamburg fight. Someone must show that the party meant it.
-- @stop: Send word to break off and save the cadres.
-- @watch: The rising is in the leadership's hands.
+- @let_fight
+- @stop
 
 @let_fight
-view-if: player == "left" or player == "stalin"
+title: Let Hamburg fight. Someone must show that the party meant it.
+subtitle: Pleases <span class="f-stalin">Thälmann</span>, the <span class="f-left">Left</span> and <span class="f-ultra">Ultra-Left</span>. Angers the <span class="f-right">Right</span>. Costs lives and members.
 on-arrival: {!
+window.RF.lean(Q, {stalin: 5, left: 2, ultra: 2, right: -3});
 Q.repression += 15;
 Q.members -= 12;
 Q.readiness -= 5;
-Q[Q.player + '_strength'] += 5;
-Q[Q.player + '_moscow'] += 4;
 Q.spd_relation -= 5;
 !}
 
-For three days a few hundred fighters hold out against the police and naval units. Dozens are killed on both sides. The party will make it a legend. [? if player == "stalin" : Thälmann's name will be tied to it for the rest of his life, though his actual part in it is unclear. ?]
+For three days a few hundred fighters hold out against the police and naval units. Dozens are killed on both sides. The party will make it a legend, and Thälmann's name will be tied to it for the rest of his life, though his actual part in it is unclear.
 
 @stop
-view-if: player == "left" or player == "stalin"
+title: Send word to break off and save the cadres.
+subtitle: Pleases the <span class="f-right">Right</span> and <span class="f-center">Middle Group</span>. Angers <span class="f-stalin">Thälmann</span> and the <span class="f-left">Left</span>.
 on-arrival: {!
+window.RF.lean(Q, {right: 2, center: 2, stalin: -4, left: -3});
 Q.repression += 6;
 Q.members -= 4;
-Q[Q.player + '_strength'] -= 2;
 Q.readiness += 2;
 !}
 
-The fighters withdraw on the second day and hide their weapons. Fewer die. Some of your own people call it a betrayal.
-
-@watch
-view-if: player != "left" and player != "stalin"
-on-arrival: {!
-Q.repression += 15;
-Q.members -= 10;
-Q.readiness -= 5;
-Q.left_strength += 3;
-Q.spd_relation -= 5;
-!}
-
-For three days a few hundred fighters hold out against the police and naval units. Dozens are killed on both sides. The Left will use Hamburg against the leadership that left it alone.
+The fighters withdraw on the second day and hide their weapons. Fewer die. In Hamburg, some call it a betrayal.

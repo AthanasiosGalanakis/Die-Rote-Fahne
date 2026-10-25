@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta prefix="ifiction: http://babel.ifarchive.org/protocol/iFiction/"
-        property="ifiction:ifid" content="7FCDF039-2B77-4179-B795-CBAFA65253AA">
-    <title>Social Democracy: An Alternate History - Autumn Chen</title>
+        property="ifiction:ifid" content="0BF716E2-976E-4264-96F9-6616C3382681">
+    <title>Die Rote Fahne</title>
     <link rel="stylesheet" type="text/css" href="game.css">
     <script src="jquery-1.11.1.min.js"></script>
     <script src="d3.v7.min.js"></script>
@@ -358,11 +358,10 @@
     <div id='page'>
         <div id="mid_panel">
             <header>
-                <h1 id="game-title">Social Democracy: An Alternate History</h1>
-                <h2 id="game-author">Autumn Chen</h2>
+                <h1 id="game-title">Die Rote Fahne</h1>
+                <h2 id="game-author">Maarten, after Autumn Chen</h2>
 
                 <div id="header-links">
-                    <a id="stats-link" onclick="window.showStats();" href="#">Library</a>
                     <a id="save-link" onclick="dendryUI.showSaveSlots();" href="#">Save/Load</a>
                     <a id="options-link"  onclick="window.showOptions();" href="#">Options</a>
                 </div>
@@ -370,10 +369,9 @@
             <div id="tools_wrapper">
                 <div id='stats_sidebar' class='tools left'>
                     <div class="tab_container">
-                        <button class="tab_button active" id="main_tab" onclick="window.changeTab('status', 'main_tab');">Main</button>
-                        <button class="tab_button" id="politics_tab" onclick="window.changeTab('status.politics', 'politics_tab');">Politics</button>
-                        <button class="tab_button" id="paramilitary_tab" onclick="window.changeTab('status.paramilitaries', 'paramilitary_tab');">Defense</button>
-                        <button class="tab_button" id="poll_tab" onclick="window.changeTab('status.polls', 'poll_tab');">Polls</button>
+                        <button class="tab_button active" id="main_tab" onclick="window.changeTab('rf_status', 'main_tab');">Party</button>
+                        <button class="tab_button" id="politics_tab" onclick="window.changeTab('rf_status.politics', 'politics_tab');">Germany</button>
+                        <button class="tab_button" id="paramilitary_tab" onclick="window.changeTab('rf_status.paramilitaries', 'paramilitary_tab');">Armed</button>
                     </div>
                     <div id="qualities">
                     </div>
