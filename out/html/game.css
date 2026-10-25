@@ -598,18 +598,6 @@ table {
 }
 
 /* Die Rote Fahne: party colours (after the Dynamic Social Democracy mod) */
-.p-kpd { color: #700000; font-weight: bold; }
-.p-spd { color: #c00000; font-weight: bold; }
-.p-uspd { color: #9B0000; font-weight: bold; }
-.p-nsdap { color: #7A3C00; font-weight: bold; }
-.p-dnvp { color: #3E88B3; font-weight: bold; }
-.p-dvp { color: #C0A054; font-weight: bold; }
-.p-ddp { color: #B8A000; font-weight: bold; }
-.p-z { color: #1A1A1A; font-weight: bold; }
-.p-kapd { color: #3a3a3a; font-weight: bold; }
-.p-pcf { color: #b3004b; font-weight: bold; }
-.p-reichswehr { color: #555555; font-weight: bold; }
-.p-comintern { color: #b8000f; font-weight: bold; }
 
 /* KPD factions */
 .f-right { color: #c4622d; font-weight: bold; }
@@ -618,17 +606,6 @@ table {
 .f-ultra { color: #2b2b2b; font-weight: bold; }
 .f-stalin { color: #5a0f2e; font-weight: bold; }
 
-body.dark-mode .p-kpd { color: #e05050; }
-body.dark-mode .p-spd { color: #ff5c5c; }
-body.dark-mode .p-uspd { color: #ff7070; }
-body.dark-mode .p-nsdap { color: #c8874a; }
-body.dark-mode .p-dnvp { color: #6fb3dc; }
-body.dark-mode .p-ddp { color: #f0d64a; }
-body.dark-mode .p-z { color: #d0d0d0; }
-body.dark-mode .p-kapd { color: #b0b0b0; }
-body.dark-mode .p-pcf { color: #ff5c9a; }
-body.dark-mode .p-reichswehr { color: #aaaaaa; }
-body.dark-mode .p-comintern { color: #ff6060; }
 body.dark-mode .f-right { color: #f0925a; }
 body.dark-mode .f-center { color: #d2b27a; }
 body.dark-mode .f-left { color: #ff5c6e; }
@@ -639,12 +616,12 @@ body.dark-mode .f-stalin { color: #d0607f; }
 .rf-bar { height: 0.45em; margin: 0.15em 0 0.6em 0; background: rgba(0, 0, 0, 0.08); }
 .rf-bar span { display: block; height: 100%; }
 body.dark-mode .rf-bar { background: rgba(255, 255, 255, 0.12); }
-.rf-bar .b-right { background: #c4622d; }
-.rf-bar .b-center { background: #8a6d3b; }
-.rf-bar .b-left { background: #b00020; }
-.rf-bar .b-ultra { background: #2b2b2b; }
-.rf-bar .b-stalin { background: #5a0f2e; }
-body.dark-mode .rf-bar .b-ultra { background: #c8c8c8; }
+.b-right { background: #c4622d; }
+.b-center { background: #8a6d3b; }
+.b-left { background: #b00020; }
+.b-ultra { background: #2b2b2b; }
+.b-stalin { background: #5a0f2e; }
+body.dark-mode .b-ultra { background: #c8c8c8; }
 
 /* Die Rote Fahne: hover text boxes. game.js places one floating box
    inside the window, so the cards' own tooltips are not shown. */
@@ -672,11 +649,6 @@ a.card:focus .card-tooltip, a.card:hover .card-tooltip {
   cursor: help;
 }
 
-.p-bvp { color: #4a6fa5; font-weight: bold; }
-.p-other { color: #777777; font-weight: bold; }
-body.dark-mode .p-bvp { color: #8fb0e0; }
-body.dark-mode .p-other { color: #b0b0b0; }
-body.dark-mode .p-dvp { color: #e0c070; }
 
 /* sidebar charts: stacked bars and tables for the Reichstag and the polls */
 .rf-stack { display: flex; height: 0.8em; margin: 0.3em 0 0.4em 0; overflow: hidden; }
@@ -689,18 +661,6 @@ body.dark-mode .p-dvp { color: #e0c070; }
 .rf-demo { margin-bottom: 0.7em; }
 .rf-demo-name { font-weight: bold; }
 .rf-demo-list { font-size: 0.9em; line-height: 1.4; }
-.bg-kpd { background: #700000; }
-.bg-spd { background: #c00000; }
-.bg-uspd { background: #9B0000; }
-.bg-z { background: #333333; }
-.bg-bvp { background: #4a6fa5; }
-.bg-ddp { background: #B8A000; }
-.bg-dvp { background: #C0A054; }
-.bg-dnvp { background: #3E88B3; }
-.bg-nsdap { background: #7A3C00; }
-.bg-other { background: #9a9a9a; }
-body.dark-mode .bg-z { background: #8a8a8a; }
-body.dark-mode .bg-kpd { background: #b03030; }
 
 /* a hand of four cards: three on the first row, the fourth below */
 ul.hand li.card-in-hand:nth-child(4) {
@@ -744,4 +704,282 @@ ul.hand li.card-in-hand:nth-child(4) {
 }
 .rf-portrait-role {
   font-size: 0.9em;
+}
+
+/* Party colours. game.js and rote_fahne.js set --c-<party> from the
+ * party's current leadership; the values here are the defaults. */
+.p-kpd { color: var(--c-kpd, #b5452a); font-weight: bold; }
+.p-spd { color: var(--c-spd, #c00000); font-weight: bold; }
+.p-uspd { color: var(--c-uspd, #9B0000); font-weight: bold; }
+.p-nsdap { color: var(--c-nsdap, #7A3C00); font-weight: bold; }
+.p-dnvp { color: var(--c-dnvp, #3E88B3); font-weight: bold; }
+.p-dvp { color: var(--c-dvp, #C0A054); font-weight: bold; }
+.p-ddp { color: var(--c-ddp, #B8A000); font-weight: bold; }
+.p-z { color: var(--c-z, #1A1A1A); font-weight: bold; }
+.p-kapd { color: var(--c-kapd, #3a3a3a); font-weight: bold; }
+.p-pcf { color: var(--c-pcf, #b3004b); font-weight: bold; }
+.p-reichswehr { color: var(--c-reichswehr, #555555); font-weight: bold; }
+.p-comintern { color: var(--c-comintern, #b8000f); font-weight: bold; }
+.p-bvp { color: var(--c-bvp, #4a6fa5); font-weight: bold; }
+.p-other { color: var(--c-other, #777777); font-weight: bold; }
+body.dark-mode .p-kpd { color: var(--c-kpd-dark, #f07a5a); }
+body.dark-mode .p-spd { color: var(--c-spd-dark, #ff5c5c); }
+body.dark-mode .p-uspd { color: var(--c-uspd-dark, #ff7070); }
+body.dark-mode .p-nsdap { color: var(--c-nsdap-dark, #c8874a); }
+body.dark-mode .p-dnvp { color: var(--c-dnvp-dark, #6fb3dc); }
+body.dark-mode .p-dvp { color: var(--c-dvp-dark, #e0c070); }
+body.dark-mode .p-ddp { color: var(--c-ddp-dark, #f0d64a); }
+body.dark-mode .p-z { color: var(--c-z-dark, #d0d0d0); }
+body.dark-mode .p-kapd { color: var(--c-kapd-dark, #b0b0b0); }
+body.dark-mode .p-pcf { color: var(--c-pcf-dark, #ff5c9a); }
+body.dark-mode .p-reichswehr { color: var(--c-reichswehr-dark, #aaaaaa); }
+body.dark-mode .p-comintern { color: var(--c-comintern-dark, #ff6060); }
+body.dark-mode .p-bvp { color: var(--c-bvp-dark, #8fb0e0); }
+body.dark-mode .p-other { color: var(--c-other-dark, #b0b0b0); }
+.bg-kpd { background: var(--c-kpd, #b5452a); }
+.bg-spd { background: var(--c-spd, #c00000); }
+.bg-uspd { background: var(--c-uspd, #9B0000); }
+.bg-nsdap { background: var(--c-nsdap, #7A3C00); }
+.bg-dnvp { background: var(--c-dnvp, #3E88B3); }
+.bg-dvp { background: var(--c-dvp, #C0A054); }
+.bg-ddp { background: var(--c-ddp, #B8A000); }
+.bg-z { background: var(--c-z, #1A1A1A); }
+.bg-kapd { background: var(--c-kapd, #3a3a3a); }
+.bg-pcf { background: var(--c-pcf, #b3004b); }
+.bg-reichswehr { background: var(--c-reichswehr, #555555); }
+.bg-comintern { background: var(--c-comintern, #b8000f); }
+.bg-bvp { background: var(--c-bvp, #4a6fa5); }
+.bg-other { background: var(--c-other, #777777); }
+body.dark-mode .bg-z { background: #8a8a8a; }
+
+/* ---- Layout: the sidebar and the page sit side by side, centred ---- */
+@media screen and (min-width: 900px) {
+  #mid_panel {
+    margin: 0 auto;
+    max-width: calc(15.7rem + 1.2em + 540px + 3.3em);
+    display: grid;
+    grid-template-columns: 15.7rem minmax(0, 1fr);
+    grid-template-areas: "header header" "side content" "footer footer";
+    column-gap: 1.2em;
+    align-items: start;
+  }
+  header {
+    grid-area: header;
+    max-width: none;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.6em;
+    overflow: visible;
+  }
+  header .header-title {
+    white-space: nowrap;
+  }
+  header #header-links {
+    order: -1;
+    float: none;
+    margin: 0;
+  }
+  #tools_wrapper {
+    grid-area: side;
+    position: static;
+    width: auto;
+    max-width: none;
+    margin: 0;
+  }
+  .tools.left, .tools {
+    float: none;
+    width: auto;
+    margin: 0;
+  }
+  #content {
+    grid-area: content;
+    max-width: none;
+    margin: 0;
+  }
+  footer {
+    grid-area: footer;
+  }
+  /* no sidebar on the title screen: the page takes the centre */
+  #mid_panel.rf-no-sidebar {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "header" "content" "footer";
+    max-width: calc(540px + 3.3em);
+  }
+}
+
+/* ---- Hover cards ---- */
+#rf-tip {
+  padding: 0;
+  border-radius: 6px;
+  overflow: hidden;
+  font-size: 0.85em;
+  max-width: min(19em, calc(100vw - 16px));
+}
+.rf-tip-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.5em 0.7em;
+  background-color: var(--tab-bg-color);
+}
+.rf-tip-logo {
+  flex: 0 0 auto;
+  width: 2.6em;
+  height: 2.6em;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: bold;
+  font-size: 0.85em;
+  letter-spacing: 0.02em;
+  overflow: hidden;
+  background-color: #999;
+}
+.rf-tip-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #fff;
+}
+.rf-tip-title {
+  font-weight: bold;
+  line-height: 1.2;
+}
+.rf-tip-sub {
+  font-size: 0.9em;
+  opacity: 0.85;
+}
+.rf-tip-body {
+  padding: 0.5em 0.7em 0.6em 0.7em;
+}
+.rf-tip-extra {
+  margin-top: 0.4em;
+  font-style: italic;
+}
+
+/* ---- Inside the KPD: one block per faction ---- */
+.rf-faction {
+  margin-bottom: 0.2em;
+}
+.rf-lead {
+  display: inline-block;
+  margin-left: 0.4em;
+  padding: 0 0.35em;
+  font-size: 0.75em;
+  border: 1px solid currentColor;
+  border-radius: 3px;
+  vertical-align: 0.1em;
+}
+.rf-stat {
+  padding-left: 0.8em;
+  font-size: 0.95em;
+}
+
+/* ---- Images from the data file ---- */
+.rf-portrait-img.rf-has-img {
+  background: none;
+}
+.rf-portrait-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.rf-event-img {
+  margin: 0 auto 1em auto;
+  text-align: center;
+}
+.rf-event-img img {
+  max-height: 260px;
+  border: 6px solid var(--card-border-color);
+}
+
+/* ---- Achievements ---- */
+.rf-ach-count {
+  text-align: center;
+  text-indent: 0;
+}
+.rf-ach-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14em, 1fr));
+  gap: 0.6em;
+  margin-bottom: 1em;
+}
+.rf-ach {
+  display: flex;
+  gap: 0.6em;
+  padding: 0.5em;
+  border: 1px solid var(--card-border-color);
+  border-radius: 6px;
+  opacity: 0.55;
+}
+.rf-ach-got {
+  opacity: 1;
+  border-color: #b8000f;
+}
+.rf-ach-icon {
+  flex: 0 0 3em;
+  height: 3em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3em;
+  background-color: var(--card-bg-color);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.rf-ach-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.rf-ach-name {
+  font-weight: bold;
+}
+.rf-ach-desc, .rf-ach-date {
+  font-size: 0.85em;
+}
+.rf-toast {
+  position: fixed;
+  right: 1em;
+  bottom: 1em;
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
+  padding: 0.7em 1em;
+  color: #fff;
+  background: #7a0010;
+  border-radius: 6px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  transition: opacity 0.8s;
+}
+.rf-toast img {
+  width: 2.5em;
+  height: 2.5em;
+  object-fit: cover;
+  border-radius: 4px;
+}
+.rf-toast-star {
+  font-size: 1.6em;
+}
+.rf-toast-head {
+  font-size: 0.8em;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.rf-toast-name {
+  font-weight: bold;
+}
+.rf-toast-out {
+  opacity: 0;
+}
+
+/* the title screen has its own big title */
+#mid_panel.rf-no-sidebar header .header-title {
+  display: none;
 }

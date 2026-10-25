@@ -31,6 +31,14 @@ The current version covers Act I, the revolutionary year: January 1923 to the Fr
 - `out/html/game.css`: party colours (`p-kpd`, `p-spd`, ...) and faction colours (`f-right`, `f-left`, ...), after the Dynamic Social Democracy mod.
 - The original game's scenes are still in `source/scenes/` for reuse in later acts, but the title screen no longer offers them.
 
+## Admin panel
+
+`out/html/admin/` (on the site at `/admin/`) edits achievements, images and the game's text files and publishes them to GitHub as one commit, which redeploys the site. Sign in with a fine-grained GitHub token that has Contents read/write and Actions read access to this repository; the token stays in the browser.
+
+- Achievements: `out/html/data/achievements.json`. Each has an id, name, description, a JavaScript condition over the game state `Q`, when it is checked (`end` or `anytime`) and whether it is hidden.
+- Images: files in `out/html/img/`, listed in `out/html/data/images.json` under keys such as `event:rf_leipzig`, `card:rf_editorial`, `advisor:rf_advisors.unions`, `leader:right`, `party:spd` and `achievement:<id>`.
+- Texts: the Dendry files in `source/scenes/`, with a text view for titles, subtitles, body text and choices, and a code view for everything else.
+
 ## Included Libraries
 
 [jquery v1.11.1](https://releases.jquery.com/)

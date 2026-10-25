@@ -16,6 +16,7 @@ if (Q.rf_ending == 'revolution') {
 } else {
     Q.grade = 0;
 }
+window.RF.checkAchievements(Q, 'end');
 !}
 go-to: revolution if rf_ending == "revolution"; frankfurt if rf_ending == "frankfurt"; collapse if rf_ending == "collapse"
 
@@ -45,11 +46,9 @@ The party has about [+ members +] thousand members. Unity stands at [+ unity +],
 
 The new Zentrale is the <span class="f-[+ leader +]">[+ leader_name +]</span>.
 
-[? if leader == "right" : Against the current, the Right keeps the party. Zinoviev will not forgive it. In our history Brandler and Thalheimer were kept in Moscow from 1924 to 1928, then expelled for opposing the Third Period and founded the KPO. Here, the united front is still the party's policy. ?][? if leader == "center" : The Middle Group holds the party together. Every faction resents it a little. In our history, its caretaker moment lasted only from January to April 1924. ?][? if leader == "left" : The Left takes the party, as it did historically. Its patron is Zinoviev, and Zinoviev is losing his struggle in Moscow. In our history, the same International that made Fischer and Maslow removed them with its Open Letter of 1925. ?][? if leader == "ultra" : The Ultra-Left takes the party, something that never happened in our history. A <span class="p-kpd">KPD</span> led by Korsch and Scholem will not take orders from Moscow for long, and Moscow will not fund a party that does not. ?][? if leader == "stalin" : Years early, Thälmann's circle controls the party. Moscow has learned it can rely on the German Communists. In our history this came in 1925. Whether that loyalty will be worth anything when the Nazis come is the question for later acts. ?]
+[? if leader == "right" : Against the current, the Right keeps the party. Zinoviev will not forgive it. In our history Brandler and Thalheimer were kept in Moscow from 1924 to 1928, then expelled for opposing the Third Period and founded the KPO. Here, the united front is still the party's policy. ?][? if leader == "center" : The Middle Group holds the party together. Every faction resents it a little. In our history, its caretaker moment lasted only from January to April 1924. ?][? if leader == "left" : The Left takes the party, as it did historically. Its patron is Zinoviev, and Zinoviev is losing his struggle in Moscow. In our history, the same International that made Fischer and Maslow removed them with its Open Letter of 1925. ?][? if leader == "ultra" : The Ultra-Left takes the party, something that never happened in our history. A <span class="p-kpd">KPD</span> led by Korsch and Scholem will not take orders from Moscow for long, and Moscow will not fund a party that does not. ?][? if leader == "stalin" : Years early, Thälmann's circle controls the party. Moscow has learned it can rely on the German Communists. In our history this came in 1925. Whether that loyalty will be worth anything when the Nazis come is the question for the years ahead. ?]
 
 Final standings: <span class="f-right">Right</span> [+ right_strength +]%, <span class="f-center">Middle Group</span> [+ center_strength +]%, <span class="f-left">Left</span> [+ left_strength +]%, <span class="f-ultra">Ultra-Left</span> [+ ultra_strength +]%, <span class="f-stalin">Thälmann circle</span> [+ stalin_strength +]%.
-
-This is the end of the first act. Acts II to V (Bolshevization, stabilisation, the Third Period, and 1930 to 1934) are not built yet.
 
 - @finish: End game.
 
