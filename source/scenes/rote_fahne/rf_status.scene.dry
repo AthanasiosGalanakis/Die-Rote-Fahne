@@ -30,7 +30,7 @@ Chancellor: <span class="[+ chancellor_class +]">[+ chancellor +]</span> ([+ cha
 
 {!<span class="tooltip-text" title="Police and courts acting against the party: bans, raids, arrests.">State repression</span>!}: [+ repression : rf_level +][+ n_repression +]
 
-Reichstag composition (elected June 1920):
+Reichstag, share of seats (elected June 1920):
 
 {!<div id="rf-reichstag"></div>!}
 

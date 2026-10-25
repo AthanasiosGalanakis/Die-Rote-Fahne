@@ -300,6 +300,7 @@
       var Q = dendryUI.dendryEngine.state.qualities;
       // the sidebar only makes sense once a game is under way
       $('#stats_sidebar').toggle(!!Q.started);
+      $('#rf-right-wrapper').toggle(!!Q.started);
       $('#mid_panel').toggleClass('rf-no-sidebar', !Q.started);
       Q.show_numbers = window.rfShowNumbers ? 1 : 0;
       if (window.rfShowNumbers && Q.started) {
@@ -504,7 +505,7 @@
       }
       for (var r of RF.reichstag1920 || []) {
           if (r[0] == p) {
-              rows.push(['Reichstag seats (1920)', r[2]]);
+              rows.push(['Share of Reichstag seats (1920)', RF.seatShare(r[2])]);
           }
       }
       if (Q.rf_mode && p != 'kpd' && p != 'other') {
