@@ -1,18 +1,1 @@
-[
-  {
-    "id": "true_trust",
-    "name": "True Trust",
-    "description": "",
-    "condition": "Q.moscow_trust == 100",
-    "when": "anytime",
-    "hidden": false,
-    "rules": [
-      {
-        "q": "moscow_trust",
-        "op": "==",
-        "v": "100"
-      }
-    ],
-    "join": "and"
-  }
-]
+[]
