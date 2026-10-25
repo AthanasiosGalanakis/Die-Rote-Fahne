@@ -259,28 +259,35 @@
     var at = function(yy, mm) {
       return yy * 12 + mm;
     };
+    // party names in the government line get their colours and hover cards
+    var P = function(id, label) {
+      return '<span class="p-' + id + '">' + label + '</span>';
+    };
     Q.president = 'Friedrich Ebert';
     Q.president_party = 'spd';
+    Q.president_class = 'p-spd';
     if (t < at(1923, 8)) {
       Q.chancellor = 'Wilhelm Cuno';
       Q.chancellor_party = 'non-party';
       Q.chancellor_class = 'p-other';
-      Q.government = 'Cuno cabinet: non-party experts backed by Z, DDP, DVP and BVP';
+      Q.government = 'Cuno cabinet: non-party experts backed by ' + P('z', 'Z') + ', ' + P('ddp', 'DDP') + ', ' +
+          P('dvp', 'DVP') + ' and ' + P('bvp', 'BVP');
     } else if (t < at(1923, 11)) {
       Q.chancellor = 'Gustav Stresemann';
       Q.chancellor_party = 'DVP';
       Q.chancellor_class = 'p-dvp';
-      Q.government = 'Grand coalition: SPD, Z, DDP and DVP';
+      Q.government = 'Grand coalition: ' + P('spd', 'SPD') + ', ' + P('z', 'Z') + ', ' + P('ddp', 'DDP') + ' and ' + P('dvp', 'DVP');
     } else if (t < at(1923, 12)) {
       Q.chancellor = 'Gustav Stresemann';
       Q.chancellor_party = 'DVP';
       Q.chancellor_class = 'p-dvp';
-      Q.government = 'Rump cabinet: Z, DDP and DVP, after the SPD walked out';
+      Q.government = 'Rump cabinet: ' + P('z', 'Z') + ', ' + P('ddp', 'DDP') + ' and ' + P('dvp', 'DVP') + ', after the ' +
+          P('spd', 'SPD') + ' walked out';
     } else {
       Q.chancellor = 'Wilhelm Marx';
       Q.chancellor_party = 'Z';
       Q.chancellor_class = 'p-z';
-      Q.government = 'Bourgeois minority: Z, BVP, DDP and DVP';
+      Q.government = 'Bourgeois minority: ' + P('z', 'Z') + ', ' + P('bvp', 'BVP') + ', ' + P('ddp', 'DDP') + ' and ' + P('dvp', 'DVP');
     }
     // Ebert's state of emergency ran from 26 September 1923; Seeckt held
     // executive power from November 1923 to the end of February 1924.
@@ -1018,6 +1025,16 @@
     $(content).children('ul.decks:not(.rf-top-cards)').remove();
     $(content).children('p.deck-description').prev('hr').remove();
     $(content).children('p.deck-description').remove();
+  };
+
+  // People outside the KPD who get a hover card (class m-<id>).
+  RF.people = {
+    zinoviev: {name: 'Grigory Zinoviev', party: 'comintern',
+               role: 'Chairman of the Comintern\'s Executive Committee, 1919–1926',
+               text: 'Head of the International and the patron of the KPD\'s Left. He pushed for the German October in 1923 and looked for others to blame when it failed.'},
+    radek: {name: 'Karl Radek', party: 'comintern',
+            role: 'The Comintern\'s expert on Germany',
+            text: 'Backed Brandler and the united front, and in June 1923 courted German nationalists with his Schlageter speech. After the failed October he fell with Brandler.'}
   };
 
   RF.factionPersons = PERSONS;

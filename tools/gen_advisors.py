@@ -1,4 +1,4 @@
-# Generates source/scenes/rote_fahne/rf_advisors.scene.dry. Run from the repository root:
+# Generates source/scenes/rote_fahne/rf_advisors.scene.dry (archived in version 0.8; see archive/README.md). Run from the repository root:
 #   python3 tools/gen_advisors.py
 # Keep ADVISORS here in step with RF.advisors in out/html/rote_fahne.js.
 SLOTS = [

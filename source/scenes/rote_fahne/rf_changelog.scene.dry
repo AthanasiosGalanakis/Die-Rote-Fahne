@@ -4,6 +4,8 @@ is-special: true
 
 = Changelog
 
+**Version 0.8**: cards, advisors, events and endings are taken out while the game is rebuilt; the government line and the President show party colours; hover cards for Zinoviev and Radek.
+
 **Version 0.7**: the menu links sit centred at the top; a panel on the right, empty for now; Replace an advisor sits next to the deck and End the month is gone; Reichstag seats and group results in percent; a new opening text about what the party can do.
 
 **Version 0.6**: advisors: three posts in the Zentrale, ten historical candidates, each post acting once every six months, and a card to replace them; one Party Affairs deck instead of three, with the old cards taken out while they are rewritten; an End the month card; a tighter main page with four cards to a row; larger hover cards that look the same everywhere.

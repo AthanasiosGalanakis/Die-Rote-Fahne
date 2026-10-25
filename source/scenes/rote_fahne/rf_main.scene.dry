@@ -2,14 +2,13 @@ title: Next month
 new-page: true
 is-hand: true
 max-cards: 4
-on-arrival: {! Q.handDescription = "Hand"; Q.pinnedCardsDescription = "Advisors"; !}
+on-arrival: {! Q.handDescription = "Hand"; !}
 
-#The Party Affairs deck. Clicking it draws a card into the hand; the hand holds four cards. The pinned cards are the advisors and "Replace an advisor", which sits next to the deck.
+#The Party Affairs deck. Clicking it draws a card into the hand; the hand holds four cards.
 
 {!<div class="rf-portrait"><div class="rf-portrait-img">Portrait</div><div class="rf-portrait-name">!}[+ leader_person +]{!</div><div class="rf-portrait-role">!}Leads the <span class="p-kpd">KPD</span> · <span class="f-[+ leader +]">[+ leader_name +]</span>{!</div></div>!}
 
 - @rf_party
-- #rf_advisor
 
 @rf_party
 title: Party Affairs

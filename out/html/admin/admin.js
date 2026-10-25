@@ -678,7 +678,7 @@
   };
   var categoryOfKey = function(key) {
     var prefix = key.split(':')[0];
-    return {event: 'events', card: 'cards', deck: 'cards', advisor: 'advisors', leader: 'leaders', party: 'parties',
+    return {event: 'events', card: 'cards', deck: 'cards', advisor: 'advisors', leader: 'leaders', person: 'leaders', party: 'parties',
             achievement: 'achievements'}[prefix] || 'cards';
   };
   var imgCat = 'events';
@@ -718,6 +718,11 @@
     if (cat == 'leaders') {
       (RF.factions || FACTION_VALUES).forEach(function(f) {
         out.push({key: 'leader:' + f, id: f, title: (RF.factionPersons[f] || f) + ' · ' + (RF.names[f] || f)});
+      });
+    }
+    if (cat == 'leaders') {
+      Object.keys(RF.people || {}).forEach(function(id) {
+        out.push({key: 'person:' + id, id: id, title: RF.people[id].name + ' · ' + RF.people[id].role});
       });
     }
     if (cat == 'parties') {

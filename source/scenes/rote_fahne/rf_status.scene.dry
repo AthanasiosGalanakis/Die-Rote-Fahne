@@ -22,7 +22,7 @@ Members: about [+ members +] thousand
 
 Government: [+ government +]
 
-President: [+ president +] (<span class="p-spd">SPD</span>)
+President: <span class="[+ president_class +]">[+ president +]</span> (<span class="p-spd">SPD</span>)
 
 Chancellor: <span class="[+ chancellor_class +]">[+ chancellor +]</span> ([+ chancellor_party +])
 
@@ -78,21 +78,21 @@ Leadership: <span class="f-[+ leader +]">[+ leader_name +]</span>
 
 {!<span class="tooltip-text" title="The leadership only changes at a party congress, where the delegates elect a new Zentrale and Moscow may overturn their choice.">Next party congress</span>!}: [+ next_congress +]
 
-[? if right_expelled = 0 : {!<div class="rf-faction">!}<span class="f-right">Brandler Right</span>[? if leader == "right" : {!<span class="rf-lead">!}leads the party{!</span>!} ?]{!<div class="rf-stat">!}Strength: [+ right_strength : strength +][+ n_right_strength +]{!</div><div class="rf-stat">!}Dissent: [+ right_dissent : rf_dissent +][+ n_right_dissent +]{!</div>!}{!<div class="rf-bar"><span class="b-right" style="width: !}[+ right_strength +]{!%"></span></div></div>!} ?][? if right_expelled : <span class="f-right">Brandler Right</span>: left the party ?]
+[? if right_expelled = 0 : {!<div class="rf-faction">!}<span class="f-right">Brandler Right</span>{!<div class="rf-stat">!}Strength: [+ right_strength : strength +][+ n_right_strength +]{!</div><div class="rf-stat">!}Dissent: [+ right_dissent : rf_dissent +][+ n_right_dissent +]{!</div>!}{!<div class="rf-bar"><span class="b-right" style="width: !}[+ right_strength +]{!%"></span></div></div>!} ?][? if right_expelled : <span class="f-right">Brandler Right</span>: left the party ?]
 
-[? if center_expelled = 0 : {!<div class="rf-faction">!}<span class="f-center">Middle Group</span>[? if leader == "center" : {!<span class="rf-lead">!}leads the party{!</span>!} ?]{!<div class="rf-stat">!}Strength: [+ center_strength : strength +][+ n_center_strength +]{!</div><div class="rf-stat">!}Dissent: [+ center_dissent : rf_dissent +][+ n_center_dissent +]{!</div>!}{!<div class="rf-bar"><span class="b-center" style="width: !}[+ center_strength +]{!%"></span></div></div>!} ?][? if center_expelled : <span class="f-center">Middle Group</span>: left the party ?]
+[? if center_expelled = 0 : {!<div class="rf-faction">!}<span class="f-center">Middle Group</span>{!<div class="rf-stat">!}Strength: [+ center_strength : strength +][+ n_center_strength +]{!</div><div class="rf-stat">!}Dissent: [+ center_dissent : rf_dissent +][+ n_center_dissent +]{!</div>!}{!<div class="rf-bar"><span class="b-center" style="width: !}[+ center_strength +]{!%"></span></div></div>!} ?][? if center_expelled : <span class="f-center">Middle Group</span>: left the party ?]
 
-[? if left_expelled = 0 : {!<div class="rf-faction">!}<span class="f-left">Fischer–Maslow Left</span>[? if leader == "left" : {!<span class="rf-lead">!}leads the party{!</span>!} ?]{!<div class="rf-stat">!}Strength: [+ left_strength : strength +][+ n_left_strength +]{!</div><div class="rf-stat">!}Dissent: [+ left_dissent : rf_dissent +][+ n_left_dissent +]{!</div>!}{!<div class="rf-bar"><span class="b-left" style="width: !}[+ left_strength +]{!%"></span></div></div>!} ?][? if left_expelled : <span class="f-left">Fischer–Maslow Left</span>: left the party ?]
+[? if left_expelled = 0 : {!<div class="rf-faction">!}<span class="f-left">Fischer–Maslow Left</span>{!<div class="rf-stat">!}Strength: [+ left_strength : strength +][+ n_left_strength +]{!</div><div class="rf-stat">!}Dissent: [+ left_dissent : rf_dissent +][+ n_left_dissent +]{!</div>!}{!<div class="rf-bar"><span class="b-left" style="width: !}[+ left_strength +]{!%"></span></div></div>!} ?][? if left_expelled : <span class="f-left">Fischer–Maslow Left</span>: left the party ?]
 
-[? if ultra_expelled = 0 : {!<div class="rf-faction">!}<span class="f-ultra">Ultra-Left</span>[? if leader == "ultra" : {!<span class="rf-lead">!}leads the party{!</span>!} ?]{!<div class="rf-stat">!}Strength: [+ ultra_strength : strength +][+ n_ultra_strength +]{!</div><div class="rf-stat">!}Dissent: [+ ultra_dissent : rf_dissent +][+ n_ultra_dissent +]{!</div>!}{!<div class="rf-bar"><span class="b-ultra" style="width: !}[+ ultra_strength +]{!%"></span></div></div>!} ?][? if ultra_expelled : <span class="f-ultra">Ultra-Left</span>: left the party ?]
+[? if ultra_expelled = 0 : {!<div class="rf-faction">!}<span class="f-ultra">Ultra-Left</span>{!<div class="rf-stat">!}Strength: [+ ultra_strength : strength +][+ n_ultra_strength +]{!</div><div class="rf-stat">!}Dissent: [+ ultra_dissent : rf_dissent +][+ n_ultra_dissent +]{!</div>!}{!<div class="rf-bar"><span class="b-ultra" style="width: !}[+ ultra_strength +]{!%"></span></div></div>!} ?][? if ultra_expelled : <span class="f-ultra">Ultra-Left</span>: left the party ?]
 
-[? if stalin_expelled = 0 : {!<div class="rf-faction">!}<span class="f-stalin">Thälmann circle</span>[? if leader == "stalin" : {!<span class="rf-lead">!}leads the party{!</span>!} ?]{!<div class="rf-stat">!}Strength: [+ stalin_strength : strength +][+ n_stalin_strength +]{!</div><div class="rf-stat">!}Dissent: [+ stalin_dissent : rf_dissent +][+ n_stalin_dissent +]{!</div>!}{!<div class="rf-bar"><span class="b-stalin" style="width: !}[+ stalin_strength +]{!%"></span></div></div>!} ?][? if stalin_expelled : <span class="f-stalin">Thälmann circle</span>: left the party ?]
+[? if stalin_expelled = 0 : {!<div class="rf-faction">!}<span class="f-stalin">Thälmann circle</span>{!<div class="rf-stat">!}Strength: [+ stalin_strength : strength +][+ n_stalin_strength +]{!</div><div class="rf-stat">!}Dissent: [+ stalin_dissent : rf_dissent +][+ n_stalin_dissent +]{!</div>!}{!<div class="rf-bar"><span class="b-stalin" style="width: !}[+ stalin_strength +]{!%"></span></div></div>!} ?][? if stalin_expelled : <span class="f-stalin">Thälmann circle</span>: left the party ?]
 
 = Moscow
 
 {!<span class="tooltip-text" title="The Comintern's strategy for Germany. Factions that fit the line gain standing in Moscow.">Comintern line</span>!}: [? if line == "united_front" : united front with the SPD's workers ?][? if line == "insurrection" : prepare the insurrection ?][? if line == "bolshevization" : Bolshevization of the party ?]
 
-[? if year = 1923 : In Moscow: Zinoviev chairs the International; Radek handles Germany. ?][? if year >= 1924 : In Moscow: Zinoviev chairs the International; Radek is blamed for October. ?]
+In Moscow: {!<span class="m-zinoviev">Zinoviev</span>!} chairs the {!<span class="p-comintern">Comintern</span>!}[? if year = 1923 : ; {!<span class="m-radek">Radek</span>!} handles Germany. ?][? if year >= 1924 : ; {!<span class="m-radek">Radek</span>!} is blamed for the failed October. ?]
 
 {!<span class="tooltip-text" title="Moscow trusts a party that follows its orders. Low trust means less help and more intervention.">Moscow's trust</span>!}: [+ moscow_trust : relationships +][+ n_moscow_trust +]
 
