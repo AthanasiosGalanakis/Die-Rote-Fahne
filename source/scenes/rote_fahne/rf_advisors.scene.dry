@@ -1,0 +1,37 @@
+title: Organisation
+subtitle: Advisor slot: the party's organisation secretary. Empty for now.
+is-pinned-card: true
+tags: rf_advisor
+new-page: true
+
+= Organisation
+
+This slot will hold the party's organisation secretary, who runs the apparatus, the districts and the membership. Advisors are not in the game yet.
+
+- @rf_hand: Back.
+
+@unions
+title: Trade Unions
+subtitle: Advisor slot: the head of the party's trade-union work. Empty for now.
+is-pinned-card: true
+tags: rf_advisor
+new-page: true
+
+= Trade Unions
+
+This slot will hold the head of the party's trade-union and factory-council work. Advisors are not in the game yet.
+
+- @rf_hand: Back.
+
+@military
+title: Military Affairs
+subtitle: Advisor slot: the head of the party's military apparatus. Empty for now.
+is-pinned-card: true
+tags: rf_advisor
+new-page: true
+
+= Military Affairs
+
+This slot will hold the head of the party's military apparatus and its defence formations. Advisors are not in the game yet.
+
+- @rf_hand: Back.

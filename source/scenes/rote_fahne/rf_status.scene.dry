@@ -1,69 +1,188 @@
 title: Status
 new-page: true
 is-special: true
+on-arrival: {!
+window.RF.updateReich(Q);
+!}
 
-= The KPD
+= Status
 
 [+ month : month +] [+ year +]
 
-Leadership: <span class="f-[+ leader +]">[+ leader_name +]</span>
-
-Moscow favours: <span class="f-[+ favourite +]">[+ favourite_name +]</span>
-
-<span class="p-comintern">Comintern</span> line: [? if line == "united_front" : united front ?][? if line == "insurrection" : insurrection ?][? if line == "bolshevization" : Bolshevization ?]
-
-Moscow's trust: [+ moscow_trust +]/100
-
-Party autonomy: [+ autonomy +]/100
-
-Party unity: [+ unity +]/100
+{!<span class="tooltip-text" title="Party funds. Dues bring in one more each month while the party has at least 150,000 members.">Resources</span>!}: [+ funds +]
 
 Members: about [+ members +] thousand
 
-Funds: [+ funds +]
+{!<span class="tooltip-text" title="Where the KPD stands towards the governments of the Reich and the states.">KPD position</span>!}: [+ kpd_position +]
 
-[? if party_banned : **The party is banned.** ?]
+{!<span class="tooltip-text" title="How divided the party is: the anger of each faction, weighted by its size. Details are on the Party tab.">Internal dissent</span>!}: [+ party_dissent : rf_party_dissent +]
 
-= Factions
+= Government
 
-[? if right_expelled = 0 : <span class="f-right">Brandler Right</span>: [+ right_strength +]%, dissent [+ right_dissent : dissent +], Moscow [+ right_moscow +] {!<div class="rf-bar"><span class="b-right" style="width: !}[+ right_strength +]{!%"></span></div>!} ?][? if right_expelled : <span class="f-right">Brandler Right</span>: left the party ?]
+{!<span class="tooltip-text" title="The parties that support the Reich cabinet.">Government</span>!}: [+ government +]
 
-[? if center_expelled = 0 : <span class="f-center">Middle Group</span>: [+ center_strength +]%, dissent [+ center_dissent : dissent +], Moscow [+ center_moscow +] {!<div class="rf-bar"><span class="b-center" style="width: !}[+ center_strength +]{!%"></span></div>!} ?][? if center_expelled : <span class="f-center">Middle Group</span>: left the party ?]
+President: [+ president +] (<span class="p-spd">SPD</span>)
 
-[? if left_expelled = 0 : <span class="f-left">Fischer–Maslow Left</span>: [+ left_strength +]%, dissent [+ left_dissent : dissent +], Moscow [+ left_moscow +] {!<div class="rf-bar"><span class="b-left" style="width: !}[+ left_strength +]{!%"></span></div>!} ?][? if left_expelled : <span class="f-left">Fischer–Maslow Left</span>: left the party ?]
+Chancellor: <span class="[+ chancellor_class +]">[+ chancellor +]</span> ([+ chancellor_party +])
 
-[? if ultra_expelled = 0 : <span class="f-ultra">Ultra-Left</span>: [+ ultra_strength +]%, dissent [+ ultra_dissent : dissent +], Moscow [+ ultra_moscow +] {!<div class="rf-bar"><span class="b-ultra" style="width: !}[+ ultra_strength +]{!%"></span></div>!} ?][? if ultra_expelled : <span class="f-ultra">Ultra-Left</span>: left the party ?]
+[? if emergency != "" : **[+ emergency +]** ?]
 
-[? if stalin_expelled = 0 : <span class="f-stalin">Thälmann circle</span>: [+ stalin_strength +]%, dissent [+ stalin_dissent : dissent +], Moscow [+ stalin_moscow +] {!<div class="rf-bar"><span class="b-stalin" style="width: !}[+ stalin_strength +]{!%"></span></div>!} ?][? if stalin_expelled : <span class="f-stalin">Thälmann circle</span>: left the party ?]
+{!<span class="tooltip-text" title="Police and courts acting against the party: bans, raids, arrests.">State repression</span>!}: [+ repression : rf_level +]
+
+Reichstag composition (elected June 1920):
+
+{!<div id="rf-reichstag"></div>!}
+
+{!<span class="tooltip-text" title="The Reichstag elected in 1920 sits until 1924. Historically it was dissolved in March 1924 and Germany voted on 4 May.">Next election</span>!}: [+ next_election +]
+
+= Economics
+
+Currency: [+ currency +]
+
+[? if dollar_rate != "" : One US dollar: [+ dollar_rate +] ?]
+
+*A full economic model is still to come.*
+
+@party
+title: Inside the Party
+new-page: true
+is-special: true
+on-arrival: {!
+var RF = window.RF;
+Q.overrule_risk = Math.round(100 * RF.overruleChance(Q));
+var base = RF.risingBase(Q);
+Q.rising_chance = Math.round(100 * Math.max(0, Math.min(1, (base + 30 - 140) / 30)));
+var t = Q.year * 12 + Q.month;
+// which armed formations the party has: the Proletarian Hundreds of 1923,
+// then (from July 1924) the Red Front Fighters' League
+if (t < 1923 * 12 + 3) {
+    Q.para_stage = 0;
+} else if (t < 1923 * 12 + 12 && !Q.party_banned) {
+    Q.para_stage = 1;
+} else if (t < 1924 * 12 + 7) {
+    Q.para_stage = 2;
+} else {
+    Q.para_stage = 3;
+}
+Q.hundreds_strength = Math.round(15 + 0.8 * Q.readiness);
+Q.rfb_strength = Math.round(40 + Q.readiness);
+!}
+
+= Inside the KPD
+
+Leadership: <span class="f-[+ leader +]">[+ leader_name +]</span>
+
+[? if right_expelled = 0 : <span class="f-right">Brandler Right</span>: [+ right_strength : strength +], [+ right_dissent : rf_dissent +][? if leader == "right" : , leads the party ?] {!<div class="rf-bar"><span class="b-right" style="width: !}[+ right_strength +]{!%"></span></div>!} ?][? if right_expelled : <span class="f-right">Brandler Right</span>: left the party ?]
+
+[? if center_expelled = 0 : <span class="f-center">Middle Group</span>: [+ center_strength : strength +], [+ center_dissent : rf_dissent +][? if leader == "center" : , leads the party ?] {!<div class="rf-bar"><span class="b-center" style="width: !}[+ center_strength +]{!%"></span></div>!} ?][? if center_expelled : <span class="f-center">Middle Group</span>: left the party ?]
+
+[? if left_expelled = 0 : <span class="f-left">Fischer–Maslow Left</span>: [+ left_strength : strength +], [+ left_dissent : rf_dissent +][? if leader == "left" : , leads the party ?] {!<div class="rf-bar"><span class="b-left" style="width: !}[+ left_strength +]{!%"></span></div>!} ?][? if left_expelled : <span class="f-left">Fischer–Maslow Left</span>: left the party ?]
+
+[? if ultra_expelled = 0 : <span class="f-ultra">Ultra-Left</span>: [+ ultra_strength : strength +], [+ ultra_dissent : rf_dissent +][? if leader == "ultra" : , leads the party ?] {!<div class="rf-bar"><span class="b-ultra" style="width: !}[+ ultra_strength +]{!%"></span></div>!} ?][? if ultra_expelled : <span class="f-ultra">Ultra-Left</span>: left the party ?]
+
+[? if stalin_expelled = 0 : <span class="f-stalin">Thälmann circle</span>: [+ stalin_strength : strength +], [+ stalin_dissent : rf_dissent +][? if leader == "stalin" : , leads the party ?] {!<div class="rf-bar"><span class="b-stalin" style="width: !}[+ stalin_strength +]{!%"></span></div>!} ?][? if stalin_expelled : <span class="f-stalin">Thälmann circle</span>: left the party ?]
+
+= Moscow
+
+{!<span class="tooltip-text" title="The Comintern's strategy for Germany. Factions that fit the line gain standing in Moscow.">Comintern line</span>!}: [? if line == "united_front" : united front with the SPD's workers ?][? if line == "insurrection" : prepare the insurrection ?][? if line == "bolshevization" : Bolshevization of the party ?]
+
+[? if year = 1923 : In Moscow: Zinoviev chairs the International; Radek handles Germany. ?][? if year >= 1924 : In Moscow: Zinoviev chairs the International; Radek is blamed for October. ?]
+
+{!<span class="tooltip-text" title="Moscow trusts a party that follows its orders. Low trust means less help and more intervention.">Moscow's trust</span>!}: [+ moscow_trust : relationships +]
+
+{!<span class="tooltip-text" title="How far the KPD still decides for itself. Each intervention from Moscow wears it down, and the lower it is, the easier Moscow overturns a congress.">Party autonomy</span>!}: [+ autonomy : rf_autonomy +]
+
+Moscow favours: <span class="f-[+ favourite +]">[+ favourite_name +]</span>
+
+{!<span class="tooltip-text" title="The chance that Moscow overturns the current leadership at the next congress. It grows with the gap between the leadership and Moscow's favourite, and as autonomy falls.">Risk of intervention</span>!}: [+ overrule_risk : rf_overrule +]
+
+= Armed formations
+
+[? if para_stage = 0 : {!<span class="tooltip-text" title="Party stewards who guard meetings and demonstrations.">Ordnerdienst</span>!}: the party's stewards. The Leipzig congress is debating proletarian defence units. ?]
+
+[? if para_stage = 1 : {!<span class="tooltip-text" title="Factory-based workers' defence units, formed from 1923 with SPD and non-party workers. Figures are the party's own claims and uncertain.">Proletarian Hundreds</span>!}: about [+ hundreds_strength +] thousand ?]
+
+[? if para_stage = 1 and month >= 5 : Status: banned in Prussia, legal in Saxony and Thuringia ?][? if para_stage = 1 and month < 5 : Status: legal ?]
+
+[? if para_stage = 2 : {!<span class="tooltip-text" title="Factory-based workers' defence units of 1923.">Proletarian Hundreds</span>!}: dissolved and banned; remnants underground ?]
+
+[? if para_stage = 3 : {!<span class="tooltip-text" title="The Red Front Fighters' League, the KPD's uniformed paramilitary, founded in July 1924.">RFB</span>!}: about [+ rfb_strength +] thousand ?]
+
+[? if october_plan : {!<span class="tooltip-text" title="The secret military apparatus built for the German October, with Soviet advisers.">M-Apparat</span>!}: weapons and plans for the rising ?]
+
+{!<span class="tooltip-text" title="Weapons, training and plans for an armed rising.">Armed readiness</span>!}: [+ readiness : rf_level +]
+
+= Support for the revolution
+
+{!<span class="tooltip-text" title="Hunger, strikes and anger at the Republic. It rises with inflation and falls once the currency is stable.">Revolutionary situation</span>!}: [+ rev_situation : rf_rev +]
+
+{!<span class="tooltip-text" title="Communist strength in the trade unions and factory councils.">Influence in the unions</span>!}: [+ union_influence : rf_level +]
+
+{!<span class="tooltip-text" title="Whether SPD workers would follow a call to arms. Good relations with the SPD count for a lot.">SPD workers</span>!}: [? if spd_relation >= 60 : might follow ?][? if spd_relation < 60 and spd_relation >= 35 : wary ?][? if spd_relation < 35 : would not follow ?]
+
+{!<span class="tooltip-text" title="Readiness, the revolutionary situation, the unions, the SPD's workers and state repression, against a Reichswehr and police far stronger than the party.">Chance of a rising</span>!}: [+ rising_chance : rf_odds +]
 
 @politics
-title: Germany
+title: Politics
 new-page: true
 is-special: true
+on-arrival: {!
+window.RF.updateReich(Q);
+!}
 
-= Germany
+= Inter-party Relations
 
-Revolutionary situation: [+ rev_situation +]/100
+{!<span class="tooltip-text" title="Social Democratic Party of Germany">!}<span class="p-spd">SPD</span>{!</span>!}: [+ spd_relation : relationships +]
 
-Union influence: [+ union_influence +]/100
+{!<span class="tooltip-text" title="The rump of the Independent Social Democrats, who refused both the KPD and reunification with the SPD.">!}<span class="p-uspd">USPD</span>{!</span>!}: [+ uspd_relation : relationships +]
 
-Relations with the <span class="p-spd">SPD</span>: [+ spd_relation +] ([+ spd_relation : relationships +])
+{!<span class="tooltip-text" title="Centre Party">!}<span class="p-z">Z</span>{!</span>!}: [+ z_relation : relationships +]
 
-State repression: [+ repression +]/100
+{!<span class="tooltip-text" title="German Democratic Party">!}<span class="p-ddp">DDP</span>{!</span>!}: [+ ddp_relation : relationships +]
 
-[? if workers_govt : The <span class="p-kpd">KPD</span> sits in the Saxon and Thuringian governments. ?]
+{!<span class="tooltip-text" title="German People's Party">!}<span class="p-dvp">DVP</span>{!</span>!}: [+ dvp_relation : relationships +]
 
-@paramilitaries
-title: Armed readiness
+{!<span class="tooltip-text" title="German National People's Party">!}<span class="p-dnvp">DNVP</span>{!</span>!}: [+ dnvp_relation : relationships +]
+
+{!<span class="tooltip-text" title="National Socialist German Workers' Party">!}<span class="p-nsdap">NSDAP</span>{!</span>!}: [+ nsdap_relation : relationships +]
+
+= Party Leadership
+
+{!<span class="tooltip-text" title="Reformist social democracy: defend the Republic, work with the bourgeois centre. The largest party of the working class.">!}<span class="p-spd">SPD</span>{!</span>!}: Otto Wels, Hermann Müller
+
+{!<span class="tooltip-text" title="Left socialists who stayed out of both the KPD (1920) and the reunited SPD (1922). A small group by now.">!}<span class="p-uspd">USPD</span>{!</span>!}: Georg Ledebour, Theodor Liebknecht
+
+{!<span class="tooltip-text" title="The Catholic party of the centre, with its Bavarian sister the BVP. A partner in almost every Reich government.">!}<span class="p-z">Z</span>{!</span>!}: Wilhelm Marx
+
+{!<span class="tooltip-text" title="Left liberals, one of the founding parties of the Republic.">!}<span class="p-ddp">DDP</span>{!</span>!}: Carl Petersen
+
+{!<span class="tooltip-text" title="National liberals close to industry. Stresemann is moving them towards accepting the Republic.">!}<span class="p-dvp">DVP</span>{!</span>!}: Gustav Stresemann
+
+{!<span class="tooltip-text" title="Monarchist conservatives of the landowners, the officer corps and the old elites.">!}<span class="p-dnvp">DNVP</span>{!</span>!}: Oskar Hergt
+
+[? if beer_hall_seen = 0 : {!<span class="tooltip-text" title="Völkisch nationalists, strongest in Bavaria. Banned in Prussia and several other states since late 1922.">!}<span class="p-nsdap">NSDAP</span>{!</span>!}: Adolf Hitler ?][? if beer_hall_seen = 1 : {!<span class="tooltip-text" title="Banned across the Reich after the Munich putsch of 8–9 November 1923. Hitler is in prison; völkisch politicians carry on under other names.">!}<span class="p-nsdap">NSDAP</span>{!</span>!}: banned; Hitler in prison ?]
+
+@polls
+title: Polls
 new-page: true
 is-special: true
+on-arrival: {!
+Q.pro_republic_disp = Math.round(Q.pro_republic);
+Q.nationalism_disp = Math.round(Q.nationalism);
+!}
 
-= Armed readiness
+= Projected election results
 
-Armed readiness: [+ readiness +]/100
+{!<span class="tooltip-text" title="There were no opinion polls in Weimar Germany. This is the game's estimate of a Reichstag election held now.">If the election were held now</span>!}:
 
-Apparatus control: [+ apparatus +]/100
+{!<div id="rf-polls"></div>!}
 
-[? if october_plan : Moscow has ordered preparations for a German October. ?]
+{!<span class="tooltip-text" title="The share of Germans who back the democratic Republic. Hyperinflation drains it; stability restores it.">Support for the Republic</span>!}: [+ pro_republic_disp +]%
 
-A rising is judged against the <span class="p-reichswehr">Reichswehr</span> and police, which are far stronger than anything the party can field. Readiness, the mood of the masses, the unions and the left wing of the <span class="p-spd">SPD</span> all count.
+{!<span class="tooltip-text" title="Nationalist feeling. The Ruhr occupation feeds it, and it feeds the DNVP and the völkisch right.">Support for nationalism</span>!}: [+ nationalism_disp +]%
+
+= Results by group
+
+Each group's parties are listed from strongest to weakest.
+
+{!<div id="rf-demographics"></div>!}

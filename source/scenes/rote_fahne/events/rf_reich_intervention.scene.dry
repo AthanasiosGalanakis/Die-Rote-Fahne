@@ -9,6 +9,9 @@ Q.workers_govt = 0;
 Q.repression += 10;
 Q.readiness -= 8;
 Q.spd_relation += 4;
+// an SPD president deposing a workers' government costs the SPD votes
+Q.spd_discredit += 8;
+Q.pro_republic -= 3;
 !}
 
 = Reich Intervention in Saxony

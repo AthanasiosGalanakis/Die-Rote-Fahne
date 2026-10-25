@@ -11,7 +11,14 @@ go-to: start_menu_2
 @start_menu_2
 
 - @rf_start: Begin (January 1923)
+- @rf_start_four: Begin with four cards in hand
 - @credits: Credits
+
+@rf_start_four
+title: Begin with four cards in hand
+subtitle: Draw up to four cards each month instead of three. An easier game.
+on-arrival: rf_four_cards = 1
+go-to: rf_start
 
 
 @start
