@@ -85,7 +85,7 @@ if (choices && choices[0].title != "Continue...") {
     Q.has_event = 1;
 }
 !}
-go-to: rf_endings if rf_over = 1; events_choice if rf_over = 0 and has_event = 1; rf_main if rf_over = 0 and has_event = 0 and hand_size != 4; rf_main.four if rf_over = 0 and has_event = 0 and hand_size = 4
+go-to: rf_endings if rf_over = 1; events_choice if rf_over = 0 and has_event = 1; rf_main if rf_over = 0 and has_event = 0
 
 = [+ month : month +] [+ year +]
 

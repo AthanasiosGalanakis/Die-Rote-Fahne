@@ -1,2 +1,2 @@
 title: Next month
-go-to: rf_main if hand_size != 4; rf_main.four if hand_size = 4
+go-to: rf_main

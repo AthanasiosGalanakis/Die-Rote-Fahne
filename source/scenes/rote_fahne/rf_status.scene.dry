@@ -3,6 +3,7 @@ new-page: true
 is-special: true
 on-arrival: {!
 window.RF.updateReich(Q);
+window.RF.numbers(Q);
 !}
 
 = Status
@@ -15,7 +16,7 @@ Members: about [+ members +] thousand
 
 {!<span class="tooltip-text" title="Where the KPD stands towards the governments of the Reich and the states.">KPD position</span>!}: [+ kpd_position +]
 
-{!<span class="tooltip-text" title="How divided the party is: the anger of each faction, weighted by its size. Details are on the Party tab.">Internal dissent</span>!}: [+ party_dissent : rf_party_dissent +]
+{!<span class="tooltip-text" title="How divided the party is: the anger of each faction, weighted by its size. Details are on the Party tab.">Internal dissent</span>!}: [+ party_dissent : rf_party_dissent +][+ n_party_dissent +]
 
 = Government
 
@@ -27,7 +28,7 @@ Chancellor: <span class="[+ chancellor_class +]">[+ chancellor +]</span> ([+ cha
 
 [? if emergency != "" : **[+ emergency +]** ?]
 
-{!<span class="tooltip-text" title="Police and courts acting against the party: bans, raids, arrests.">State repression</span>!}: [+ repression : rf_level +]
+{!<span class="tooltip-text" title="Police and courts acting against the party: bans, raids, arrests.">State repression</span>!}: [+ repression : rf_level +][+ n_repression +]
 
 Reichstag composition (elected June 1920):
 
@@ -66,21 +67,22 @@ if (t < 1923 * 12 + 3) {
 }
 Q.hundreds_strength = Math.round(15 + 0.8 * Q.readiness);
 Q.rfb_strength = Math.round(40 + Q.readiness);
+RF.numbers(Q);
 !}
 
 = Inside the KPD
 
 Leadership: <span class="f-[+ leader +]">[+ leader_name +]</span>
 
-[? if right_expelled = 0 : <span class="f-right">Brandler Right</span>: [+ right_strength : strength +], [+ right_dissent : rf_dissent +][? if leader == "right" : , leads the party ?] {!<div class="rf-bar"><span class="b-right" style="width: !}[+ right_strength +]{!%"></span></div>!} ?][? if right_expelled : <span class="f-right">Brandler Right</span>: left the party ?]
+[? if right_expelled = 0 : <span class="f-right">Brandler Right</span>: [+ right_strength : strength +][+ n_right_strength +], [+ right_dissent : rf_dissent +][+ n_right_dissent +][? if leader == "right" : , leads the party ?] {!<div class="rf-bar"><span class="b-right" style="width: !}[+ right_strength +]{!%"></span></div>!} ?][? if right_expelled : <span class="f-right">Brandler Right</span>: left the party ?]
 
-[? if center_expelled = 0 : <span class="f-center">Middle Group</span>: [+ center_strength : strength +], [+ center_dissent : rf_dissent +][? if leader == "center" : , leads the party ?] {!<div class="rf-bar"><span class="b-center" style="width: !}[+ center_strength +]{!%"></span></div>!} ?][? if center_expelled : <span class="f-center">Middle Group</span>: left the party ?]
+[? if center_expelled = 0 : <span class="f-center">Middle Group</span>: [+ center_strength : strength +][+ n_center_strength +], [+ center_dissent : rf_dissent +][+ n_center_dissent +][? if leader == "center" : , leads the party ?] {!<div class="rf-bar"><span class="b-center" style="width: !}[+ center_strength +]{!%"></span></div>!} ?][? if center_expelled : <span class="f-center">Middle Group</span>: left the party ?]
 
-[? if left_expelled = 0 : <span class="f-left">Fischer–Maslow Left</span>: [+ left_strength : strength +], [+ left_dissent : rf_dissent +][? if leader == "left" : , leads the party ?] {!<div class="rf-bar"><span class="b-left" style="width: !}[+ left_strength +]{!%"></span></div>!} ?][? if left_expelled : <span class="f-left">Fischer–Maslow Left</span>: left the party ?]
+[? if left_expelled = 0 : <span class="f-left">Fischer–Maslow Left</span>: [+ left_strength : strength +][+ n_left_strength +], [+ left_dissent : rf_dissent +][+ n_left_dissent +][? if leader == "left" : , leads the party ?] {!<div class="rf-bar"><span class="b-left" style="width: !}[+ left_strength +]{!%"></span></div>!} ?][? if left_expelled : <span class="f-left">Fischer–Maslow Left</span>: left the party ?]
 
-[? if ultra_expelled = 0 : <span class="f-ultra">Ultra-Left</span>: [+ ultra_strength : strength +], [+ ultra_dissent : rf_dissent +][? if leader == "ultra" : , leads the party ?] {!<div class="rf-bar"><span class="b-ultra" style="width: !}[+ ultra_strength +]{!%"></span></div>!} ?][? if ultra_expelled : <span class="f-ultra">Ultra-Left</span>: left the party ?]
+[? if ultra_expelled = 0 : <span class="f-ultra">Ultra-Left</span>: [+ ultra_strength : strength +][+ n_ultra_strength +], [+ ultra_dissent : rf_dissent +][+ n_ultra_dissent +][? if leader == "ultra" : , leads the party ?] {!<div class="rf-bar"><span class="b-ultra" style="width: !}[+ ultra_strength +]{!%"></span></div>!} ?][? if ultra_expelled : <span class="f-ultra">Ultra-Left</span>: left the party ?]
 
-[? if stalin_expelled = 0 : <span class="f-stalin">Thälmann circle</span>: [+ stalin_strength : strength +], [+ stalin_dissent : rf_dissent +][? if leader == "stalin" : , leads the party ?] {!<div class="rf-bar"><span class="b-stalin" style="width: !}[+ stalin_strength +]{!%"></span></div>!} ?][? if stalin_expelled : <span class="f-stalin">Thälmann circle</span>: left the party ?]
+[? if stalin_expelled = 0 : <span class="f-stalin">Thälmann circle</span>: [+ stalin_strength : strength +][+ n_stalin_strength +], [+ stalin_dissent : rf_dissent +][+ n_stalin_dissent +][? if leader == "stalin" : , leads the party ?] {!<div class="rf-bar"><span class="b-stalin" style="width: !}[+ stalin_strength +]{!%"></span></div>!} ?][? if stalin_expelled : <span class="f-stalin">Thälmann circle</span>: left the party ?]
 
 = Moscow
 
@@ -88,13 +90,13 @@ Leadership: <span class="f-[+ leader +]">[+ leader_name +]</span>
 
 [? if year = 1923 : In Moscow: Zinoviev chairs the International; Radek handles Germany. ?][? if year >= 1924 : In Moscow: Zinoviev chairs the International; Radek is blamed for October. ?]
 
-{!<span class="tooltip-text" title="Moscow trusts a party that follows its orders. Low trust means less help and more intervention.">Moscow's trust</span>!}: [+ moscow_trust : relationships +]
+{!<span class="tooltip-text" title="Moscow trusts a party that follows its orders. Low trust means less help and more intervention.">Moscow's trust</span>!}: [+ moscow_trust : relationships +][+ n_moscow_trust +]
 
-{!<span class="tooltip-text" title="How far the KPD still decides for itself. Each intervention from Moscow wears it down, and the lower it is, the easier Moscow overturns a congress.">Party autonomy</span>!}: [+ autonomy : rf_autonomy +]
+{!<span class="tooltip-text" title="How far the KPD still decides for itself. Each intervention from Moscow wears it down, and the lower it is, the easier Moscow overturns a congress.">Party autonomy</span>!}: [+ autonomy : rf_autonomy +][+ n_autonomy +]
 
 Moscow favours: <span class="f-[+ favourite +]">[+ favourite_name +]</span>
 
-{!<span class="tooltip-text" title="The chance that Moscow overturns the current leadership at the next congress. It grows with the gap between the leadership and Moscow's favourite, and as autonomy falls.">Risk of intervention</span>!}: [+ overrule_risk : rf_overrule +]
+{!<span class="tooltip-text" title="The chance that Moscow overturns the current leadership at the next congress. It grows with the gap between the leadership and Moscow's favourite, and as autonomy falls.">Risk of intervention</span>!}: [+ overrule_risk : rf_overrule +][+ n_overrule_risk +]
 
 = Armed formations
 
@@ -110,17 +112,17 @@ Moscow favours: <span class="f-[+ favourite +]">[+ favourite_name +]</span>
 
 [? if october_plan : {!<span class="tooltip-text" title="The secret military apparatus built for the German October, with Soviet advisers.">M-Apparat</span>!}: weapons and plans for the rising ?]
 
-{!<span class="tooltip-text" title="Weapons, training and plans for an armed rising.">Armed readiness</span>!}: [+ readiness : rf_level +]
+{!<span class="tooltip-text" title="Weapons, training and plans for an armed rising.">Armed readiness</span>!}: [+ readiness : rf_level +][+ n_readiness +]
 
 = Support for the revolution
 
-{!<span class="tooltip-text" title="Hunger, strikes and anger at the Republic. It rises with inflation and falls once the currency is stable.">Revolutionary situation</span>!}: [+ rev_situation : rf_rev +]
+{!<span class="tooltip-text" title="Hunger, strikes and anger at the Republic. It rises with inflation and falls once the currency is stable.">Revolutionary situation</span>!}: [+ rev_situation : rf_rev +][+ n_rev_situation +]
 
-{!<span class="tooltip-text" title="Communist strength in the trade unions and factory councils.">Influence in the unions</span>!}: [+ union_influence : rf_level +]
+{!<span class="tooltip-text" title="Communist strength in the trade unions and factory councils.">Influence in the unions</span>!}: [+ union_influence : rf_level +][+ n_union_influence +]
 
-{!<span class="tooltip-text" title="Whether SPD workers would follow a call to arms. Good relations with the SPD count for a lot.">SPD workers</span>!}: [? if spd_relation >= 60 : might follow ?][? if spd_relation < 60 and spd_relation >= 35 : wary ?][? if spd_relation < 35 : would not follow ?]
+{!<span class="tooltip-text" title="Whether SPD workers would follow a call to arms. Good relations with the SPD count for a lot.">SPD workers</span>!}: [? if spd_relation >= 60 : might follow ?][? if spd_relation < 60 and spd_relation >= 35 : wary ?][? if spd_relation < 35 : would not follow ?][+ n_spd_relation +]
 
-{!<span class="tooltip-text" title="Readiness, the revolutionary situation, the unions, the SPD's workers and state repression, against a Reichswehr and police far stronger than the party.">Chance of a rising</span>!}: [+ rising_chance : rf_odds +]
+{!<span class="tooltip-text" title="Readiness, the revolutionary situation, the unions, the SPD's workers and state repression, against a Reichswehr and police far stronger than the party.">Chance of a rising</span>!}: [+ rising_chance : rf_odds +][+ n_rising_chance +]
 
 @politics
 title: Politics
@@ -128,23 +130,24 @@ new-page: true
 is-special: true
 on-arrival: {!
 window.RF.updateReich(Q);
+window.RF.numbers(Q);
 !}
 
 = Inter-party Relations
 
-{!<span class="tooltip-text" title="Social Democratic Party of Germany">!}<span class="p-spd">SPD</span>{!</span>!}: [+ spd_relation : relationships +]
+{!<span class="tooltip-text" title="Social Democratic Party of Germany">!}<span class="p-spd">SPD</span>{!</span>!}: [+ spd_relation : relationships +][+ n_spd_relation +]
 
-{!<span class="tooltip-text" title="The rump of the Independent Social Democrats, who refused both the KPD and reunification with the SPD.">!}<span class="p-uspd">USPD</span>{!</span>!}: [+ uspd_relation : relationships +]
+{!<span class="tooltip-text" title="The rump of the Independent Social Democrats, who refused both the KPD and reunification with the SPD.">!}<span class="p-uspd">USPD</span>{!</span>!}: [+ uspd_relation : relationships +][+ n_uspd_relation +]
 
-{!<span class="tooltip-text" title="Centre Party">!}<span class="p-z">Z</span>{!</span>!}: [+ z_relation : relationships +]
+{!<span class="tooltip-text" title="Centre Party">!}<span class="p-z">Z</span>{!</span>!}: [+ z_relation : relationships +][+ n_z_relation +]
 
-{!<span class="tooltip-text" title="German Democratic Party">!}<span class="p-ddp">DDP</span>{!</span>!}: [+ ddp_relation : relationships +]
+{!<span class="tooltip-text" title="German Democratic Party">!}<span class="p-ddp">DDP</span>{!</span>!}: [+ ddp_relation : relationships +][+ n_ddp_relation +]
 
-{!<span class="tooltip-text" title="German People's Party">!}<span class="p-dvp">DVP</span>{!</span>!}: [+ dvp_relation : relationships +]
+{!<span class="tooltip-text" title="German People's Party">!}<span class="p-dvp">DVP</span>{!</span>!}: [+ dvp_relation : relationships +][+ n_dvp_relation +]
 
-{!<span class="tooltip-text" title="German National People's Party">!}<span class="p-dnvp">DNVP</span>{!</span>!}: [+ dnvp_relation : relationships +]
+{!<span class="tooltip-text" title="German National People's Party">!}<span class="p-dnvp">DNVP</span>{!</span>!}: [+ dnvp_relation : relationships +][+ n_dnvp_relation +]
 
-{!<span class="tooltip-text" title="National Socialist German Workers' Party">!}<span class="p-nsdap">NSDAP</span>{!</span>!}: [+ nsdap_relation : relationships +]
+{!<span class="tooltip-text" title="National Socialist German Workers' Party">!}<span class="p-nsdap">NSDAP</span>{!</span>!}: [+ nsdap_relation : relationships +][+ n_nsdap_relation +]
 
 = Party Leadership
 

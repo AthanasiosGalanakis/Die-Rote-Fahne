@@ -1,0 +1,11 @@
+title: Achievements
+new-page: true
+is-special: true
+
+= Achievements
+
+There are no achievements yet.
+
+[? if numbers_shown = 1 : Achievements are off for this game, because exact numbers were turned on in the options. ?]
+
+- @backSpecialScene: Back.
