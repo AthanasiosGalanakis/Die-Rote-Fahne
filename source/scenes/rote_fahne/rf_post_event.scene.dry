@@ -13,9 +13,10 @@ if (Q.month_actions >= 1) {
         Q.month = 1;
         Q.year += 1;
     }
-    for (var t of Q.rf_timers) {
-        if (Q[t + '_timer'] > 0) {
-            Q[t + '_timer'] -= 1;
+    // every countdown (a quality named *_timer) ticks down
+    for (var t in Q) {
+        if (/_timer$/.test(t) && Q[t] > 0) {
+            Q[t] -= 1;
         }
     }
 

@@ -791,11 +791,13 @@
       }
       var base = id.split('.')[0];
       var src = RF.image('card:' + id) || RF.image('card:' + base) ||
-          RF.image('advisor:' + id) || RF.image('advisor:' + base);
+          (this.closest('li.deck') ? RF.image('deck:' + id.split('.').pop()) : null);
       if (src) {
         $(this).prepend($('<img>').addClass('card-img').attr({src: src, alt: ''}));
       }
     });
+    RF.layoutMain();
+    RF.decorateAdvisors(Q);
     var portrait = document.querySelector('#content .rf-portrait-img');
     if (portrait && Q.leader) {
       var p = RF.image('leader:' + Q.leader);
@@ -814,7 +816,204 @@
     RF.renderAchievements();
   };
 
+  // ---- Advisors -------------------------------------------------------------
+  // Three posts in the Zentrale. Each holder can act once every six months;
+  // the holder's faction gains a little from every action. Who held which
+  // post, and when, is simplified: treat the dates as approximate.
+  var ADVISOR_SLOTS = {
+    org: {name: 'Organisation', role: 'Organisation secretary'},
+    unions: {name: 'Trade Unions', role: 'Head of trade-union work'},
+    military: {name: 'Military Affairs', role: 'Head of the military apparatus'}
+  };
+  var ADVISORS = {
+    eberlein: {name: 'Hugo Eberlein', slot: 'org', faction: 'center',
+               note: 'Founding member and the party\'s organiser since 1919.'},
+    pieck: {name: 'Wilhelm Pieck', slot: 'org', faction: 'center',
+            note: 'A veteran of the Zentrale who keeps his distance from every faction.'},
+    geschke: {name: 'Ottomar Geschke', slot: 'org', faction: 'left',
+              note: 'A Berlin metalworker and organiser of the Left.'},
+    scholem: {name: 'Werner Scholem', slot: 'org', faction: 'ultra',
+              note: 'Ran the party\'s organisation under the Left in 1924.'},
+    walcher: {name: 'Jacob Walcher', slot: 'unions', faction: 'right',
+              note: 'Head of the party\'s trade-union department, close to Brandler.'},
+    heckert: {name: 'Fritz Heckert', slot: 'unions', faction: 'center',
+              note: 'A bricklayer and union man who bends with the majority.'},
+    merker: {name: 'Paul Merker', slot: 'unions', faction: 'stalin',
+             note: 'A hard-liner for red unions; prominent only later in the decade.'},
+    skoblevsky: {name: 'Pyotr Skoblevsky', slot: 'military', faction: 'moscow', from: 1923 * 12 + 8,
+                 note: 'A Red Army officer sent by Moscow in 1923 to build the M-Apparat.'},
+    schneller: {name: 'Ernst Schneller', slot: 'military', faction: 'left',
+                note: 'A former officer who trains the party\'s defence units.'},
+    kippenberger: {name: 'Hans Kippenberger', slot: 'military', faction: 'stalin',
+                   note: 'Fought in the Hamburg rising; later ran the party\'s secret apparatus.'}
+  };
+
+  RF.advisorSlots = ADVISOR_SLOTS;
+  RF.advisors = ADVISORS;
+
+  RF.advisorStart = function(Q) {
+    Q.adv_org = 'eberlein';
+    Q.adv_unions = 'walcher';
+    Q.adv_military = '';
+    for (var s in ADVISOR_SLOTS) {
+      Q['adv_' + s + '_next'] = 0;
+    }
+  };
+
+  var factionLabel = function(f) {
+    return f == 'moscow' ? '<span class="p-comintern">Comintern</span>' :
+        '<span class="f-' + f + '">' + NAMES[f] + '</span>';
+  };
+
+  // Months until the post can act again (0 = ready).
+  RF.advisorWait = function(Q, slot) {
+    return Math.max(0, (Q['adv_' + slot + '_next'] || 0) - Q.time);
+  };
+
+  // Called when the player opens an advisor's card.
+  RF.advisorView = function(Q, slot) {
+    var id = Q['adv_' + slot];
+    var a = ADVISORS[id];
+    var wait = RF.advisorWait(Q, slot);
+    Q.adv_slot = slot;
+    Q.adv_vacant = a ? 0 : 1;
+    Q.adv_ready = a && wait == 0 ? 1 : 0;
+    var img = a && RF.image('advisor:' + id);
+    var html = '<div class="rf-adv">' +
+        '<div class="rf-adv-img">' + (img ? '<img src="' + esc(img) + '" alt="">' : (a ? esc(a.name.split(' ').pop()) : '?')) + '</div><div>';
+    if (a) {
+      html += '<div class="rf-adv-name">' + esc(a.name) + '</div>' +
+          '<div>' + ADVISOR_SLOTS[slot].role + ' · ' + factionLabel(a.faction) + '</div>' +
+          '<div class="rf-adv-note">' + esc(a.note) + '</div>' +
+          '<div class="rf-adv-status">' + (wait ? 'Can act again in ' + wait + (wait == 1 ? ' month.' : ' months.') :
+                                          'Ready to act. Each action pleases ' + factionLabel(a.faction) + '.') + '</div>';
+    } else {
+      html += '<div class="rf-adv-name">Vacant</div><div>No one holds this post yet.</div>';
+    }
+    Q.adv_text = html + '</div></div>';
+  };
+
+  // An advisor acts: the post waits six months and the holder's faction gains.
+  RF.advisorUse = function(Q, slot) {
+    var a = ADVISORS[Q['adv_' + slot]];
+    Q['adv_' + slot + '_next'] = Q.time + 6;
+    if (a && a.faction == 'moscow') {
+      Q.moscow_trust += 3;
+      Q.autonomy -= 2;
+    } else if (a) {
+      var e = {};
+      e[a.faction] = 2;
+      RF.lean(Q, e);
+    }
+    RF.normalize(Q);
+  };
+
+  // Who can be appointed to a post now.
+  RF.advisorCandidates = function(Q, slot) {
+    var t = Q.year * 12 + Q.month;
+    var out = [];
+    for (var id in ADVISORS) {
+      var a = ADVISORS[id];
+      Q['pick_' + id] = 0;
+      if (a.slot != slot || Q['adv_' + slot] == id || (a.from && t < a.from) ||
+          (a.faction != 'moscow' && Q[a.faction + '_expelled'])) {
+        continue;
+      }
+      Q['pick_' + id] = 1;
+      Q['pick_' + id + '_desc'] = factionLabel(a.faction) + '. ' + a.note;
+      out.push(id);
+    }
+    Q.adv_slot = slot;
+    Q.adv_slot_name = ADVISOR_SLOTS[slot].name;
+    var cur = ADVISORS[Q['adv_' + slot]];
+    Q.adv_current = cur ? cur.name + ' (' + factionLabel(cur.faction) + ')' : 'no one';
+    return out;
+  };
+
+  // Replacing an advisor angers the old holder's faction and pleases the new
+  // one's. It does not reset the six-month wait.
+  RF.appoint = function(Q, slot, id) {
+    var old = ADVISORS[Q['adv_' + slot]];
+    var a = ADVISORS[id];
+    if (old && old.faction != 'moscow') {
+      Q[old.faction + '_dissent'] += 4;
+    }
+    if (a.faction == 'moscow') {
+      Q.moscow_trust += 4;
+      Q.autonomy -= 3;
+    } else {
+      Q[a.faction + '_dissent'] -= 3;
+      Q[a.faction + '_strength'] += 1;
+    }
+    Q['adv_' + slot] = id;
+    Q.appointed_name = a.name;
+    Q.appointed_faction = factionLabel(a.faction);
+    RF.normalize(Q);
+  };
+
+  // Advisor cards on the main page: the holder's portrait, name and wait.
+  // The other cards without a picture get a word on their face.
+  RF.decorateAdvisors = function(Q) {
+    var faces = {
+      'rf_end_month': '→ ' + MONTHS[Q.month % 12 + 1],
+      'rf_advisors.replace': '⇄',
+      'rf_main.rf_party': 'Draw'
+    };
+    for (var cid in faces) {
+      var c = document.querySelector('#content a.card[card-id="' + cid + '"]');
+      if (c && !c.querySelector('img, .rf-card-face')) {
+        $(c).prepend($('<span>').addClass('rf-card-face').text(faces[cid]));
+      }
+    }
+    $('#content li.pinned-card').each(function() {
+      var link = this.querySelector('a.card');
+      var id = link && link.getAttribute('card-id');
+      var slot = id && id.indexOf('rf_advisors.') == 0 ? id.split('.')[1] : null;
+      if (!slot || !ADVISOR_SLOTS[slot] || this.querySelector('.rf-card-sub')) {
+        return;
+      }
+      var a = ADVISORS[Q['adv_' + slot]];
+      var wait = RF.advisorWait(Q, slot);
+      var img = a && RF.image('advisor:' + Q['adv_' + slot]);
+      if (img && !link.querySelector('img')) {
+        $(link).prepend($('<img>').addClass('card-img').attr({src: img, alt: ''}));
+      } else if (!img) {
+        $(link).prepend($('<span>').addClass('rf-card-face').text(a ? a.name.split(' ').pop() : 'Vacant'));
+      }
+      if (a && wait) {
+        this.classList.add('rf-cooldown');
+        $(link).append($('<span>').addClass('rf-card-badge').text(wait + ' mo'));
+      }
+      $(this).append($('<span>').addClass('rf-card-sub').text(a ? a.name : 'Vacant'));
+    });
+  };
+
+  // The main page: the leader, the deck and "End the month" side by side,
+  // then the hand and the advisors in rows of four.
+  RF.layoutMain = function() {
+    var content = document.getElementById('content');
+    var portrait = content.querySelector('.rf-portrait');
+    if (!portrait || content.querySelector('.rf-top')) {
+      return;
+    }
+    var top = $('<div>').addClass('rf-top');
+    $(portrait).before(top);
+    top.append(portrait);
+    var decks = $('<ul>').addClass('decks rf-top-cards');
+    $(content).find('ul.decks li.deck').appendTo(decks);
+    top.append(decks);
+    var end = $(content).find('ul.pinned-cards a.card[card-id^="rf_end_month"]').closest('li');
+    if (end.length) {
+      top.append($('<ul>').addClass('pinned-cards rf-top-cards').append(end));
+    }
+    // the old deck row and its divider are empty now
+    $(content).children('ul.decks:not(.rf-top-cards)').remove();
+    $(content).children('p.deck-description').prev('hr').remove();
+    $(content).children('p.deck-description').remove();
+  };
+
   RF.factionPersons = PERSONS;
+  RF.reichstag1920 = REICHSTAG_1920;
 
   RF.renderSidebar = function(Q) {
     RF.applyColours(Q);

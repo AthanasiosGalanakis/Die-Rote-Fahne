@@ -2,31 +2,19 @@ title: Next month
 new-page: true
 is-hand: true
 max-cards: 4
-on-arrival: {! Q.pinnedCardsDescription = "Advisors: the slots are in place. Advisors arrive in a later version."; !}
+on-arrival: {! Q.handDescription = "Hand"; Q.pinnedCardsDescription = "Advisors"; !}
 
-#The three decks of the Die Rote Fahne mode. Clicking a deck draws a card into the hand; the hand holds four cards.
+#The Party Affairs deck. Clicking it draws a card into the hand; the hand holds four cards. The pinned cards are the advisors, "Replace an advisor" and "End the month".
 
 {!<div class="rf-portrait"><div class="rf-portrait-img">Portrait</div><div class="rf-portrait-name">!}[+ leader_person +]{!</div><div class="rf-portrait-role">!}Leads the <span class="p-kpd">KPD</span> · <span class="f-[+ leader +]">[+ leader_name +]</span>{!</div></div>!}
 
 - @rf_party
-- @rf_mass
-- @rf_moscow
 - #rf_advisor
+- #rf_turn
 
 @rf_party
 title: Party Affairs
+subtitle: Draw a card. Each card you play takes up the month.
 is-deck: true
 
 - #rf_party
-
-@rf_mass
-title: Mass Work
-is-deck: true
-
-- #rf_mass
-
-@rf_moscow
-title: Moscow
-is-deck: true
-
-- #rf_moscow
