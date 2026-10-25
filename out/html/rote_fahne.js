@@ -24,7 +24,8 @@
   var LINE_AFFINITY = {
     united_front: {right: 20, center: 10, left: 0, ultra: -10, stalin: 0},
     insurrection: {right: 5, center: 5, left: 20, ultra: 5, stalin: 10},
-    bolshevization: {right: 0, center: 5, left: 20, ultra: -10, stalin: 15}
+    bolshevization: {right: 0, center: 5, left: 20, ultra: -10, stalin: 15},
+    class_against_class: {right: -15, center: -5, left: 5, ultra: 0, stalin: 25}
   };
 
   var clamp = function(x, lo, hi) {
@@ -69,7 +70,7 @@
         Q[g + '_dissent'] = Math.round(clamp(Q[g + '_dissent'], 0, 99));
         Q[g + '_moscow'] = Math.round(clamp(Q[g + '_moscow'], 0, 100));
       }
-      var stats = ['autonomy', 'moscow_trust', 'rev_situation', 'readiness',
+      var stats = ['autonomy', 'rev_situation', 'readiness',
                    'spd_relation', 'union_influence', 'repression', 'apparatus',
                    'uspd_relation', 'z_relation', 'ddp_relation', 'dvp_relation',
                    'dnvp_relation', 'nsdap_relation', 'pro_republic', 'nationalism'];
@@ -96,14 +97,11 @@
       Q.leader_dissent = Q[Q.leader + '_dissent'];
     },
 
-    // Stalin had little say in the International before 1925, so standing
-    // with his circle counts for less until then.
+    // How Moscow rates a faction: its own standing, how well it fits the
+    // line, and how powerful its patron in the Kremlin is.
     moscowScore: function(Q, f) {
-      var standing = Q[f + '_moscow'];
-      if (f == 'stalin' && Q.year < 1925) {
-        standing *= 0.8;
-      }
-      return standing + LINE_AFFINITY[Q.line][f];
+      var patron = RF.patronOf(Q, f);
+      return Q[f + '_moscow'] + LINE_AFFINITY[Q.line][f] + (patron ? 0.5 * RF.patronPower(Q, patron) : 0);
     },
 
     moscowFavourite: function(Q, exclude) {
@@ -153,17 +151,19 @@
       RF.updateNames(Q);
     },
 
-    // The Comintern may overturn the result. The chance grows with the gap
-    // in standing and with every earlier loss of party autonomy.
+    // The Comintern overturns the result when the leadership was condemned
+    // by an Open Letter, or when Moscow's pressure reaches 100. No dice: the
+    // Party tab shows the pressure in advance.
     verdict: function(Q) {
       var preferred = RF.moscowFavourite(Q);
       Q.moscow_overruled = 0;
       if (preferred == Q.leader) {
+        Q.open_letter = 0;
         return;
       }
-      var gap = RF.moscowScore(Q, preferred) - RF.moscowScore(Q, Q.leader);
-      var chance = clamp((gap / 100) * (100 - Q.autonomy) / 50, 0, 0.9);
-      if (Math.random() < chance) {
+      if (Q.open_letter || RF.overruleChance(Q) >= 1) {
+        Q.open_letter = 0;
+        Q.moscow_rebukes = 0;
         Q[Q.leader + '_dissent'] += 20;
         Q.overruled_name = NAMES[Q.leader];
         Q.leader = preferred;
@@ -177,16 +177,16 @@
     },
 
     // Obeying Moscow pleases the Thälmann circle; defying it feeds the
-    // Ultra-Left and costs the party Moscow's trust.
+    // Ultra-Left and costs the leadership Moscow's favour.
     obey: function(Q, amount) {
-      Q.moscow_trust += amount;
+      Q[Q.leader + '_moscow'] += amount / 2;
       Q.stalin_moscow += amount / 2;
       Q.autonomy -= amount / 2;
       RF.lean(Q, {stalin: Math.round(amount / 2), ultra: -Math.round(amount / 3)});
     },
 
     defy: function(Q, amount) {
-      Q.moscow_trust -= amount;
+      Q[Q.leader + '_moscow'] -= amount / 2;
       Q.stalin_moscow -= amount / 2;
       Q.autonomy += amount / 3;
       RF.lean(Q, {ultra: Math.round(amount / 2), stalin: -Math.round(amount / 2)});
@@ -325,13 +325,20 @@
   };
 
   // Chance that Moscow overturns the current leadership at the next congress.
+  // Moscow's pressure on the leadership, from 0 to 1. At 1 the next
+  // congress is overturned. A party that keeps its autonomy can stand a
+  // larger gap between the leadership and Moscow's favourite.
   RF.overruleChance = function(Q) {
     var preferred = RF.moscowFavourite(Q);
     if (preferred == Q.leader) {
       return 0;
     }
+    if (Q.open_letter) {
+      return 1;
+    }
     var gap = RF.moscowScore(Q, preferred) - RF.moscowScore(Q, Q.leader);
-    return clamp((gap / 100) * (100 - Q.autonomy) / 50, 0, 0.9);
+    var tolerance = 10 + 0.6 * Q.autonomy;
+    return clamp(gap / tolerance, 0, 1);
   };
 
   // The rising score without the dice (the dice add up to 30).
@@ -355,7 +362,7 @@
   var NUMBERED = ['right_strength', 'center_strength', 'left_strength', 'ultra_strength',
                   'stalin_strength', 'right_dissent', 'center_dissent', 'left_dissent',
                   'ultra_dissent', 'stalin_dissent', 'party_dissent', 'repression',
-                  'moscow_trust', 'autonomy', 'overrule_risk', 'readiness', 'rev_situation',
+                  'autonomy', 'overrule_risk', 'readiness', 'rev_situation',
                   'union_influence', 'spd_relation', 'rising_chance', 'uspd_relation',
                   'z_relation', 'ddp_relation', 'dvp_relation', 'dnvp_relation',
                   'nsdap_relation'];
@@ -914,7 +921,7 @@
     var a = ADVISORS[Q['adv_' + slot]];
     Q['adv_' + slot + '_next'] = Q.time + 6;
     if (a && a.faction == 'moscow') {
-      Q.moscow_trust += 3;
+      Q[Q.leader + '_moscow'] += 3;
       Q.autonomy -= 2;
     } else if (a) {
       var e = {};
@@ -955,7 +962,7 @@
       Q[old.faction + '_dissent'] += 4;
     }
     if (a.faction == 'moscow') {
-      Q.moscow_trust += 4;
+      Q[Q.leader + '_moscow'] += 4;
       Q.autonomy -= 3;
     } else {
       Q[a.faction + '_dissent'] -= 3;
@@ -1027,6 +1034,187 @@
     $(content).children('p.deck-description').remove();
   };
 
+  // ---- Moscow: the Kremlin patrons and the Comintern plenums -----------
+  // The Russian leadership is four patrons whose power follows the
+  // succession struggle (keyframes by year and month, linearly in between).
+  // Each KPD faction leans on one patron. Dates are approximate.
+  var PATRONS = {
+    zinoviev: {name: 'Zinoviev', person: 'zinoviev',
+               curve: [[1923, 1, 90], [1924, 12, 85], [1925, 12, 55], [1926, 10, 20], [1927, 11, 3], [1934, 1, 0]]},
+    trotsky: {name: 'Trotsky and Radek', person: 'trotsky',
+              curve: [[1923, 1, 55], [1923, 12, 45], [1924, 2, 25], [1925, 1, 15], [1926, 6, 20], [1927, 11, 2], [1934, 1, 0]]},
+    bukharin: {name: 'Bukharin', person: 'bukharin',
+               curve: [[1923, 1, 40], [1925, 6, 55], [1926, 10, 70], [1927, 12, 72], [1928, 7, 50], [1929, 4, 25], [1929, 11, 5], [1934, 1, 0]]},
+    stalin: {name: 'Stalin', person: 'stalin',
+             curve: [[1923, 1, 35], [1924, 6, 50], [1925, 12, 70], [1926, 10, 80], [1927, 12, 90], [1929, 12, 100], [1934, 1, 100]]}
+  };
+  RF.patrons = PATRONS;
+
+  // Which patron each faction leans on. Brandler's Right went down with
+  // Radek in 1924 and from about 1927 looked to Bukharin (the date is a
+  // judgement call); the Ultra-Left had none.
+  RF.patronOf = function(Q, f) {
+    var t = Q.year * 12 + Q.month;
+    if (f == 'right') {
+      return t < 1927 * 12 + 1 ? 'trotsky' : 'bukharin';
+    }
+    return {center: 'bukharin', left: 'zinoviev', ultra: null, stalin: 'stalin'}[f];
+  };
+
+  // A patron's power now: history, nudged by the KPD (patron_<id>_mod).
+  RF.patronPower = function(Q, id) {
+    var t = Q.year * 12 + Q.month;
+    var c = PATRONS[id].curve;
+    var v = c[c.length - 1][2];
+    for (var i = 0; i + 1 < c.length; i++) {
+      var a = c[i][0] * 12 + c[i][1], b = c[i + 1][0] * 12 + c[i + 1][1];
+      if (t <= a) {
+        v = c[i][2];
+        break;
+      }
+      if (t < b) {
+        v = c[i][2] + (c[i + 1][2] - c[i][2]) * (t - a) / (b - a);
+        break;
+      }
+    }
+    return clamp(v + (Q['patron_' + id + '_mod'] || 0), 0, 100);
+  };
+
+  // Plenums and congresses of the Comintern on the historical calendar.
+  // Each sets the line and a directive with a target the KPD is judged on
+  // at the next plenum. Dates are the month the meeting opened.
+  // The first entry is the directive the game starts with.
+  var PLENUMS = [
+    {year: 1922, month: 11, name: 'Fourth World Congress', line: 'united_front',
+     directive: 'Win Social Democratic workers for the united front', stat: 'spd_relation', op: '>=', target: 45},
+    {year: 1923, month: 6, name: 'Third Enlarged Plenum of the ECCI', line: 'united_front',
+     directive: 'Rally the masses against the Cuno government', stat: 'rev_situation', op: '>=', target: 55},
+    {year: 1923, month: 9, name: 'ECCI conference on the German revolution', line: 'insurrection',
+     directive: 'Prepare the armed rising', stat: 'readiness', op: '>=', target: 40},
+    {year: 1924, month: 1, name: 'ECCI Presidium on the German events', line: 'bolshevization',
+     directive: 'Rebuild the party around its factory cells', stat: 'apparatus', op: '>=', target: 20},
+    {year: 1924, month: 6, name: 'Fifth World Congress', line: 'bolshevization',
+     directive: 'Bolshevise the party', stat: 'apparatus', op: '>=', target: 30},
+    {year: 1925, month: 3, name: 'Fifth Enlarged Plenum of the ECCI', line: 'united_front',
+     directive: 'Win the trade unions back', stat: 'union_influence', op: '>=', target: 45},
+    {year: 1926, month: 2, name: 'Sixth Enlarged Plenum of the ECCI', line: 'united_front',
+     directive: 'Work inside the trade unions', stat: 'union_influence', op: '>=', target: 50},
+    {year: 1926, month: 11, name: 'Seventh Enlarged Plenum of the ECCI', line: 'united_front',
+     directive: 'Close ranks behind the leadership', stat: 'party_dissent', op: '<=', target: 30},
+    {year: 1927, month: 5, name: 'Eighth Plenum of the ECCI', line: 'united_front',
+     directive: 'Build mass campaigns against the war danger', stat: 'members', op: '>=', target: 130},
+    {year: 1928, month: 2, name: 'Ninth Plenum of the ECCI', line: 'class_against_class',
+     directive: 'Break with the Social Democrats', stat: 'spd_relation', op: '<=', target: 20},
+    {year: 1928, month: 7, name: 'Sixth World Congress', line: 'class_against_class',
+     directive: 'Fight the right danger in the party', stat: 'right_strength', op: '<=', target: 10},
+    {year: 1929, month: 7, name: 'Tenth Plenum of the ECCI', line: 'class_against_class',
+     directive: 'Lead the strikes against social fascism', stat: 'spd_relation', op: '<=', target: 10}
+  ];
+  RF.plenums = PLENUMS;
+
+  RF.nextPlenum = function(Q) {
+    var t = Q.year * 12 + Q.month;
+    for (var p of PLENUMS) {
+      if (p.year * 12 + p.month > t) {
+        return p;
+      }
+    }
+    return null;
+  };
+
+  // What the Party tab shows about the plenums and the current directive.
+  RF.moscowStatus = function(Q) {
+    var p = PLENUMS[Q.directive_index] || PLENUMS[0];
+    var next = RF.nextPlenum(Q);
+    Q.directive = p.directive;
+    Q.directive_from = p.name + ' (' + MONTHS[p.month] + ' ' + p.year + ')';
+    Q.directive_on_track = RF.directiveMet(Q, p) ? 1 : 0;
+    Q.next_plenum = next ? next.name + ', ' + MONTHS[next.month] + ' ' + next.year : 'none planned';
+  };
+
+  RF.directiveMet = function(Q, p) {
+    var v = Q[p.stat] || 0;
+    return p.op == '>=' ? v >= p.target : v <= p.target;
+  };
+
+  // Called once a month, after the date moves on: plenums judge the last
+  // directive and set a new one; party congresses elect the Zentrale.
+  RF.monthlyMoscow = function(Q) {
+    var t = Q.year * 12 + Q.month;
+    Q.moscow_news = '';
+    // a faction's standing in Moscow drifts towards its patron's power
+    for (var f of FACTIONS) {
+      var pa = RF.patronOf(Q, f);
+      var goal = pa ? RF.patronPower(Q, pa) : 10;
+      Q[f + '_moscow'] += (goal - Q[f + '_moscow']) * 0.05;
+    }
+    for (var i = 0; i < PLENUMS.length; i++) {
+      var p = PLENUMS[i];
+      if (p.year * 12 + p.month != t) {
+        continue;
+      }
+      var prev = Q.directive_index >= 0 ? PLENUMS[Q.directive_index] : null;
+      if (prev) {
+        if (RF.directiveMet(Q, prev)) {
+          Q[Q.leader + '_moscow'] += 8;
+          Q.autonomy += 3;
+          Q.moscow_rebukes = Math.max(0, Q.moscow_rebukes - 1);
+          Q.moscow_news = p.name + ': Moscow praises the KPD for its work on "' + prev.directive + '".';
+        } else {
+          Q[Q.leader + '_moscow'] -= 10;
+          Q.autonomy -= 5;
+          Q.moscow_rebukes += 1;
+          Q.moscow_news = p.name + ': Moscow rebukes the leadership for failing to "' + prev.directive.toLowerCase() + '".';
+          if (Q.moscow_rebukes >= 2) {
+            Q.open_letter = 1;
+            Q.moscow_news += ' An Open Letter condemns the leadership; Moscow will replace it at the next congress.';
+          }
+        }
+      }
+      Q.line = p.line;
+      Q.directive_index = i;
+    }
+    for (var c of KPD_CONGRESSES) {
+      if (c.year * 12 + c.month == t) {
+        var before = Q.leader;
+        RF.congress(Q);
+        Q.congress_news = c.place + ' (' + c.name + '): ' +
+            (Q.moscow_overruled ? 'Moscow overturned the vote and installed the ' + NAMES[Q.leader] + '.' :
+             Q.leader == before ? 'the ' + NAMES[Q.leader] + ' keeps the Zentrale.' :
+             'the ' + NAMES[Q.leader] + ' takes over the Zentrale.');
+      }
+    }
+    RF.normalize(Q);
+  };
+
+  RF.patronWord = function(Q, id) {
+    var power = RF.patronPower(Q, id);
+    var word = power >= 75 ? 'dominant' : power >= 50 ? 'strong' : power >= 25 ? 'weakening' : power >= 5 ? 'beaten' : 'gone';
+    return word + (Q.show_numbers ? ' (' + Math.round(power) + ')' : '');
+  };
+
+  RF.renderKremlin = function(Q) {
+    var el = document.getElementById('rf-kremlin');
+    if (!el) {
+      return;
+    }
+    var backs = {};
+    for (var f of FACTIONS) {
+      var pa = RF.patronOf(Q, f);
+      if (pa && !Q[f + '_expelled']) {
+        (backs[pa] = backs[pa] || []).push('<span class="f-' + f + '">' + NAMES[f] + '</span>');
+      }
+    }
+    var ids = Object.keys(PATRONS).sort(function(a, b) { return RF.patronPower(Q, b) - RF.patronPower(Q, a); });
+    var html = '<table class="rf-table rf-kremlin">';
+    for (var id of ids) {
+      html += '<tr><td><span class="m-' + PATRONS[id].person + '">' + PATRONS[id].name + '</span>' +
+          (backs[id] ? '<div class="rf-kremlin-backs">backs ' + backs[id].join(', ') + '</div>' : '') +
+          '</td><td class="rf-num">' + RF.patronWord(Q, id) + '</td></tr>';
+    }
+    el.innerHTML = html + '</table>';
+  };
+
   // People outside the KPD who get a hover card (class m-<id>).
   RF.people = {
     zinoviev: {name: 'Grigory Zinoviev', party: 'comintern',
@@ -1034,7 +1222,16 @@
                text: 'Head of the International and the patron of the KPD\'s Left. He pushed for the German October in 1923 and looked for others to blame when it failed.'},
     radek: {name: 'Karl Radek', party: 'comintern',
             role: 'The Comintern\'s expert on Germany',
-            text: 'Backed Brandler and the united front, and in June 1923 courted German nationalists with his Schlageter speech. After the failed October he fell with Brandler.'}
+            text: 'Backed Brandler and the united front, and in June 1923 courted German nationalists with his Schlageter speech. After the failed October he fell with Brandler.'},
+    trotsky: {name: 'Leon Trotsky', party: 'comintern',
+              role: 'People\'s Commissar for War until January 1925',
+              text: 'Leader of the Left Opposition from late 1923, with Radek at his side. Removed from his posts, expelled from the party in November 1927 and deported in 1929.'},
+    bukharin: {name: 'Nikolai Bukharin', party: 'comintern',
+               role: 'Led the Comintern in practice, 1926–1929',
+               text: 'Stalin\'s ally against Zinoviev and Trotsky, then branded the leader of the \'right deviation\' and removed in 1929. Brandler\'s KPO looked to him.'},
+    stalin: {name: 'Joseph Stalin', party: 'comintern',
+             role: 'General Secretary of the Russian party from 1922',
+             text: 'Allied with Zinoviev against Trotsky, then with Bukharin against Zinoviev, and stood alone by 1929. Thälmann\'s patron from 1925.'}
   };
 
   RF.factionPersons = PERSONS;
@@ -1046,6 +1243,7 @@
       return;
     }
     RF.renderLeaders(Q);
+    RF.renderKremlin(Q);
     RF.renderReichstag();
     RF.renderPolls(Q);
   };

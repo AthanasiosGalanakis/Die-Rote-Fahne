@@ -1,8 +1,9 @@
 
-# chance in percent that Moscow overturns the leadership at a congress
+# Moscow's pressure on the leadership, in percent; at 100 the next congress is overturned
 
 (..0.5) none: Moscow backs the leadership
-(0.5..15) low
-(15..35) real
-(35..60) high
-(60..) very high
+(0.5..25) low
+(25..50) rising
+(50..75) high
+(75..99.5) severe
+(99.5..) certain: Moscow will overturn the next congress

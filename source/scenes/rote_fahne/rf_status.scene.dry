@@ -51,6 +51,7 @@ is-special: true
 on-arrival: {!
 var RF = window.RF;
 Q.overrule_risk = Math.round(100 * RF.overruleChance(Q));
+RF.moscowStatus(Q);
 var base = RF.risingBase(Q);
 Q.rising_chance = Math.round(100 * Math.max(0, Math.min(1, (base + 30 - 140) / 30)));
 var t = Q.year * 12 + Q.month;
@@ -90,17 +91,27 @@ Leadership: <span class="f-[+ leader +]">[+ leader_name +]</span>
 
 = Moscow
 
-{!<span class="tooltip-text" title="The Comintern's strategy for Germany. Factions that fit the line gain standing in Moscow.">Comintern line</span>!}: [? if line == "united_front" : united front with the SPD's workers ?][? if line == "insurrection" : prepare the insurrection ?][? if line == "bolshevization" : Bolshevization of the party ?]
+{!<span class="tooltip-text" title="The Comintern's strategy for Germany, set at each plenum in Moscow. Factions that fit the line gain standing there.">Comintern line</span>!}: [? if line == "united_front" : united front with the SPD's workers ?][? if line == "insurrection" : prepare the insurrection ?][? if line == "bolshevization" : Bolshevization of the party ?][? if line == "class_against_class" : class against class ?]
 
-In Moscow: {!<span class="m-zinoviev">Zinoviev</span>!} chairs the {!<span class="p-comintern">Comintern</span>!}[? if year = 1923 : ; {!<span class="m-radek">Radek</span>!} handles Germany. ?][? if year >= 1924 : ; {!<span class="m-radek">Radek</span>!} is blamed for the failed October. ?]
+{!<span class="tooltip-text" title="What the last plenum asked of the KPD. The next plenum judges the leadership on it: success wins Moscow's favour, failure brings a rebuke.">Directive</span>!}: [+ directive +] [? if directive_on_track = 1 : (on track) ?][? if directive_on_track = 0 : (behind) ?]
 
-{!<span class="tooltip-text" title="Moscow trusts a party that follows its orders. Low trust means less help and more intervention.">Moscow's trust</span>!}: [+ moscow_trust : relationships +][+ n_moscow_trust +]
+{!<span class="tooltip-text" title="The plenums of the Comintern's Executive Committee and the World Congresses, on their historical dates.">Next plenum</span>!}: [+ next_plenum +]
 
-{!<span class="tooltip-text" title="How far the KPD still decides for itself. Each intervention from Moscow wears it down, and the lower it is, the easier Moscow overturns a congress.">Party autonomy</span>!}: [+ autonomy : rf_autonomy +][+ n_autonomy +]
+[? if moscow_news != "" : *[+ moscow_news +]* ?]
+
+[? if open_letter = 1 : **Moscow has condemned the leadership in an Open Letter. It will be replaced at the next party congress.** ?][? if open_letter = 0 and moscow_rebukes = 1 : **Moscow has rebuked the leadership once. A second rebuke brings an Open Letter.** ?]
+
+{!<span class="tooltip-text" title="The Russian leaders who decide the Comintern's course. Each KPD faction leans on one of them and rises or falls with its patron.">The Kremlin</span>!}:
+
+{!<div id="rf-kremlin"></div>!}
 
 Moscow favours: <span class="f-[+ favourite +]">[+ favourite_name +]</span>
 
-{!<span class="tooltip-text" title="The chance that Moscow overturns the current leadership at the next congress. It grows with the gap between the leadership and Moscow's favourite, and as autonomy falls.">Risk of intervention</span>!}: [+ overrule_risk : rf_overrule +][+ n_overrule_risk +]
+{!<span class="tooltip-text" title="How far the KPD still decides for itself. Each intervention from Moscow wears it down, and the lower it is, the easier Moscow overturns a congress.">Party autonomy</span>!}: [+ autonomy : rf_autonomy +][+ n_autonomy +]
+
+{!<span class="tooltip-text" title="How hard Moscow is pushing to replace the leadership with its favourite. It grows with the gap between them and as autonomy falls. At its peak, Moscow overturns the next congress.">Moscow's pressure</span>!}: [+ overrule_risk : rf_overrule +][+ n_overrule_risk +]
+
+[? if congress_news != "" : *Last congress: [+ congress_news +]* ?]
 
 = Armed formations
 

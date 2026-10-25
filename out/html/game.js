@@ -575,7 +575,8 @@
           logoClass: 'bg-' + person.party + ' rf-tip-portrait',
           title: escHtml(person.name), titleClass: 'p-' + person.party,
           subtitle: escHtml(person.role),
-          rows: info ? [['Belongs to', escHtml(info.full)]] : [],
+          rows: (info ? [['Belongs to', escHtml(info.full)]] : []).concat(
+              RF.patrons && RF.patrons[id] && qualities().rf_mode ? [['In the Kremlin', RF.patronWord(qualities(), id)]] : []),
           body: escHtml(person.text),
           accent: cssVar('--c-' + person.party, '')
       });
