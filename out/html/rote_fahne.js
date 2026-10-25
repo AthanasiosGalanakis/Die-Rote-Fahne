@@ -493,7 +493,7 @@
       var parts = [];
       for (var q of gOrder) {
         if (g.shares[q] >= 0.5) {
-          parts.push(partyName(q, true) + '&nbsp;' + Math.round(g.shares[q]));
+          parts.push(partyName(q, true) + '&nbsp;' + Math.round(g.shares[q]) + '%');
         }
       }
       out += '<div class="rf-demo-list">' + parts.join(' · ') + '</div></div>';
@@ -515,6 +515,15 @@
     ['other', 'Others', 9, 'Bavarian Peasants\' League, German-Hanoverian Party']
   ];
 
+  // A party's share of the 1920 Reichstag, as a percentage of all seats.
+  RF.seatShare = function(seats) {
+    var total = 0;
+    for (var r of REICHSTAG_1920) {
+      total += r[2];
+    }
+    return (100 * seats / total).toFixed(1) + '%';
+  };
+
   RF.renderReichstag = function() {
     var el = document.getElementById('rf-reichstag');
     if (!el) {
@@ -528,7 +537,7 @@
     var html = stackedBar(order, shares, 459) + '<table class="rf-table">';
     for (var s of REICHSTAG_1920) {
       html += '<tr><td><span class="p-' + s[0] + ' tooltip-text" title="' + esc(s[3]) + '">' +
-          s[1] + '</span></td><td class="rf-num">' + s[2] + ' seats</td></tr>';
+          s[1] + '</span></td><td class="rf-num">' + RF.seatShare(s[2]) + '</td></tr>';
     }
     el.innerHTML = html + '</table>';
   };
@@ -955,7 +964,6 @@
   // The other cards without a picture get a word on their face.
   RF.decorateAdvisors = function(Q) {
     var faces = {
-      'rf_end_month': '→ ' + MONTHS[Q.month % 12 + 1],
       'rf_advisors.replace': '⇄',
       'rf_main.rf_party': 'Draw'
     };
@@ -988,7 +996,7 @@
     });
   };
 
-  // The main page: the leader, the deck and "End the month" side by side,
+  // The main page: the leader, the deck and "Replace an advisor" side by side,
   // then the hand and the advisors in rows of four.
   RF.layoutMain = function() {
     var content = document.getElementById('content');
@@ -1002,9 +1010,9 @@
     var decks = $('<ul>').addClass('decks rf-top-cards');
     $(content).find('ul.decks li.deck').appendTo(decks);
     top.append(decks);
-    var end = $(content).find('ul.pinned-cards a.card[card-id^="rf_end_month"]').closest('li');
-    if (end.length) {
-      top.append($('<ul>').addClass('pinned-cards rf-top-cards').append(end));
+    var replace = $(content).find('ul.pinned-cards a.card[card-id="rf_advisors.replace"]').closest('li');
+    if (replace.length) {
+      top.append($('<ul>').addClass('pinned-cards rf-top-cards').append(replace));
     }
     // the old deck row and its divider are empty now
     $(content).children('ul.decks:not(.rf-top-cards)').remove();

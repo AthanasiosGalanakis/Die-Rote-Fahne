@@ -1,6 +1,0 @@
-title: End the month
-subtitle: Let the month pass without playing a card.
-is-pinned-card: true
-tags: rf_turn
-on-arrival: month_actions += 1
-go-to: rf_post_event
