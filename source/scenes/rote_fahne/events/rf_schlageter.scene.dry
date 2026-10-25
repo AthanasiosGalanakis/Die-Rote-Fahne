@@ -7,37 +7,43 @@ max-visits: 1
 
 = The Schlageter Speech
 
-On 20 June, at a session of the Comintern's Executive, Karl Radek gave a speech on Albert Leo Schlageter, a Freikorps veteran shot by the French for sabotage in the Ruhr. Radek called him a "wanderer into the void" and invited German nationalists to find their way to the workers' side against the Entente.
+On 20 June, at a session of the <span class="p-comintern">Comintern</span>'s Executive, Karl Radek gave a speech on Albert Leo Schlageter, a Freikorps veteran shot by the French for sabotage in the Ruhr. Radek called him a "wanderer into the void" and invited German nationalists to find their way to the workers' side against the Entente.
 
-The "Schlageter course" now runs through the party press. Communist speakers debate with nationalist students and völkisch groups. Many members are confused.
+Moscow expects the party to follow this "Schlageter course". Communist speakers could debate with nationalist students and völkisch groups. Many members are confused.
 
-- @amplify: Take the course seriously: debate the nationalists and win their youth.
-- @tolerate: Repeat the line in the paper but keep it away from the factories.
-- @oppose: Object to the course, inside the party.
+- @amplify
+- @tolerate
+- @oppose
 
 @amplify
+title: Take the course seriously: debate the nationalists and win their youth.
+subtitle: Pleases Moscow, <span class="f-stalin">Thälmann</span> and the <span class="f-right">Right</span>. Angers the <span class="f-ultra">Ultra-Left</span> and the <span class="p-spd">SPD</span>.
 on-arrival: {!
+window.RF.obey(Q, 6);
+window.RF.lean(Q, {right: 2});
 Q.members += 8;
 Q.spd_relation -= 6;
-Q.right_moscow += 3;
-Q[Q.player + '_moscow'] += 4;
 !}
 
-Communist and nationalist speakers share platforms. A few young nationalists join the party. The SPD press is delighted to quote the Rote Fahne next to the völkisch papers.
+Communist and nationalist speakers share platforms. A few young nationalists join the party. The <span class="p-spd">SPD</span> press is delighted to quote the *Rote Fahne* next to the völkisch papers.
 
 @tolerate
+title: Repeat the line in the paper but keep it away from the factories.
+subtitle: Little effect either way.
 on-arrival: {!
 Q.members += 3;
 Q.spd_relation -= 2;
 !}
 
-The party prints the speeches and goes on with its factory work. The episode passes without much effect either way.
+The party prints the speeches and goes on with its factory work. The episode passes.
 
 @oppose
+title: Refuse: a workers' party cannot borrow the nationalists' heroes.
+subtitle: Defies Moscow. Pleases the <span class="f-ultra">Ultra-Left</span> and <span class="f-left">Left</span>. Angers <span class="f-stalin">Thälmann</span>.
 on-arrival: {!
-Q[Q.player + '_moscow'] -= 6;
+window.RF.defy(Q, 8);
+window.RF.lean(Q, {left: 2});
 Q.spd_relation += 3;
-Q[Q.player + '_dissent'] += 4;
 !}
 
-You argue that a workers' party cannot borrow the nationalists' heroes. Radek takes it personally.
+The party declines to follow the course. Radek takes it personally, and Moscow notes who in Germany thinks for themselves.

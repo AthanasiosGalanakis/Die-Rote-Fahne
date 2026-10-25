@@ -1,29 +1,29 @@
 # Die Rote Fahne
 
-A mod of [Social Democracy: An Alternate History](https://github.com/aucchen/social_democracy_alternate_history) by Autumn Chen. You lead one of four factions inside the Communist Party of Germany (KPD), starting in January 1923.
+A standalone game built on [Social Democracy: An Alternate History](https://github.com/aucchen/social_democracy_alternate_history) by Autumn Chen. You lead the Communist Party of Germany (KPD), starting in January 1923.
 
-The original SPD game is still in this repository and can be started from the title screen.
+## How it plays
 
-## The prototype
+You play the party as a whole, not one faction. Every card and event you choose strengthens some factions inside the KPD and angers others, and each choice says which:
 
-The current version covers Act I, the revolutionary year: January 1923 to the Frankfurt party congress of April 1924. Choose "Die Rote Fahne" on the title screen.
+- Brandler Right: united front with the SPD, workers' governments.
+- Middle Group: party unity above any line.
+- Fischer–Maslow Left: no coalitions, prepare the offensive; Zinoviev's favourites.
+- Ultra-Left: Korsch, Scholem, Rosenberg; suspicious of the unions, parliament and Moscow. Defying Moscow feeds it.
+- Thälmann circle: follows whoever rules in Moscow. Obeying Moscow feeds it; defying Moscow angers it.
 
-- **Factions:** Brandler Right, Fischer–Maslow Left, Middle Group, and the Thälmann circle (which starts inside the Left, because a separate Stalinist faction did not exist yet in 1923).
-- **Two boards:** Party Affairs, Mass Work and Moscow card decks move faction strength, dissent and Moscow standing on one side, and the revolutionary situation, armed readiness, unions and SPD relations on the other.
-- **Comintern:** each faction has a standing in Moscow, and the party has an autonomy score that falls each time Moscow intervenes. After congresses and defeats, Moscow can overturn the result.
-- **Events:** the Leipzig congress, the Schlageter speech, the Cuno strikes, the German October plan, the Saxon workers' government, the Chemnitz conference, the Hamburg Uprising, the Reich intervention, the Beer Hall Putsch, the party ban, Moscow's verdict, Lenin's death and the Frankfurt congress.
-- **Purges and splits:** the leadership can remove or expel rival factions; a faction with very high dissent breaks away; an expelled player can recant, found a splinter party, or leave.
-- **Endings:** a successful German October (rare, by design), or the Frankfurt congress, graded by where your faction ends up.
+Strong factions take the leadership at congresses. Angry factions can break away. A leadership pushed too far can resign. Moscow can overturn any result, more easily the less autonomy the party has kept.
 
-Acts II to V (1924 to 1934) are not built yet.
+The current version covers Act I, the revolutionary year: January 1923 to the Frankfurt party congress of April 1924. It ends with a successful German October (rare, by design), a graded verdict on the party at Frankfurt, or the party's collapse. Acts II to V (1924 to 1934) are not built yet.
 
 ## Where the code is
 
-- `source/scenes/rote_fahne/`: all scenes for the mod, prefixed `rf_` (start, hand, monthly update, sidebar, endings).
+- `source/scenes/rote_fahne/`: the game's scenes, prefixed `rf_` (start, hand, monthly update, sidebar, endings).
 - `source/scenes/rote_fahne/cards/`: playable cards, tagged `rf_party`, `rf_mass` or `rf_moscow`.
 - `source/scenes/rote_fahne/events/`: events, tagged `rf_event`.
-- `out/html/rote_fahne.js`: shared rules (normalising factions, congresses, Moscow verdicts, the rising).
-- `source/scenes/root.scene.dry` routes to `rf_post_event` when `rf_mode = 1`; `out/html/game.js` shows the `rf_status` sidebar in that mode.
+- `out/html/rote_fahne.js`: shared rules (faction leanings, congresses, Moscow verdicts, the rising).
+- `out/html/game.css`: party colours (`p-kpd`, `p-spd`, ...) and faction colours (`f-right`, `f-left`, ...), after the Dynamic Social Democracy mod.
+- The original game's scenes are still in `source/scenes/` for reuse in later acts, but the title screen no longer offers them.
 
 ## Included Libraries
 

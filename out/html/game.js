@@ -16,7 +16,7 @@
     // Add your custom code here.
   };
 
-  var TITLE = "Social Democracy: An Alternate History" + '_' + "Autumn Chen";
+  var TITLE = "Die Rote Fahne" + '_' + "Maarten";
 
   // the url is a link to game.json
   // test url: https://aucchen.github.io/social_democracy_mods/v0.1.json
@@ -368,15 +368,7 @@
   // TODO: have some code for tabbed sidebar browsing.
   window.updateSidebar = function() {
       $('#qualities').empty();
-      var tab = window.statusTab;
-      // Die Rote Fahne mode has its own sidebar scenes (rf_status, rf_status.politics, ...)
-      if (dendryUI.dendryEngine.state.qualities.rf_mode) {
-          tab = tab.replace('status', 'rf_status');
-          if (!dendryUI.game.scenes[tab]) {
-              tab = 'rf_status';
-          }
-      }
-      var scene = dendryUI.game.scenes[tab];
+      var scene = dendryUI.game.scenes[window.statusTab];
       dendryUI.dendryEngine._runActions(scene.onArrival);
       var displayContent = dendryUI.dendryEngine._makeDisplayContent(scene.content, true);
       $('#qualities').append(dendryUI.contentToHTML.convert(displayContent));
@@ -434,7 +426,7 @@
 
 
   window.justLoaded = true;
-  window.statusTab = "status";
+  window.statusTab = "rf_status";
   window.dendryModifyUI = main;
   console.log("Modifying stats: see dendryUI.dendryEngine.state.qualities");
 

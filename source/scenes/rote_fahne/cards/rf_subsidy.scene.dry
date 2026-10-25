@@ -10,23 +10,25 @@ on-arrival: month_actions += 1; rf_subsidy_timer = 4
 
 Members' dues are worth nothing in a hyperinflation. The International's representatives can supply hard currency.
 
-- @accept: Accept the subsidy.
-- @refuse: Rely on the members.
+- @accept
+- @refuse
 
 @accept
+title: Accept the subsidy.
+subtitle: +3 funds. Pleases <span class="f-stalin">Thälmann</span>. Angers the <span class="f-ultra">Ultra-Left</span>.
 on-arrival: {!
 Q.funds += 3;
-Q.autonomy -= 4;
-Q[Q.player + '_moscow'] += 2;
+window.RF.obey(Q, 4);
 !}
 
 The money arrives in dollars. With it come reports, instructions and representatives.
 
 @refuse
+title: Rely on the members' dues.
+subtitle: +1 fund. Pleases the <span class="f-ultra">Ultra-Left</span>. Angers <span class="f-stalin">Thälmann</span>.
 on-arrival: {!
 Q.funds += 1;
-Q.autonomy += 2;
-Q[Q.player + '_moscow'] -= 2;
+window.RF.defy(Q, 4);
 !}
 
 You raise what you can at home. The party stays poorer and a little freer.

@@ -46,14 +46,20 @@ if (Q.month_actions >= 1) {
     RF.normalize(Q);
 }
 
-// 2. a faction the player does not lead may split off when its dissent is too high
+// 2. a faction outside the leadership may split off when its dissent is too high
 Q.split_pending = 0;
 for (var g of RF.factions) {
-    if (g != Q.player && g != Q.leader && !Q[g + '_expelled'] && Q[g + '_dissent'] >= 85) {
+    if (g != Q.leader && !Q[g + '_expelled'] && Q[g + '_dissent'] >= 85) {
         Q.split_pending = 1;
         Q.split_faction = g;
         Q.split_faction_name = RF.names[g];
     }
+}
+
+// 3. a party that has bled away its members collapses
+if (Q.members < 60 && !Q.rf_over) {
+    Q.rf_over = 1;
+    Q.rf_ending = 'collapse';
 }
 
 Q.has_event = 0;

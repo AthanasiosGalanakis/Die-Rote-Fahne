@@ -1,5 +1,5 @@
 title: Friends in Moscow
-subtitle: Every German faction has someone in the Russian leadership. Use yours.
+subtitle: Every German faction has someone in the Russian leadership.
 new-page: true
 is-card: true
 tags: rf_moscow
@@ -8,24 +8,41 @@ on-arrival: month_actions += 1; rf_patron_timer = 4
 
 = Friends in Moscow
 
-[? if player == "right" : Karl Radek knows Germany better than any Russian leader and has defended Brandler before. ?][? if player == "left" : Grigory Zinoviev chairs the International and is happy to have a German faction of his own. ?][? if player == "center" : You have no patron of your own. You can lobby the ECCI's officials and hope to be seen as the safe choice. ?][? if player == "stalin" : Stalin is General Secretary of the Russian party but has little say in the International yet. His people are building a network, and they are looking for Germans. ?]
+The Russian leaders each have their German friends. Whom the party listens to decides whom Moscow will back.
 
-- @write: Ask your friends to speak for you.
-- @offer: Offer your faction's loyalty in the Russian party's own disputes.
+- @radek
+- @zinoviev
+- @stalin
 
-@write
+@radek
+title: Lean on Karl Radek, the International's expert on Germany.
+subtitle: Moscow warms to the <span class="f-right">Right</span>.
 on-arrival: {!
-var gain = {right: 6, left: 6, center: 4, stalin: Q.year >= 1924 ? 8 : 3};
-Q[Q.player + '_moscow'] += gain[Q.player];
+window.RF.lean(Q, {right: 2});
+Q.right_moscow += 7;
+Q.moscow_trust += 2;
 !}
 
-Your friends in Moscow speak for you. [? if player == "stalin" : For now, Stalin's word counts for less in the International than Zinoviev's. ?]
+Radek knows Germany better than any Russian leader and has defended Brandler before. He will speak for the party's moderates.
 
-@offer
+@zinoviev
+title: Court Grigory Zinoviev, chairman of the International.
+subtitle: Moscow warms to the <span class="f-left">Left</span>.
 on-arrival: {!
-Q[Q.player + '_moscow'] += 9;
-Q.autonomy -= 3;
-Q[Q.player + '_dissent'] += 3;
+window.RF.lean(Q, {left: 2});
+Q.left_moscow += 7;
+Q.moscow_trust += 2;
 !}
 
-You let it be known that your faction will take the right side in the Russian leadership's struggle with Trotsky. It earns you favour, and ties your fate to men you cannot control.
+Zinoviev is happy to have a German faction of his own, and Fischer and Maslow are happy to be it.
+
+@stalin
+title: Cultivate the General Secretary's people.
+subtitle: Moscow warms to <span class="f-stalin">Thälmann</span>, slowly while Stalin's word counts for little in the International.
+on-arrival: {!
+window.RF.lean(Q, {stalin: 2});
+Q.stalin_moscow += Q.year >= 1924 ? 8 : 4;
+Q.moscow_trust += 2;
+!}
+
+Stalin runs the Russian party's machine but has little say in the International yet. His people are building a network, and they are looking for Germans.

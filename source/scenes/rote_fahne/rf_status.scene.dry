@@ -2,19 +2,23 @@ title: Status
 new-page: true
 is-special: true
 
-= Status
+= The KPD
 
 [+ month : month +] [+ year +]
 
-You lead: **[+ player_name +]** [? if player_leads : (in control of the Zentrale) ?][? if player_leads = 0 : (in opposition) ?]
+Leadership: <span class="f-[+ leader +]">[+ leader_name +]</span>
 
-Party leadership: [+ leader_name +]
+Moscow favours: <span class="f-[+ favourite +]">[+ favourite_name +]</span>
 
-Moscow favours: [+ favourite_name +]
+<span class="p-comintern">Comintern</span> line: [? if line == "united_front" : united front ?][? if line == "insurrection" : insurrection ?][? if line == "bolshevization" : Bolshevization ?]
 
-Comintern line: [? if line == "united_front" : united front ?][? if line == "insurrection" : insurrection ?][? if line == "bolshevization" : Bolshevization ?]
+Moscow's trust: [+ moscow_trust +]/100
 
 Party autonomy: [+ autonomy +]/100
+
+Party unity: [+ unity +]/100
+
+Members: about [+ members +] thousand
 
 Funds: [+ funds +]
 
@@ -22,19 +26,15 @@ Funds: [+ funds +]
 
 = Factions
 
-Strength, dissent and standing in Moscow.
+[? if right_expelled = 0 : <span class="f-right">Brandler Right</span>: [+ right_strength +]%, dissent [+ right_dissent : dissent +], Moscow [+ right_moscow +] {!<div class="rf-bar"><span class="b-right" style="width: !}[+ right_strength +]{!%"></span></div>!} ?][? if right_expelled : <span class="f-right">Brandler Right</span>: left the party ?]
 
-[? if right_expelled = 0 : Brandler Right: [+ right_strength +]% ([+ right_strength : strength +]), dissent [+ right_dissent : dissent +], Moscow [+ right_moscow +] ?]
-[? if right_expelled : Brandler Right: expelled ?]
+[? if center_expelled = 0 : <span class="f-center">Middle Group</span>: [+ center_strength +]%, dissent [+ center_dissent : dissent +], Moscow [+ center_moscow +] {!<div class="rf-bar"><span class="b-center" style="width: !}[+ center_strength +]{!%"></span></div>!} ?][? if center_expelled : <span class="f-center">Middle Group</span>: left the party ?]
 
-[? if left_expelled = 0 : Fischer–Maslow Left: [+ left_strength +]% ([+ left_strength : strength +]), dissent [+ left_dissent : dissent +], Moscow [+ left_moscow +] ?]
-[? if left_expelled : Fischer–Maslow Left: expelled ?]
+[? if left_expelled = 0 : <span class="f-left">Fischer–Maslow Left</span>: [+ left_strength +]%, dissent [+ left_dissent : dissent +], Moscow [+ left_moscow +] {!<div class="rf-bar"><span class="b-left" style="width: !}[+ left_strength +]{!%"></span></div>!} ?][? if left_expelled : <span class="f-left">Fischer–Maslow Left</span>: left the party ?]
 
-[? if center_expelled = 0 : Middle Group: [+ center_strength +]% ([+ center_strength : strength +]), dissent [+ center_dissent : dissent +], Moscow [+ center_moscow +] ?]
-[? if center_expelled : Middle Group: expelled ?]
+[? if ultra_expelled = 0 : <span class="f-ultra">Ultra-Left</span>: [+ ultra_strength +]%, dissent [+ ultra_dissent : dissent +], Moscow [+ ultra_moscow +] {!<div class="rf-bar"><span class="b-ultra" style="width: !}[+ ultra_strength +]{!%"></span></div>!} ?][? if ultra_expelled : <span class="f-ultra">Ultra-Left</span>: left the party ?]
 
-[? if stalin_expelled = 0 : Thälmann circle: [+ stalin_strength +]% ([+ stalin_strength : strength +]), dissent [+ stalin_dissent : dissent +], Moscow [+ stalin_moscow +] ?]
-[? if stalin_expelled : Thälmann circle: expelled ?]
+[? if stalin_expelled = 0 : <span class="f-stalin">Thälmann circle</span>: [+ stalin_strength +]%, dissent [+ stalin_dissent : dissent +], Moscow [+ stalin_moscow +] {!<div class="rf-bar"><span class="b-stalin" style="width: !}[+ stalin_strength +]{!%"></span></div>!} ?][? if stalin_expelled : <span class="f-stalin">Thälmann circle</span>: left the party ?]
 
 @politics
 title: Germany
@@ -45,15 +45,13 @@ is-special: true
 
 Revolutionary situation: [+ rev_situation +]/100
 
-Members: about [+ members +] thousand
-
 Union influence: [+ union_influence +]/100
 
-Relations with the SPD: [+ spd_relation +] ([+ spd_relation : relationships +])
+Relations with the <span class="p-spd">SPD</span>: [+ spd_relation +] ([+ spd_relation : relationships +])
 
 State repression: [+ repression +]/100
 
-[? if workers_govt : The KPD sits in the Saxon and Thuringian governments. ?]
+[? if workers_govt : The <span class="p-kpd">KPD</span> sits in the Saxon and Thuringian governments. ?]
 
 @paramilitaries
 title: Armed readiness
@@ -68,4 +66,4 @@ Apparatus control: [+ apparatus +]/100
 
 [? if october_plan : Moscow has ordered preparations for a German October. ?]
 
-A rising is judged against the Reichswehr and police, which are far stronger than anything the party can field. Readiness, the mood of the masses, the unions and the left wing of the SPD all count.
+A rising is judged against the <span class="p-reichswehr">Reichswehr</span> and police, which are far stronger than anything the party can field. Readiness, the mood of the masses, the unions and the left wing of the <span class="p-spd">SPD</span> all count.

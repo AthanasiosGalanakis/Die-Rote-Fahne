@@ -596,3 +596,52 @@ table {
     text-decoration: underline;
     text-decoration-style: dotted;
 }
+
+/* Die Rote Fahne: party colours (after the Dynamic Social Democracy mod) */
+.p-kpd { color: #700000; font-weight: bold; }
+.p-spd { color: #c00000; font-weight: bold; }
+.p-uspd { color: #9B0000; font-weight: bold; }
+.p-nsdap { color: #7A3C00; font-weight: bold; }
+.p-dnvp { color: #3E88B3; font-weight: bold; }
+.p-dvp { color: #C0A054; font-weight: bold; }
+.p-ddp { color: #B8A000; font-weight: bold; }
+.p-z { color: #1A1A1A; font-weight: bold; }
+.p-kapd { color: #3a3a3a; font-weight: bold; }
+.p-pcf { color: #b3004b; font-weight: bold; }
+.p-reichswehr { color: #555555; font-weight: bold; }
+.p-comintern { color: #b8000f; font-weight: bold; }
+
+/* KPD factions */
+.f-right { color: #c4622d; font-weight: bold; }
+.f-center { color: #8a6d3b; font-weight: bold; }
+.f-left { color: #b00020; font-weight: bold; }
+.f-ultra { color: #2b2b2b; font-weight: bold; }
+.f-stalin { color: #5a0f2e; font-weight: bold; }
+
+body.dark-mode .p-kpd { color: #e05050; }
+body.dark-mode .p-spd { color: #ff5c5c; }
+body.dark-mode .p-uspd { color: #ff7070; }
+body.dark-mode .p-nsdap { color: #c8874a; }
+body.dark-mode .p-dnvp { color: #6fb3dc; }
+body.dark-mode .p-ddp { color: #f0d64a; }
+body.dark-mode .p-z { color: #d0d0d0; }
+body.dark-mode .p-kapd { color: #b0b0b0; }
+body.dark-mode .p-pcf { color: #ff5c9a; }
+body.dark-mode .p-reichswehr { color: #aaaaaa; }
+body.dark-mode .p-comintern { color: #ff6060; }
+body.dark-mode .f-right { color: #f0925a; }
+body.dark-mode .f-center { color: #d2b27a; }
+body.dark-mode .f-left { color: #ff5c6e; }
+body.dark-mode .f-ultra { color: #c8c8c8; }
+body.dark-mode .f-stalin { color: #d0607f; }
+
+/* faction strength bars in the sidebar */
+.rf-bar { height: 0.45em; margin: 0.15em 0 0.6em 0; background: rgba(0, 0, 0, 0.08); }
+.rf-bar span { display: block; height: 100%; }
+body.dark-mode .rf-bar { background: rgba(255, 255, 255, 0.12); }
+.rf-bar .b-right { background: #c4622d; }
+.rf-bar .b-center { background: #8a6d3b; }
+.rf-bar .b-left { background: #b00020; }
+.rf-bar .b-ultra { background: #2b2b2b; }
+.rf-bar .b-stalin { background: #5a0f2e; }
+body.dark-mode .rf-bar .b-ultra { background: #c8c8c8; }

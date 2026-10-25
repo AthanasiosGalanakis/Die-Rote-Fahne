@@ -10,23 +10,27 @@ on-arrival: month_actions += 1; rf_underground_timer = 1
 
 The offices are sealed and the paper is banned. Members meet in flats and allotment huts.
 
-- @cells: Rebuild the organisation cell by cell.
-- @paper: Print an illegal Rote Fahne.
+- @cells
+- @paper
 
 @cells
+title: Rebuild the organisation cell by cell.
+subtitle: Saves members. Strengthens the apparatus and <span class="f-stalin">Thälmann</span>.
 on-arrival: {!
+window.RF.lean(Q, {stalin: 2});
 Q.members += 6;
 Q.apparatus += 3;
-Q[Q.player + '_strength'] += 2;
 !}
 
 Small groups meet in secret and keep paying dues. The organisation survives in a harder form.
 
 @paper
+title: Print an illegal Rote Fahne.
+subtitle: Saves some members. Pleases the <span class="f-left">Left</span>.
 on-arrival: {!
+window.RF.lean(Q, {left: 3});
 Q.members += 3;
 Q.repression += 3;
-Q[Q.player + '_strength'] += 3;
 !}
 
-Illegal leaflets and papers circulate in the factories. The police seize some presses, but your faction's voice is the one members hear.
+Illegal leaflets and papers circulate in the factories. The police seize some presses, but the party's voice is still heard.

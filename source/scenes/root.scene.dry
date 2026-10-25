@@ -1,20 +1,17 @@
 title: Root Scene
 new-page: true
-go-to: rf_post_event if started = 1 and rf_mode = 1; post_event if started = 1 and rf_mode = 0; start_menu if started = 0
+go-to: rf_post_event if started = 1; start_menu if started = 0
 
 @start_menu
 new-page: true
 go-to: start_menu_2
 
-= Social Democracy: An Alternate History
+= Die Rote Fahne
 
 @start_menu_2
 
-- @rf_start: Die Rote Fahne: lead a KPD faction (1923 prototype)
-- @start: Start game (Social Democracy, 1928)
-- @election_simulation: Election simulation
+- @rf_start: Begin (January 1923)
 - @credits: Credits
-- @game_over.achievements
 
 
 @start

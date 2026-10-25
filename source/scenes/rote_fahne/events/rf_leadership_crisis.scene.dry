@@ -1,0 +1,47 @@
+title: Leadership Crisis
+subtitle: The faction in the Zentrale no longer accepts the party's course.
+new-page: true
+tags: rf_event
+view-if: rf_over = 0 and leader_dissent >= 70 and crisis_timer <= 0
+on-arrival: crisis_timer = 4
+
+= Leadership Crisis
+
+The <span class="f-[+ leader +]">[+ leader_name +]</span> holds the Zentrale but has lost patience with the decisions you have pushed through. Its leaders threaten to resign and take the apparatus with them.
+
+- @concede
+- @replace
+
+@concede
+title: Give the leadership its way for now.
+subtitle: Calms the leadership. Every other faction is irritated.
+on-arrival: {!
+Q[Q.leader + '_dissent'] -= 25;
+Q[Q.leader + '_strength'] += 3;
+for (var f of window.RF.factions) {
+    if (f != Q.leader) { Q[f + '_dissent'] += 4; }
+}
+!}
+
+The leadership stays, and the line bends its way.
+
+@replace
+title: Let the Central Committee choose a new leadership.
+subtitle: The strongest faction, or Moscow's choice, takes over.
+on-arrival: {!
+var old = Q.leader;
+Q.old_leader = old;
+Q.old_leader_name = window.RF.names[old];
+Q[old + '_dissent'] += 10;
+Q.apparatus -= 5;
+var best = null;
+for (var f of window.RF.factions) {
+    if (f == old || Q[f + '_expelled']) { continue; }
+    if (best === null || Q[f + '_strength'] > Q[best + '_strength']) { best = f; }
+}
+Q.leader = best;
+window.RF.verdict(Q);
+window.RF.normalize(Q);
+!}
+
+The <span class="f-[+ old_leader +]">[+ old_leader_name +]</span> resigns from the Zentrale. [? if moscow_overruled : Moscow steps in and installs ?][? if moscow_overruled = 0 : The Central Committee elects ?] the <span class="f-[+ leader +]">[+ leader_name +]</span>.

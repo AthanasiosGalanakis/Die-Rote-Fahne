@@ -8,46 +8,51 @@ on-arrival: line = "insurrection"
 
 = The German October
 
-Moscow has watched the Cuno strikes closely. The leaders of the Russian party have concluded that Germany is ready for a Communist rising, and the International has called the KPD's leaders to Moscow. Military advisers, money and plans will follow. The date is to be set for the autumn. Party organisers in Germany are told to prepare.
+Moscow has watched the Cuno strikes closely. The leaders of the Russian party have concluded that Germany is ready for a Communist rising, and the International has called the <span class="p-kpd">KPD</span>'s leaders to Moscow. Military advisers, money and plans will follow. The date is to be set for the autumn.
 
-The KPD's own leaders are less sure. Brandler warns that the party is not yet ready and that the left SPD will not follow. The Left says the opposite.
+Brandler warns that the party is not yet ready and that the left <span class="p-spd">SPD</span> will not follow. The Left says the opposite. Moscow's line is now insurrection.
 
-[? if player_leads : As leader, your answer decides the party's course. ?][? if player_leads = 0 : The leadership will answer for the party. Your faction's stance will be remembered in Moscow. ?]
-
-- @embrace: Throw everything into the preparations.
-- @doubts: Accept, while warning Moscow that the party is not ready.
-- @refuse: Refuse. The party is not ready, and a defeat will set it back years.
+- @embrace
+- @doubts
+- @refuse
 
 @embrace
+title: Throw everything into the preparations.
+subtitle: Pleases Moscow, the <span class="f-left">Left</span> and <span class="f-stalin">Thälmann</span>. +2 funds, more readiness.
 on-arrival: {!
 Q.october_plan = 1;
-Q[Q.player + '_moscow'] += 10;
+window.RF.obey(Q, 8);
+window.RF.lean(Q, {left: 4, right: -2});
 Q.readiness += 6;
 Q.funds += 2;
-Q.autonomy -= 4;
 !}
 
 Military advisers arrive from Russia. The party's military apparatus draws up lists of weapons and targets. Moscow's money flows.
 
 @doubts
+title: Accept, while warning Moscow that the party is not ready.
+subtitle: Pleases the <span class="f-right">Right</span> and <span class="f-center">Middle Group</span>. +2 funds.
 on-arrival: {!
 Q.october_plan = 1;
-Q[Q.player + '_moscow'] += 3;
+window.RF.lean(Q, {right: 3, center: 2});
+Q.moscow_trust += 2;
+Q.autonomy -= 2;
 Q.readiness += 4;
 Q.funds += 2;
-Q.autonomy -= 4;
 !}
 
-You accept the plan and put your doubts on record. If it fails, the record may help you, or may be used as proof that you never believed in it.
+You accept the plan and put your doubts on record. If it fails, the record may help, or may be used as proof that the leadership never believed in it.
 
 @refuse
+title: Refuse. The party is not ready, and a defeat will set it back years.
+subtitle: Defies Moscow. Pleases the <span class="f-ultra">Ultra-Left</span>. Angers <span class="f-stalin">Thälmann</span> and the <span class="f-left">Left</span>. Moscow may impose the plan anyway.
 on-arrival: {!
-Q[Q.player + '_moscow'] -= 20;
-Q.autonomy += 3;
+window.RF.defy(Q, 15);
+window.RF.lean(Q, {left: -3});
 Q.october_plan = 1;
-if (Q.player_leads && Math.random() >= (100 - Q.autonomy) / 100) {
+if (Math.random() >= (100 - Q.autonomy) / 100) {
     Q.october_plan = 0;
 }
 !}
 
-[? if october_plan = 0 : Against all expectations, the German leadership holds its ground. Moscow postpones the plan and makes clear it will not forget. ?][? if october_plan = 1 and player_leads : Moscow overrules you. The plan goes ahead, and you will be expected to lead it. ?][? if october_plan = 1 and player_leads = 0 : The leadership accepts Moscow's plan. Your objection is noted. ?]
+[? if october_plan = 0 : Against all expectations, the German party holds its ground. Moscow postpones the plan and makes clear it will not forget. ?][? if october_plan = 1 : Moscow overrules you. The plan goes ahead, and the German leadership will be expected to carry it out. ?]

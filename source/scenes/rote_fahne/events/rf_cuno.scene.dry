@@ -7,40 +7,45 @@ max-visits: 1
 
 = The Cuno Strikes
 
-In August the dollar buys millions of marks. Printers at the state mint walk out and the money stops. Strikes spread across Berlin and the industrial regions, many led by Communist factory councils. On 12 August Chancellor Cuno resigns. Gustav Stresemann forms a grand coalition that includes the SPD.
+In August the dollar buys millions of marks. Printers at the state mint walk out and the money stops. Strikes spread across Berlin and the industrial regions, many led by Communist factory councils. On 12 August Chancellor Cuno resigns. Gustav Stresemann forms a grand coalition that includes the <span class="p-spd">SPD</span>.
 
 The party called the strikes. What does it do with them?
 
-- @escalate: Push the strike toward a general strike and a fight for power.
-- @front: Turn it into a joint front with SPD workers against the new government.
-- @end: Win what can be won and call the strikes off.
+- @escalate
+- @front
+- @end
 
 @escalate
+title: Push the strike toward a general strike and a fight for power.
+subtitle: Pleases the <span class="f-left">Left</span> and <span class="f-ultra">Ultra-Left</span>. Angers the <span class="f-right">Right</span>. Raises the revolutionary situation.
 on-arrival: {!
+window.RF.lean(Q, {left: 4, ultra: 3, right: -3});
 Q.rev_situation += 10;
 Q.readiness += 3;
 Q.repression += 6;
 Q.spd_relation -= 4;
-Q.left_strength += 3;
-Q.strike_pressure += 1;
 !}
 
-The strike committees call for more. In some places police fire on demonstrators. The SPD, now in government, appeals for calm.
+The strike committees call for more. In some places police fire on demonstrators. The <span class="p-spd">SPD</span>, now in government, appeals for calm.
 
 @front
+title: Turn it into a joint front with <span class="p-spd">SPD</span> workers against the new government.
+subtitle: Pleases the <span class="f-right">Right</span> and <span class="f-center">Middle Group</span>. Angers the <span class="f-ultra">Ultra-Left</span>. Improves relations with the <span class="p-spd">SPD</span>.
 on-arrival: {!
+window.RF.lean(Q, {right: 4, center: 2, ultra: -3});
 Q.spd_relation += 8;
 Q.union_influence += 5;
-Q.right_strength += 3;
 !}
 
-Joint strike committees with SPD members stay together after the strike ends. The SPD leaders who joined Stresemann's government find their own members harder to manage.
+Joint strike committees with <span class="p-spd">SPD</span> members stay together after the strike ends. The <span class="p-spd">SPD</span> leaders who joined Stresemann's government find their own members harder to manage.
 
 @end
+title: Win what can be won and call the strikes off.
+subtitle: Brings in members. Pleases the <span class="f-center">Middle Group</span>. Angers the <span class="f-left">Left</span>.
 on-arrival: {!
+window.RF.lean(Q, {center: 3, left: -3});
 Q.members += 6;
 Q.union_influence += 2;
-Q.left_dissent += 4;
 !}
 
 The strikers win wage indexing in several industries. The party gains members and loses some of its fire.
