@@ -563,6 +563,23 @@
           accent: FACTION_ACCENT[f]
       });
   };
+  var personTip = function(id) {
+      var RF = window.RF;
+      var person = RF && RF.people && RF.people[id];
+      if (!person) {
+          return null;
+      }
+      var info = RF.partyInfo[person.party];
+      return tipCard({
+          logo: RF.image('person:' + id) || '', badge: person.name.split(' ').pop().slice(0, 1),
+          logoClass: 'bg-' + person.party + ' rf-tip-portrait',
+          title: escHtml(person.name), titleClass: 'p-' + person.party,
+          subtitle: escHtml(person.role),
+          rows: info ? [['Belongs to', escHtml(info.full)]] : [],
+          body: escHtml(person.text),
+          accent: cssVar('--c-' + person.party, '')
+      });
+  };
   // The value shown after a sidebar label ("Resources: 3" gives "3").
   var valueAfter = function(t) {
       var line = t.parentNode;
@@ -600,11 +617,12 @@
               body: inner.textContent
           })};
       }
-      var named = el.closest('[class*="p-"], [class*="f-"]');
+      var named = el.closest('[class*="p-"], [class*="f-"], [class*="m-"]');
       if (named && named.closest('#content, #qualities, #rf-tip') && !named.closest('#rf-tip')) {
           var p = matchClass(named, 'p-');
           var f = matchClass(named, 'f-');
-          var tc = p ? partyTip(named, p) : (f ? factionTip(f) : null);
+          var m = matchClass(named, 'm-');
+          var tc = p ? partyTip(named, p) : (f ? factionTip(f) : (m ? personTip(m) : null));
           if (tc) {
               return {target: named, tip: tc};
           }

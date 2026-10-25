@@ -64,22 +64,9 @@ if (Q.month_actions >= 1) {
     RF.normalize(Q);
 }
 
-// 2. a faction outside the leadership may split off when its dissent is too high
-Q.split_pending = 0;
-for (var g of RF.factions) {
-    if (g != Q.leader && !Q[g + '_expelled'] && Q[g + '_dissent'] >= 85) {
-        Q.split_pending = 1;
-        Q.split_faction = g;
-        Q.split_faction_name = RF.names[g];
-    }
-}
+// splits and endings are taken out for now (see archive/README.md)
 
-// 3. a party that has bled away its members collapses
-if (Q.members < 60 && !Q.rf_over) {
-    Q.rf_over = 1;
-    Q.rf_ending = 'collapse';
-}
-
+// an event (a scene tagged rf_event) whose conditions are met comes next
 Q.has_event = 0;
 var scene = this.game.scenes['rf_post_event.events_choice'];
 var choices = this._compileChoices(scene);
@@ -87,7 +74,7 @@ if (choices && choices[0].title != "Continue...") {
     Q.has_event = 1;
 }
 !}
-go-to: rf_endings if rf_over = 1; events_choice if rf_over = 0 and has_event = 1; rf_main if rf_over = 0 and has_event = 0
+go-to: events_choice if has_event = 1; rf_main if has_event = 0
 
 = [+ month : month +] [+ year +]
 
