@@ -20,7 +20,7 @@ Members: about [+ members +] thousand
 
 = Government
 
-{!<span class="tooltip-text" title="The parties that support the Reich cabinet.">Government</span>!}: [+ government +]
+Government: [+ government +]
 
 President: [+ president +] (<span class="p-spd">SPD</span>)
 
@@ -139,19 +139,19 @@ window.RF.numbers(Q);
 
 = Inter-party Relations
 
-{!<span class="tooltip-text" title="Social Democratic Party of Germany">!}<span class="p-spd">SPD</span>{!</span>!}: [+ spd_relation : relationships +][+ n_spd_relation +]
+<span class="p-spd">SPD</span>: [+ spd_relation : relationships +][+ n_spd_relation +]
 
-{!<span class="tooltip-text" title="The rump of the Independent Social Democrats, who refused both the KPD and reunification with the SPD.">!}<span class="p-uspd">USPD</span>{!</span>!}: [+ uspd_relation : relationships +][+ n_uspd_relation +]
+{!<span class="p-uspd" data-tip="The rump of the Independent Social Democrats, who refused both the KPD and reunification with the SPD.">USPD</span>!}: [+ uspd_relation : relationships +][+ n_uspd_relation +]
 
-{!<span class="tooltip-text" title="Centre Party">!}<span class="p-z">Z</span>{!</span>!}: [+ z_relation : relationships +][+ n_z_relation +]
+<span class="p-z">Z</span>: [+ z_relation : relationships +][+ n_z_relation +]
 
-{!<span class="tooltip-text" title="German Democratic Party">!}<span class="p-ddp">DDP</span>{!</span>!}: [+ ddp_relation : relationships +][+ n_ddp_relation +]
+<span class="p-ddp">DDP</span>: [+ ddp_relation : relationships +][+ n_ddp_relation +]
 
-{!<span class="tooltip-text" title="German People's Party">!}<span class="p-dvp">DVP</span>{!</span>!}: [+ dvp_relation : relationships +][+ n_dvp_relation +]
+<span class="p-dvp">DVP</span>: [+ dvp_relation : relationships +][+ n_dvp_relation +]
 
-{!<span class="tooltip-text" title="German National People's Party">!}<span class="p-dnvp">DNVP</span>{!</span>!}: [+ dnvp_relation : relationships +][+ n_dnvp_relation +]
+<span class="p-dnvp">DNVP</span>: [+ dnvp_relation : relationships +][+ n_dnvp_relation +]
 
-{!<span class="tooltip-text" title="National Socialist German Workers' Party">!}<span class="p-nsdap">NSDAP</span>{!</span>!}: [+ nsdap_relation : relationships +][+ n_nsdap_relation +]
+<span class="p-nsdap">NSDAP</span>: [+ nsdap_relation : relationships +][+ n_nsdap_relation +]
 
 = Party Leadership
 

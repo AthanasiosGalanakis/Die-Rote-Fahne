@@ -662,10 +662,6 @@ a.card:focus .card-tooltip, a.card:hover .card-tooltip {
 .rf-demo-name { font-weight: bold; }
 .rf-demo-list { font-size: 0.9em; line-height: 1.4; }
 
-/* a hand of four cards: three on the first row, the fourth below */
-ul.hand li.card-in-hand:nth-child(4) {
-  display: block;
-}
 
 /* title screen quote */
 .rf-quote {
@@ -982,4 +978,275 @@ body.dark-mode .bg-z { background: #8a8a8a; }
 /* the title screen has its own big title */
 #mid_panel.rf-no-sidebar header .header-title {
   display: none;
+}
+
+/* ==== Version 0.6 layout ==== */
+
+/* sidebar tabs share the full width */
+.tab_container {
+  display: flex;
+}
+.tab_button {
+  flex: 1 1 0;
+  padding: 10px 4px;
+  font-size: 0.95em;
+}
+
+@media screen and (min-width: 900px) {
+  /* the header uses the same two columns as the page below it */
+  header {
+    display: grid;
+    grid-template-columns: 15.7rem minmax(0, 1fr);
+    column-gap: 1.2em;
+    align-items: center;
+  }
+  header #header-links {
+    grid-column: 1;
+    grid-row: 1;
+    display: flex;
+    justify-content: space-between;
+    box-sizing: border-box;
+    padding: 0.3em 0.9em;
+  }
+  header #header-links a {
+    padding-right: 0;
+  }
+  header .header-title {
+    grid-column: 2;
+    grid-row: 1;
+    text-align: right;
+  }
+  #mid_panel.rf-no-sidebar header {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  #mid_panel.rf-no-sidebar header #header-links {
+    justify-self: start;
+    gap: 1em;
+  }
+}
+
+/* ---- Main page: leader, deck and End the month on one row ---- */
+.rf-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.5em 1.6em;
+  margin-bottom: 0.4em;
+}
+.rf-top .rf-portrait {
+  margin: 0;
+}
+.rf-top ul.rf-top-cards {
+  margin: 0;
+}
+.rf-top .deck, .rf-top .pinned-card {
+  margin-right: 0;
+}
+.rf-portrait-img {
+  width: 120px;
+  height: 150px;
+  padding: 0;
+  overflow: hidden;
+}
+.rf-portrait-img.rf-has-img {
+  background-color: var(--card-bg-color);
+}
+.rf-portrait-img img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 20%;
+}
+.rf-portrait-name {
+  font-size: 1em;
+}
+.rf-portrait-role {
+  font-size: 0.85em;
+}
+
+/* hand and advisors: four cards to a row, centred */
+#content > hr {
+  margin: 0.6em 0;
+}
+.hand-description, .pinned-text-description {
+  margin: 0 0 0.4em 0;
+  text-align: center;
+  text-indent: 0;
+  font-variant: small-caps;
+  letter-spacing: 0.08em;
+}
+ul.hand, ul.pinned-cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6em 1em;
+  margin: 0 0 0.4em 0;
+}
+ul.hand .card-in-hand, ul.pinned-cards .pinned-card {
+  margin-right: 0;
+}
+a.card, div.blank-card {
+  box-sizing: content-box;
+  width: 96px;
+  height: 120px;
+  border-width: 8px;
+}
+.card-img {
+  width: 96px;
+  height: 120px;
+  display: block;
+}
+.card-in-hand, .pinned-card, .deck {
+  max-width: 112px;
+}
+.card-caption {
+  font-size: 0.9em;
+  line-height: 1.2;
+  margin-top: 0.1em;
+}
+.rf-card-sub {
+  display: block;
+  text-align: center;
+  font-size: 0.78em;
+  opacity: 0.8;
+  line-height: 1.2;
+}
+/* a card without a picture shows a word on its face */
+.rf-card-face {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 0 4px;
+  text-align: center;
+  font-size: 0.85em;
+  color: var(--unavailable-color, #888);
+}
+/* an advisor waiting out the six months */
+li.rf-cooldown a.card {
+  filter: grayscale(1);
+  opacity: 0.6;
+}
+.rf-card-badge {
+  position: absolute;
+  right: 3px;
+  bottom: 3px;
+  padding: 0 4px;
+  font-size: 0.75em;
+  color: #fff;
+  background: #7a0010;
+  border-radius: 3px;
+}
+ul.decks li.unavailable-card {
+  background: none !important;
+}
+ul.decks li.unavailable-card a.card {
+  opacity: 0.55;
+}
+@media screen and (max-width: 520px) {
+  a.card, div.blank-card, .card-img {
+    width: 76px;
+    height: 95px;
+  }
+  .card-in-hand, .pinned-card, .deck {
+    max-width: 92px;
+  }
+}
+
+/* ---- Advisor pages ---- */
+.rf-adv {
+  display: flex;
+  gap: 1em;
+  align-items: flex-start;
+  margin: 0.5em 0 1em 0;
+  text-indent: 0;
+}
+.rf-adv-img {
+  flex: 0 0 96px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  color: var(--unavailable-color, #888);
+  background-color: var(--card-bg-color);
+  border: 6px solid var(--card-border-color);
+}
+.rf-adv-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.rf-adv-name {
+  font-weight: bold;
+  font-size: 1.1em;
+}
+.rf-adv-note {
+  margin-top: 0.3em;
+  font-style: italic;
+}
+.rf-adv-status {
+  margin-top: 0.5em;
+}
+
+/* ---- Hover cards: one style for everything that has one ---- */
+#rf-tip {
+  font-size: 0.95em;
+  width: max-content;
+  max-width: min(25em, calc(100vw - 16px));
+  border: 1px solid var(--border-color);
+  border-top: 4px solid var(--rf-tip-accent, #7a0010);
+  border-radius: 6px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.28);
+}
+.rf-tip-head {
+  padding: 0.6em 0.8em;
+  gap: 0.8em;
+}
+.rf-tip-logo {
+  width: 3.4em;
+  height: 3.4em;
+  font-size: 0.9em;
+}
+.rf-tip-logo.rf-tip-portrait {
+  height: 4.25em;
+}
+.rf-tip-title {
+  font-size: 1.08em;
+}
+.rf-tip-sub {
+  margin-top: 0.15em;
+}
+.rf-tip-body {
+  padding: 0.6em 0.8em 0.7em 0.8em;
+  line-height: 1.45;
+}
+.rf-tip-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1em;
+  padding: 0.15em 0;
+  border-top: 1px solid rgba(128, 128, 128, 0.25);
+  font-size: 0.92em;
+}
+.rf-tip-row:first-child {
+  border-top: none;
+}
+.rf-tip-pic {
+  display: block;
+  width: 100%;
+  max-height: 11em;
+  object-fit: cover;
+}
+
+/* everything with a hover card gets the same dotted underline */
+#content [class^="p-"], #content [class*=" p-"], #content [class^="f-"], #content [class*=" f-"],
+#qualities [class^="p-"], #qualities [class*=" p-"], #qualities [class^="f-"], #qualities [class*=" f-"],
+.tooltip-text, [data-tip] {
+  text-decoration: underline dotted;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  cursor: help;
 }

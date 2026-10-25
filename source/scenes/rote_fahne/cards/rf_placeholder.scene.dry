@@ -1,0 +1,9 @@
+title: Placeholder
+subtitle: Never drawn. The engine needs one card in the Party Affairs deck; remove this file once real cards are back.
+is-card: true
+tags: rf_party
+view-if: rf_mode = 99
+
+= Placeholder
+
+- @rf_hand: Back.

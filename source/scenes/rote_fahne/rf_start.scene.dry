@@ -77,13 +77,10 @@ Q.party_banned = 0;
 Q.rf_over = 0;
 Q.rf_ending = '';
 
-Q.rf_timers = ['rf_editorial', 'rf_district', 'rf_discipline', 'rf_apparatus',
-               'rf_ruhr', 'rf_hundreds', 'rf_councils', 'rf_strike',
-               'rf_underground', 'rf_delegation', 'rf_subsidy', 'rf_patron',
-               'crisis'];
-for (var t of Q.rf_timers) {
-    Q[t + '_timer'] = 0;
-}
+// countdowns: every quality named *_timer ticks down once a month
+Q.crisis_timer = 0;
+// the three advisor posts
+window.RF.advisorStart(Q);
 window.RF.normalize(Q);
 !}
 

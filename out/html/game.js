@@ -330,11 +330,18 @@
       window.updateSidebar();
   };
 
+  // The engine draws the decks, hand and pinned cards after this hook runs,
+  // so the pictures and the main-page layout are applied a moment later.
+  var decorateSoon = function() {
+      if (window.RF) {
+          setTimeout(function() {
+              window.RF.decorate(dendryUI.dendryEngine.state.qualities);
+          }, 0);
+      }
+  };
   window.onDisplayContent = function() {
       window.updateSidebar();
-      if (window.RF) {
-          window.RF.decorate(dendryUI.dendryEngine.state.qualities);
-      }
+      decorateSoon();
   };
 
   /*
@@ -373,13 +380,14 @@
   // built-in tooltips can run off the screen, so one floating box is placed
   // next to whatever is hovered and kept inside the window.
   var tip = null;
-  var showTip = function(target, html) {
+  var showTip = function(target, card) {
       if (!tip) {
           tip = document.createElement('div');
           tip.id = 'rf-tip';
           document.body.appendChild(tip);
       }
-      tip.innerHTML = html;
+      tip.innerHTML = card.html;
+      tip.style.setProperty('--rf-tip-accent', card.accent || '#7a0010');
       tip.style.display = 'block';
       tip.style.left = '0px';
       tip.style.top = '0px';
@@ -415,9 +423,14 @@
       div.textContent = text;
       return div.innerHTML;
   };
-  // A hover card: an optional logo or picture, a title, a subtitle and text.
+  // A hover card: an optional logo or picture, a title, a subtitle, a few
+  // label/value rows and a line of text. Every hover box uses this shape.
   var tipCard = function(o) {
-      var html = '<div class="rf-tip-head">';
+      var html = '';
+      if (o.picture) {
+          html += '<img class="rf-tip-pic" src="' + escHtml(o.picture) + '" alt="">';
+      }
+      html += '<div class="rf-tip-head">';
       if (o.logo !== undefined) {
           html += '<div class="rf-tip-logo ' + (o.logoClass || '') + '">' +
               (o.logo ? '<img src="' + escHtml(o.logo) + '" alt="">' : escHtml(o.badge || '')) + '</div>';
@@ -427,10 +440,17 @@
           html += '<div class="rf-tip-sub">' + o.subtitle + '</div>';
       }
       html += '</div></div>';
-      if (o.body) {
-          html += '<div class="rf-tip-body">' + o.body + '</div>';
+      if (o.rows || o.body) {
+          html += '<div class="rf-tip-body">';
+          for (var r of (o.rows || [])) {
+              html += '<div class="rf-tip-row"><span>' + r[0] + '</span><b>' + r[1] + '</b></div>';
+          }
+          if (o.body) {
+              html += '<div' + (o.rows && o.rows.length ? ' style="margin-top:0.4em"' : '') + '>' + o.body + '</div>';
+          }
+          html += '</div>';
       }
-      return html;
+      return {html: html, accent: o.accent};
   };
   var matchClass = function(el, prefix) {
       for (var c of el.classList) {
@@ -440,25 +460,72 @@
       }
       return null;
   };
+  var qualities = function() {
+      return window.dendryUI.dendryEngine.state.qualities;
+  };
+  var cssVar = function(name, fallback) {
+      var v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+      return v || fallback;
+  };
+  // A value as the same word the sidebar uses (source/qdisplays), with the
+  // number when exact numbers are switched on. Each band is [upper bound, word].
+  var BANDS = {
+      strength: [[10, 'weak'], [25, 'moderate'], [40, 'strong'], [60, 'very strong'], [Infinity, 'dominant']],
+      dissent: [[10, 'loyal'], [25, 'restless'], [45, 'discontented'], [65, 'angry'], [85, 'rebellious'], [Infinity, 'ready to split']],
+      relation: [[5, 'hostile'], [14.9, 'frigid'], [29.9, 'cold'], [39.9, 'cool'], [54.9, 'neutral'], [64.9, 'warm'],
+                 [74.9, 'friendly'], [Infinity, 'very friendly']]
+  };
+  var word = function(v, kind) {
+      var w = '';
+      for (var b of BANDS[kind]) {
+          if (v < b[0]) {
+              w = b[1];
+              break;
+          }
+      }
+      return qualities().show_numbers ? w + ' (' + Math.round(v) + ')' : w;
+  };
   var partyTip = function(el, p) {
       var RF = window.RF;
       var info = RF && RF.partyInfo[p];
       if (!info) {
           return null;
       }
-      var Q = window.dendryUI.dendryEngine.state.qualities;
+      var Q = qualities();
       var lead = RF.partyLeadership(Q, p);
       var extra = el.getAttribute('data-tip') || el.getAttribute('title');
       if (el.getAttribute('title')) {
           el.setAttribute('data-tip', el.getAttribute('title'));
           el.removeAttribute('title');
       }
+      var rows = [];
+      if (lead && lead.name) {
+          rows.push(['Led by', escHtml(lead.name)]);
+      }
+      for (var r of RF.reichstag1920 || []) {
+          if (r[0] == p) {
+              rows.push(['Reichstag seats (1920)', r[2]]);
+          }
+      }
+      if (Q.rf_mode && p != 'kpd' && p != 'other') {
+          var rel = p == 'spd' ? Q.spd_relation : Q[p + '_relation'];
+          if (rel !== undefined) {
+              rows.push(['Relations with the KPD', word(rel, 'relation')]);
+          }
+      }
+      if (Q.rf_mode && RF.polls) {
+          var polls = RF.polls(Q).total;
+          if (polls[p] !== undefined) {
+              rows.push(['Polling now', '~' + Math.round(polls[p]) + '%']);
+          }
+      }
       return tipCard({
           logo: RF.image('party:' + p) || '', badge: info.name, logoClass: 'bg-' + p,
           title: escHtml(info.full), titleClass: 'p-' + p,
-          subtitle: lead && lead.name ? 'Led by ' + escHtml(lead.name) : '',
-          body: escHtml(info.ideology) +
-              (extra && extra != info.full ? '<div class="rf-tip-extra">' + escHtml(extra) + '</div>' : '')
+          subtitle: escHtml(info.ideology),
+          rows: rows,
+          body: extra && extra != info.full ? escHtml(extra) : '',
+          accent: cssVar('--c-' + p, '')
       });
   };
   var FACTION_TEXT = {
@@ -468,19 +535,47 @@
       ultra: 'Suspicious of the unions, of parliament, and increasingly of Moscow.',
       stalin: 'Follows whoever rules in Moscow.'
   };
+  var FACTION_ACCENT = {right: '#c4622d', center: '#8a6d3b', left: '#b00020', ultra: '#2b2b2b', stalin: '#5a0f2e'};
   var factionTip = function(f) {
       var RF = window.RF;
       if (!RF || !RF.names[f]) {
           return null;
       }
-      var Q = window.dendryUI.dendryEngine.state.qualities;
+      var Q = qualities();
+      var rows = [['Leading figure', escHtml(RF.factionPersons[f])]];
+      if (Q.rf_mode) {
+          if (Q[f + '_expelled']) {
+              rows.push(['Status', 'expelled']);
+          } else {
+              rows.push(['Strength', word(Q[f + '_strength'], 'strength')]);
+              rows.push(['Dissent', word(Q[f + '_dissent'], 'dissent')]);
+              rows.push(['Standing in Moscow', word(Q[f + '_moscow'], 'relation')]);
+          }
+      }
       return tipCard({
           logo: RF.image('leader:' + f) || '', badge: RF.factionPersons[f].split(' ').pop().slice(0, 1),
-          logoClass: 'b-' + f,
+          logoClass: 'b-' + f + ' rf-tip-portrait',
           title: escHtml(RF.names[f]), titleClass: 'f-' + f,
-          subtitle: escHtml(RF.factionPersons[f]) + (Q.leader == f ? ' · leads the party' : ''),
-          body: escHtml(FACTION_TEXT[f])
+          subtitle: Q.leader == f ? 'Leads the party' : 'Faction inside the KPD',
+          rows: rows,
+          body: escHtml(FACTION_TEXT[f]),
+          accent: FACTION_ACCENT[f]
       });
+  };
+  // The value shown after a sidebar label ("Resources: 3" gives "3").
+  var valueAfter = function(t) {
+      var line = t.parentNode;
+      if (!line || line.id == 'qualities' || line.id == 'content') {
+          return '';
+      }
+      var text = line.textContent.replace(/\s+/g, ' ').trim();
+      var label = t.textContent.replace(/\s+/g, ' ').trim();
+      var i = text.indexOf(label);
+      if (i < 0) {
+          return '';
+      }
+      var rest = text.slice(i + label.length).replace(/^\s*:\s*/, '').trim();
+      return rest.length > 60 ? rest.slice(0, 57) + '…' : rest;
   };
   var tipFor = function(el) {
       var card = el.closest('a.card');
@@ -495,10 +590,12 @@
               return null;
           }
           var img = card.querySelector('img.card-img');
+          var sub = card.parentNode.querySelector('.rf-card-sub');
           // the engine stores the subtitle as text; it is our own markup, so render it
-          return {target: card, html: tipCard({
-              logo: img ? img.getAttribute('src') : undefined,
+          return {target: card, tip: tipCard({
+              picture: img ? img.getAttribute('src') : undefined,
               title: escHtml(card.getAttribute('data-title') || ''),
+              subtitle: sub ? escHtml(sub.textContent) : '',
               body: inner.textContent
           })};
       }
@@ -506,9 +603,9 @@
       if (named && named.closest('#content, #qualities, #rf-tip') && !named.closest('#rf-tip')) {
           var p = matchClass(named, 'p-');
           var f = matchClass(named, 'f-');
-          var html = p ? partyTip(named, p) : (f ? factionTip(f) : null);
-          if (html) {
-              return {target: named, html: html};
+          var tc = p ? partyTip(named, p) : (f ? factionTip(f) : null);
+          if (tc) {
+              return {target: named, tip: tc};
           }
       }
       var t = el.closest('[title], [data-tip]');
@@ -520,7 +617,15 @@
           t.removeAttribute('title');
       }
       var text = t.getAttribute('data-tip');
-      return text ? {target: t, html: tipCard({title: escHtml(t.textContent.trim()), body: escHtml(text)})} : null;
+      if (!text) {
+          return null;
+      }
+      var value = valueAfter(t);
+      return {target: t, tip: tipCard({
+          title: escHtml(t.textContent.trim()),
+          subtitle: value ? 'Now: ' + escHtml(value) : '',
+          body: escHtml(text)
+      })};
   };
   document.addEventListener('mouseover', function(evt) {
       if (!(evt.target instanceof Element)) {
@@ -528,7 +633,7 @@
       }
       var found = tipFor(evt.target);
       if (found) {
-          showTip(found.target, found.html);
+          showTip(found.target, found.tip);
       } else {
           hideTip();
       }
@@ -536,7 +641,7 @@
   document.addEventListener('focusin', function(evt) {
       var found = evt.target instanceof Element ? tipFor(evt.target) : null;
       if (found) {
-          showTip(found.target, found.html);
+          showTip(found.target, found.tip);
       }
   });
   document.addEventListener('focusout', hideTip);
@@ -559,7 +664,13 @@
     if (window.dendryUI.dark_mode) {
         document.body.classList.add('dark-mode');
     }
-    window.pinnedCardsDescription = "Advisor cards - actions are only usable once per 6 months.";
+    // a card drawn into the hand gets its picture too
+    var displayHand = window.dendryUI.displayHand;
+    window.dendryUI.displayHand = function() {
+        var r = displayHand.apply(this, arguments);
+        decorateSoon();
+        return r;
+    };
   };
 
 }());

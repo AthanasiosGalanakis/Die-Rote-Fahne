@@ -138,6 +138,23 @@
       headSha = ref.object.sha;
       return gh(repoPath('/git/commits/' + headSha));
     }).then(function(head) {
+      // refuse to overwrite a file someone changed on GitHub (another tab,
+      // another person) after this panel loaded it
+      return gh(repoPath('/git/trees/' + head.tree.sha + '?recursive=1')).then(function(now) {
+        var current = {};
+        now.tree.forEach(function(e) { current[e.path] = e.sha; });
+        var stale = paths.filter(function(path) {
+          var mine = treeEntry(path);
+          return (mine ? mine.sha : undefined) !== current[path];
+        });
+        if (stale.length) {
+          var err = new Error('changed on GitHub since this panel loaded it: ' + stale.join(', ') +
+                              '. Reload the panel to get the latest version, then make this edit again.');
+          throw err;
+        }
+        return head;
+      });
+    }).then(function(head) {
       return Promise.all(paths.map(function(path) {
         var c = state.staged[path];
         if (c.remove) {
@@ -661,7 +678,7 @@
   };
   var categoryOfKey = function(key) {
     var prefix = key.split(':')[0];
-    return {event: 'events', card: 'cards', advisor: 'advisors', leader: 'leaders', party: 'parties',
+    return {event: 'events', card: 'cards', deck: 'cards', advisor: 'advisors', leader: 'leaders', party: 'parties',
             achievement: 'achievements'}[prefix] || 'cards';
   };
   var imgCat = 'events';
@@ -687,8 +704,17 @@
       });
     };
     if (cat == 'events') { byTag(['rf_event']); out.forEach(function(s) { s.key = 'event:' + s.id; }); }
-    if (cat == 'cards') { byTag(['rf_party', 'rf_mass', 'rf_moscow']); out.forEach(function(s) { s.key = 'card:' + s.id; }); }
-    if (cat == 'advisors') { byTag(['rf_advisor']); out.forEach(function(s) { s.key = 'advisor:' + s.id; }); }
+    if (cat == 'cards') {
+      out.push({key: 'deck:rf_party', id: 'rf_party', title: 'Party Affairs (the deck)'});
+      byTag(['rf_party']);
+      out.forEach(function(s) { s.key = s.key || 'card:' + s.id; });
+    }
+    if (cat == 'advisors') {
+      Object.keys(RF.advisors || {}).forEach(function(id) {
+        var a = RF.advisors[id];
+        out.push({key: 'advisor:' + id, id: id, title: a.name + ' · ' + ((RF.advisorSlots || {})[a.slot] || {}).name});
+      });
+    }
     if (cat == 'leaders') {
       (RF.factions || FACTION_VALUES).forEach(function(f) {
         out.push({key: 'leader:' + f, id: f, title: (RF.factionPersons[f] || f) + ' · ' + (RF.names[f] || f)});
@@ -1186,7 +1212,7 @@
     textFile = path;
     textMode = 'structured';
     renderTexts();
-    toast(kind == 'card' ? 'New card created. Change its tag to rf_mass or rf_moscow to put it in another deck.' :
+    toast(kind == 'card' ? 'New card created. It goes into the Party Affairs deck.' :
           'New event created. Set its view-if line to choose when it happens.');
   };
 

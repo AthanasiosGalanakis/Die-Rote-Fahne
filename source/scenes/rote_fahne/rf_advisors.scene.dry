@@ -1,37 +1,327 @@
+title: Advisors
+subtitle: The three posts in the Zentrale.
+new-page: true
+
+= Advisors
+
+The party's three posts.
+
+- @rf_hand: Back.
+
+@org
 title: Organisation
-subtitle: Advisor slot: the party's organisation secretary. Empty for now.
+subtitle: Your organisation secretary. Can act once every six months.
 is-pinned-card: true
 tags: rf_advisor
 new-page: true
+on-arrival: {! window.RF.advisorView(Q, 'org'); !}
 
 = Organisation
 
-This slot will hold the party's organisation secretary, who runs the apparatus, the districts and the membership. Advisors are not in the game yet.
+[+ adv_text +]
 
+- @org_recruit
+- @org_apparatus
+- @rf_appoint_org
 - @rf_hand: Back.
+
+@org_recruit
+title: Recruitment drive.
+subtitle: More members. Costs 1 resource.
+view-if: adv_ready = 1
+new-page: true
+choose-if: funds >= 1
+unavailable-subtitle: Needs 1 resource.
+on-arrival: {!
+Q.members += 10;
+Q.funds -= 1;
+window.RF.advisorUse(Q, 'org');
+!}
+
+Factory meetings, leaflets at the labour exchanges and a membership week in every district bring in new members.
+
+- @rf_hand: Back to the party.
+
+@org_apparatus
+title: Tighten the apparatus.
+subtitle: More paid functionaries loyal to the leadership; the leadership's faction calms down.
+view-if: adv_ready = 1
+new-page: true
+on-arrival: {!
+Q.apparatus += 6;
+Q[Q.leader + '_dissent'] -= 4;
+window.RF.advisorUse(Q, 'org');
+!}
+
+District secretaries are checked, paid on time and reminded who appointed them.
+
+- @rf_hand: Back to the party.
+
+@rf_appoint_org
+title: Appoint a new head of organisation.
+subtitle: The old holder's faction is angered and the new one's pleased. The six-month wait stays.
+new-page: true
+on-arrival: {! window.RF.advisorCandidates(Q, 'org'); !}
+
+= Organisation
+
+The post is held by [+ adv_current +]. Who should take it over?
+
+- @pick_eberlein
+- @pick_pieck
+- @pick_geschke
+- @pick_scholem
+- @rf_hand: Keep things as they are.
+
+@pick_eberlein
+title: Hugo Eberlein
+subtitle: [+ pick_eberlein_desc +]
+view-if: pick_eberlein = 1
+new-page: true
+on-arrival: {! window.RF.appoint(Q, 'org', 'eberlein'); !}
+
+[+ appointed_name +] takes over. [+ appointed_faction +] welcomes the appointment.
+
+- @rf_hand: Back to the party.
+
+@pick_pieck
+title: Wilhelm Pieck
+subtitle: [+ pick_pieck_desc +]
+view-if: pick_pieck = 1
+new-page: true
+on-arrival: {! window.RF.appoint(Q, 'org', 'pieck'); !}
+
+[+ appointed_name +] takes over. [+ appointed_faction +] welcomes the appointment.
+
+- @rf_hand: Back to the party.
+
+@pick_geschke
+title: Ottomar Geschke
+subtitle: [+ pick_geschke_desc +]
+view-if: pick_geschke = 1
+new-page: true
+on-arrival: {! window.RF.appoint(Q, 'org', 'geschke'); !}
+
+[+ appointed_name +] takes over. [+ appointed_faction +] welcomes the appointment.
+
+- @rf_hand: Back to the party.
+
+@pick_scholem
+title: Werner Scholem
+subtitle: [+ pick_scholem_desc +]
+view-if: pick_scholem = 1
+new-page: true
+on-arrival: {! window.RF.appoint(Q, 'org', 'scholem'); !}
+
+[+ appointed_name +] takes over. [+ appointed_faction +] welcomes the appointment.
+
+- @rf_hand: Back to the party.
 
 @unions
 title: Trade Unions
-subtitle: Advisor slot: the head of the party's trade-union work. Empty for now.
+subtitle: Your head of trade-union work. Can act once every six months.
 is-pinned-card: true
 tags: rf_advisor
 new-page: true
+on-arrival: {! window.RF.advisorView(Q, 'unions'); !}
 
 = Trade Unions
 
-This slot will hold the head of the party's trade-union and factory-council work. Advisors are not in the game yet.
+[+ adv_text +]
 
+- @unions_councils
+- @unions_adgb
+- @rf_appoint_unions
 - @rf_hand: Back.
+
+@unions_councils
+title: Campaign in the factory councils.
+subtitle: More Communist influence in the workplaces. The <span class="p-spd">SPD</span> resents it.
+view-if: adv_ready = 1
+new-page: true
+on-arrival: {!
+Q.union_influence += 6;
+Q.spd_relation -= 3;
+window.RF.advisorUse(Q, 'unions');
+!}
+
+Communist slates stand in the factory-council elections and win seats in the big works.
+
+- @rf_hand: Back to the party.
+
+@unions_adgb
+title: Work inside the ADGB unions.
+subtitle: Some union influence and better relations with the <span class="p-spd">SPD</span>.
+view-if: adv_ready = 1
+new-page: true
+on-arrival: {!
+Q.union_influence += 3;
+Q.spd_relation += 4;
+window.RF.advisorUse(Q, 'unions');
+!}
+
+Communists stay in the Free Trade Unions, take on the dull work of the locals and avoid open splits.
+
+- @rf_hand: Back to the party.
+
+@rf_appoint_unions
+title: Appoint a new head of trade-union work.
+subtitle: The old holder's faction is angered and the new one's pleased. The six-month wait stays.
+new-page: true
+on-arrival: {! window.RF.advisorCandidates(Q, 'unions'); !}
+
+= Trade Unions
+
+The post is held by [+ adv_current +]. Who should take it over?
+
+- @pick_walcher
+- @pick_heckert
+- @pick_merker
+- @rf_hand: Keep things as they are.
+
+@pick_walcher
+title: Jacob Walcher
+subtitle: [+ pick_walcher_desc +]
+view-if: pick_walcher = 1
+new-page: true
+on-arrival: {! window.RF.appoint(Q, 'unions', 'walcher'); !}
+
+[+ appointed_name +] takes over. [+ appointed_faction +] welcomes the appointment.
+
+- @rf_hand: Back to the party.
+
+@pick_heckert
+title: Fritz Heckert
+subtitle: [+ pick_heckert_desc +]
+view-if: pick_heckert = 1
+new-page: true
+on-arrival: {! window.RF.appoint(Q, 'unions', 'heckert'); !}
+
+[+ appointed_name +] takes over. [+ appointed_faction +] welcomes the appointment.
+
+- @rf_hand: Back to the party.
+
+@pick_merker
+title: Paul Merker
+subtitle: [+ pick_merker_desc +]
+view-if: pick_merker = 1
+new-page: true
+on-arrival: {! window.RF.appoint(Q, 'unions', 'merker'); !}
+
+[+ appointed_name +] takes over. [+ appointed_faction +] welcomes the appointment.
+
+- @rf_hand: Back to the party.
 
 @military
 title: Military Affairs
-subtitle: Advisor slot: the head of the party's military apparatus. Empty for now.
+subtitle: Your head of the military apparatus. Can act once every six months.
 is-pinned-card: true
 tags: rf_advisor
 new-page: true
+on-arrival: {! window.RF.advisorView(Q, 'military'); !}
 
 = Military Affairs
 
-This slot will hold the head of the party's military apparatus and its defence formations. Advisors are not in the game yet.
+[+ adv_text +]
 
+- @military_arm
+- @military_lie_low
+- @rf_appoint_military
+- @rf_hand: Back.
+
+@military_arm
+title: Arm and train the defence units.
+subtitle: More readiness for a rising. Draws the police. Costs 1 resource.
+view-if: adv_ready = 1
+new-page: true
+choose-if: funds >= 1
+unavailable-subtitle: Needs 1 resource.
+on-arrival: {!
+Q.readiness += 6;
+Q.repression += 3;
+Q.funds -= 1;
+window.RF.advisorUse(Q, 'military');
+!}
+
+Weapons are bought, hidden and cleaned; men drill on Sundays in the woods outside the cities.
+
+- @rf_hand: Back to the party.
+
+@military_lie_low
+title: Lie low and protect the cadres.
+subtitle: Less state repression.
+view-if: adv_ready = 1
+new-page: true
+on-arrival: {!
+Q.repression -= 5;
+window.RF.advisorUse(Q, 'military');
+!}
+
+Lists are burned, weapons buried and known militants moved to other towns.
+
+- @rf_hand: Back to the party.
+
+@rf_appoint_military
+title: Appoint a new head of military affairs.
+subtitle: The old holder's faction is angered and the new one's pleased. The six-month wait stays.
+new-page: true
+on-arrival: {! window.RF.advisorCandidates(Q, 'military'); !}
+
+= Military Affairs
+
+The post is held by [+ adv_current +]. Who should take it over?
+
+- @pick_skoblevsky
+- @pick_schneller
+- @pick_kippenberger
+- @rf_hand: Keep things as they are.
+
+@pick_skoblevsky
+title: Pyotr Skoblevsky
+subtitle: [+ pick_skoblevsky_desc +]
+view-if: pick_skoblevsky = 1
+new-page: true
+on-arrival: {! window.RF.appoint(Q, 'military', 'skoblevsky'); !}
+
+[+ appointed_name +] takes over. [+ appointed_faction +] welcomes the appointment.
+
+- @rf_hand: Back to the party.
+
+@pick_schneller
+title: Ernst Schneller
+subtitle: [+ pick_schneller_desc +]
+view-if: pick_schneller = 1
+new-page: true
+on-arrival: {! window.RF.appoint(Q, 'military', 'schneller'); !}
+
+[+ appointed_name +] takes over. [+ appointed_faction +] welcomes the appointment.
+
+- @rf_hand: Back to the party.
+
+@pick_kippenberger
+title: Hans Kippenberger
+subtitle: [+ pick_kippenberger_desc +]
+view-if: pick_kippenberger = 1
+new-page: true
+on-arrival: {! window.RF.appoint(Q, 'military', 'kippenberger'); !}
+
+[+ appointed_name +] takes over. [+ appointed_faction +] welcomes the appointment.
+
+- @rf_hand: Back to the party.
+
+@replace
+title: Replace an advisor
+subtitle: Put someone else in one of the three posts.
+is-pinned-card: true
+tags: rf_advisor
+new-page: true
+on-arrival: {! window.RF.advisorView(Q, 'org'); !}
+
+= Replace an Advisor
+
+Which post should change hands? Replacing an advisor angers the faction of the one who goes and pleases the faction of the one who comes. The new holder still waits out the post's six months.
+
+- @rf_appoint_org
+- @rf_appoint_unions
+- @rf_appoint_military
 - @rf_hand: Back.
