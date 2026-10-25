@@ -1,0 +1,72 @@
+title: Post Event
+new-page: true
+on-arrival: {!
+var RF = window.RF;
+RF.normalize(Q);
+
+// 1. advance the month once a card has been played
+if (Q.month_actions >= 1) {
+    Q.time += 1;
+    Q.month_actions = 0;
+    Q.month += 1;
+    if (Q.month >= 13) {
+        Q.month = 1;
+        Q.year += 1;
+    }
+    for (var t of Q.rf_timers) {
+        if (Q[t + '_timer'] > 0) {
+            Q[t + '_timer'] -= 1;
+        }
+    }
+
+    // inflation drives the revolutionary situation up until the
+    // Rentenmark (November 1923), then stabilisation drains it
+    if (Q.year == 1923 && Q.month <= 10) {
+        Q.rev_situation += 3;
+    } else if (Q.year == 1923 && Q.month == 11) {
+        Q.rev_situation -= 10;
+    } else {
+        Q.rev_situation -= 5;
+    }
+
+    // the leadership consolidates; factions out of step with the line grow restless
+    Q[Q.leader + '_strength'] += 1;
+    Q[Q.leader + '_dissent'] -= 1;
+    for (var f of RF.factions) {
+        if (f != Q.leader && !Q[f + '_expelled']) {
+            Q[f + '_dissent'] += 1;
+        }
+    }
+    if (Q.party_banned) {
+        Q.members -= 6;
+        Q.repression -= 2;
+    }
+    // dues
+    Q.funds += Q.members >= 150 ? 1 : 0;
+    RF.normalize(Q);
+}
+
+// 2. a faction the player does not lead may split off when its dissent is too high
+Q.split_pending = 0;
+for (var g of RF.factions) {
+    if (g != Q.player && g != Q.leader && !Q[g + '_expelled'] && Q[g + '_dissent'] >= 85) {
+        Q.split_pending = 1;
+        Q.split_faction = g;
+        Q.split_faction_name = RF.names[g];
+    }
+}
+
+Q.has_event = 0;
+var scene = this.game.scenes['rf_post_event.events_choice'];
+var choices = this._compileChoices(scene);
+if (choices && choices[0].title != "Continue...") {
+    Q.has_event = 1;
+}
+!}
+go-to: rf_endings if rf_over = 1; events_choice if rf_over = 0 and has_event = 1; rf_main if rf_over = 0 and has_event = 0
+
+= [+ month : month +] [+ year +]
+
+@events_choice
+
+- #rf_event

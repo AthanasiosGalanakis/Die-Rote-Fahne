@@ -1,0 +1,32 @@
+title: Underground
+subtitle: The party is banned. Keep it alive.
+new-page: true
+is-card: true
+tags: rf_mass
+view-if: rf_underground_timer <= 0 and party_banned = 1
+on-arrival: month_actions += 1; rf_underground_timer = 1
+
+= Underground
+
+The offices are sealed and the paper is banned. Members meet in flats and allotment huts.
+
+- @cells: Rebuild the organisation cell by cell.
+- @paper: Print an illegal Rote Fahne.
+
+@cells
+on-arrival: {!
+Q.members += 6;
+Q.apparatus += 3;
+Q[Q.player + '_strength'] += 2;
+!}
+
+Small groups meet in secret and keep paying dues. The organisation survives in a harder form.
+
+@paper
+on-arrival: {!
+Q.members += 3;
+Q.repression += 3;
+Q[Q.player + '_strength'] += 3;
+!}
+
+Illegal leaflets and papers circulate in the factories. The police seize some presses, but your faction's voice is the one members hear.

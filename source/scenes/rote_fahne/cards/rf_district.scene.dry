@@ -1,0 +1,54 @@
+title: Factional Work in the Districts
+subtitle: Congress delegates are chosen in the districts. Win the districts and you win the congress.
+new-page: true
+is-card: true
+tags: rf_party
+view-if: rf_district_timer <= 0
+on-arrival: month_actions += 1; rf_district_timer = 2
+
+= Factional Work in the Districts
+
+Each faction has its strongholds. Your organisers can work where you are already strong, or try to break into a rival's ground.
+
+- @berlin: Berlin-Brandenburg, the Left's fortress.
+- @hamburg: The Wasserkante around Hamburg, Thälmann's home ground.
+- @saxony: Saxony, the heartland of the Right.
+- @ruhr: The occupied Ruhr, where the members are new and angry.
+
+@berlin
+on-arrival: {!
+var gain = Q.player == 'left' ? 6 : 3;
+Q[Q.player + '_strength'] += gain;
+if (Q.player != 'left') { Q.left_dissent += 4; }
+!}
+
+[? if player == "left" : Berlin closes ranks behind Fischer and Maslow. ?][? if player != "left" : You win some Berlin cells, and the Left accuses you of poaching. ?]
+
+@hamburg
+on-arrival: {!
+var gain = Q.player == 'stalin' ? 6 : 3;
+Q[Q.player + '_strength'] += gain;
+if (Q.player != 'stalin') { Q.stalin_dissent += 4; }
+Q.readiness += 1;
+!}
+
+The dockers and shipyard workers of Hamburg are among the most militant in Germany. [? if player == "stalin" : Thälmann is one of them, and they know it. ?]
+
+@saxony
+on-arrival: {!
+var gain = Q.player == 'right' ? 6 : 3;
+Q[Q.player + '_strength'] += gain;
+if (Q.player != 'right') { Q.right_dissent += 4; }
+Q.spd_relation += 1;
+!}
+
+Saxony's KPD works closely with the left-wing SPD of the state. [? if player == "right" : It is your base, and it holds. ?][? if player != "right" : Your people make headway, and Brandler's supporters complain. ?]
+
+@ruhr
+on-arrival: {!
+Q.members += 10;
+Q.rev_situation += 2;
+Q[Q.player + '_strength'] += 2;
+!}
+
+The occupation and the inflation are bringing thousands of new members into the Ruhr locals. They owe no loyalty to any faction yet.

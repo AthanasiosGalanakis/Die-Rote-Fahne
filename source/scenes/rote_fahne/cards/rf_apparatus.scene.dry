@@ -1,0 +1,39 @@
+title: Placing Your People
+subtitle: Paid secretaries choose the delegates. Whoever places them controls the party.
+new-page: true
+is-card: true
+tags: rf_party
+view-if: rf_apparatus_timer <= 0 and (player_leads = 1 or player == "stalin")
+on-arrival: month_actions += 1; rf_apparatus_timer = 3
+
+= Placing Your People
+
+The party has a growing staff of paid organisers. [? if player_leads : The Zentrale appoints them. ?][? if player_leads = 0 : You do not run the Zentrale, but your friends in the organisation department can steer appointments. ?]
+
+- @place: Place loyal secretaries in the districts.
+- @train: Send young cadres to Moscow for training.
+
+@place
+on-arrival: {!
+Q.apparatus += 5;
+Q.members -= 3;
+Q[Q.player + '_strength'] += 4;
+for (var f of window.RF.factions) {
+    if (f != Q.player) { Q[f + '_dissent'] += 2; }
+}
+!}
+
+Reliable people now run the district offices. Some old activists, passed over, leave in disgust.
+
+@train
+choose-if: funds >= 1
+unavailable-subtitle: The party cannot pay for the journey.
+on-arrival: {!
+Q.funds -= 1;
+Q.apparatus += 3;
+Q.autonomy -= 2;
+Q[Q.player + '_moscow'] += 5;
+Q[Q.player + '_strength'] += 2;
+!}
+
+A group of young functionaries leaves for the schools of the International. They will come back knowing Moscow's ways and whom they owe.

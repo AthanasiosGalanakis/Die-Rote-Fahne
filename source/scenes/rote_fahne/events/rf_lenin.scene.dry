@@ -1,0 +1,11 @@
+title: Lenin Is Dead
+subtitle: The founder of the Soviet state dies at Gorki.
+new-page: true
+tags: rf_event
+view-if: year = 1924 and verdict_seen = 1
+max-visits: 1
+on-arrival: stalin_moscow += 5
+
+= Lenin Is Dead
+
+Vladimir Lenin died on 21 January 1924, after a year of strokes had kept him out of politics. The succession is already being fought: Zinoviev, Kamenev and Stalin stand together against Trotsky. Whoever wins in Moscow will decide who leads in Berlin.

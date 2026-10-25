@@ -1,0 +1,123 @@
+title: Die Rote Fahne
+new-page: true
+on-arrival: {!
+Q.started = 1;
+Q.rf_mode = 1;
+Q.time = 1;
+Q.year = 1923;
+Q.month = 1;
+Q.month_actions = 0;
+// the base game's difficulty switches; the prototype uses normal rules
+Q.difficulty = 0;
+Q.hand_size = 3;
+
+// factions: right (Brandler), left (Fischer-Maslow), center (Middle Group), stalin (Thälmann circle)
+// starting strengths are gameplay estimates, not delegate counts
+Q.right_strength = 45;
+Q.left_strength = 32;
+Q.center_strength = 15;
+Q.stalin_strength = 8;
+Q.right_dissent = 5;
+Q.left_dissent = 25;
+Q.center_dissent = 5;
+Q.stalin_dissent = 10;
+// standing with the Comintern (0-100)
+Q.right_moscow = 55;
+Q.left_moscow = 40;
+Q.center_moscow = 35;
+Q.stalin_moscow = 25;
+Q.right_expelled = 0;
+Q.left_expelled = 0;
+Q.center_expelled = 0;
+Q.stalin_expelled = 0;
+
+// who holds the Zentrale
+Q.leader = 'right';
+// the Comintern line: united_front -> insurrection (Sep 1923) -> bolshevization (1924)
+Q.line = 'united_front';
+// party autonomy falls with every intervention from Moscow
+Q.autonomy = 70;
+// paid functionaries loyal to the leadership
+Q.apparatus = 10;
+
+// the party and Germany
+Q.members = 220; // thousands; an estimate, published figures differ
+Q.funds = 3;
+Q.rev_situation = 45;
+Q.readiness = 10;
+Q.spd_relation = 35;
+Q.union_influence = 35;
+Q.repression = 10;
+
+// story flags
+Q.october_plan = 0;
+Q.workers_govt = 0;
+Q.strike_pressure = 0;
+Q.chemnitz_strike = 0;
+Q.party_banned = 0;
+Q.rf_over = 0;
+Q.rf_ending = '';
+
+Q.rf_timers = ['rf_editorial', 'rf_district', 'rf_discipline', 'rf_platform',
+               'rf_apparatus', 'rf_ruhr', 'rf_hundreds', 'rf_councils',
+               'rf_strike', 'rf_underground', 'rf_delegation', 'rf_subsidy',
+               'rf_patron'];
+for (var t of Q.rf_timers) {
+    Q[t + '_timer'] = 0;
+}
+!}
+
+= January 1923
+
+On 11 January, French and Belgian troops march into the Ruhr to seize coal for unpaid reparations. The Cuno government calls for passive resistance and pays for it by printing money. The mark is collapsing. Hunger, strikes and nationalist fury spread together.
+
+For the Communist Party of Germany this looks like the moment its founders waited for. The party has over two hundred thousand members, a daily paper, and the backing of the Communist International in Moscow. It does not have one mind. Four groups are fighting over what the party should do with the crisis, and Moscow will judge whoever fails.
+
+Choose the faction you will lead.
+
+- @pick_right: The Brandler Right
+- @pick_left: The Fischer–Maslow Left
+- @pick_center: The Middle Group
+- @pick_stalin: The Thälmann circle
+
+@pick_right
+subtitle: Heinrich Brandler and August Thalheimer hold the leadership. United front with the SPD, workers' governments in the states.
+on-arrival: player = "right"
+go-to: begin
+
+@pick_left
+subtitle: Ruth Fischer and Arkadi Maslow lead the Berlin opposition. No coalitions with the SPD; prepare the offensive.
+on-arrival: player = "left"
+go-to: begin
+
+@pick_center
+subtitle: Ernst Meyer, Hugo Eberlein and Wilhelm Pieck. Hold the party together, whatever the line.
+on-arrival: player = "center"
+go-to: begin
+
+@pick_stalin
+subtitle: Hard mode. Ernst Thälmann's Hamburg circle sits inside the Left. Build the apparatus and wait for Moscow.
+on-arrival: player = "stalin"
+go-to: begin
+
+@begin
+on-arrival: {!
+window.RF.normalize(Q);
+!}
+new-page: true
+
+= [+ player_name +]
+
+[? if player == "right" : You lead the party. The Leipzig congress meets at the end of January, and the Left will try to take it from you. Your idea is the workers' government: bring the left wing of the SPD into joint governments in the states, win its workers, and only then talk about power. Your protector in Moscow is Karl Radek. ?]
+
+[? if player == "left" : You lead the opposition, strongest in Berlin and Hamburg. To you the workers' government is a coalition with traitors under a new name. The crisis is a revolutionary one, and the party must arm and prepare. Your protector in Moscow is Grigory Zinoviev, chairman of the Comintern. ?]
+
+[? if player == "center" : You belong to neither camp. You think the party loses more by fighting itself than by any single wrong tactic. You have few delegates of your own, but when the big factions deadlock, the congress turns to you. You have no fixed patron in Moscow. ?]
+
+[? if player == "stalin" : In 1923 there is no Stalinist faction yet. Ernst Thälmann is a leader of the Hamburg Left, allied with Fischer. You play his circle inside the Left: small, close to the workers of the Wasserkante, and willing to be whatever Moscow needs. Stalin is still one of three men running the Soviet party, so Moscow's favour comes slowly. ?]
+
+Each month you play one card from your hand. Party Affairs decides who controls the party; Mass Work decides how strong it is in the country; Moscow decides who the Comintern backs. Events will interrupt you.
+
+This prototype covers the revolutionary year: January 1923 to the Frankfurt congress of April 1924.
+
+- @rf_main: Begin.

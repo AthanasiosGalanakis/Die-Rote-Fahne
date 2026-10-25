@@ -1,0 +1,33 @@
+title: Delegation to Moscow
+subtitle: The Executive Committee of the International hears the German factions in person.
+new-page: true
+is-card: true
+tags: rf_moscow
+view-if: rf_delegation_timer <= 0 and funds >= 1
+on-arrival: month_actions += 1; rf_delegation_timer = 3
+
+= Delegation to Moscow
+
+You can send your best speakers to the ECCI in Moscow. The International settles German disputes there, often before the German party has discussed them.
+
+- @argue: Argue your faction's line.
+- @listen: Listen, and promise to carry out the ECCI's decisions.
+
+@argue
+on-arrival: {!
+Q.funds -= 1;
+Q[Q.player + '_moscow'] += 6;
+Q.autonomy -= 1;
+!}
+
+Your delegates argue well. Some of the Russian leaders are impressed; others take note of your independence.
+
+@listen
+on-arrival: {!
+Q.funds -= 1;
+Q[Q.player + '_moscow'] += 10;
+Q.autonomy -= 4;
+Q[Q.player + '_dissent'] -= 4;
+!}
+
+Your delegates promise discipline. Moscow likes obedient Germans. The precedent will outlive you.

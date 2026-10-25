@@ -1,0 +1,46 @@
+title: The Cuno Strikes
+subtitle: A strike wave brings down the government.
+new-page: true
+tags: rf_event
+view-if: year = 1923 and month >= 8
+max-visits: 1
+
+= The Cuno Strikes
+
+In August the dollar buys millions of marks. Printers at the state mint walk out and the money stops. Strikes spread across Berlin and the industrial regions, many led by Communist factory councils. On 12 August Chancellor Cuno resigns. Gustav Stresemann forms a grand coalition that includes the SPD.
+
+The party called the strikes. What does it do with them?
+
+- @escalate: Push the strike toward a general strike and a fight for power.
+- @front: Turn it into a joint front with SPD workers against the new government.
+- @end: Win what can be won and call the strikes off.
+
+@escalate
+on-arrival: {!
+Q.rev_situation += 10;
+Q.readiness += 3;
+Q.repression += 6;
+Q.spd_relation -= 4;
+Q.left_strength += 3;
+Q.strike_pressure += 1;
+!}
+
+The strike committees call for more. In some places police fire on demonstrators. The SPD, now in government, appeals for calm.
+
+@front
+on-arrival: {!
+Q.spd_relation += 8;
+Q.union_influence += 5;
+Q.right_strength += 3;
+!}
+
+Joint strike committees with SPD members stay together after the strike ends. The SPD leaders who joined Stresemann's government find their own members harder to manage.
+
+@end
+on-arrival: {!
+Q.members += 6;
+Q.union_influence += 2;
+Q.left_dissent += 4;
+!}
+
+The strikers win wage indexing in several industries. The party gains members and loses some of its fire.

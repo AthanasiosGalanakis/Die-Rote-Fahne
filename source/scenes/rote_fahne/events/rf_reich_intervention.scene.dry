@@ -1,0 +1,18 @@
+title: Reich Intervention in Saxony
+subtitle: The Reichswehr marches into Saxony and deposes the government.
+new-page: true
+tags: rf_event
+view-if: year = 1923 and month >= 11 and workers_govt = 1
+max-visits: 1
+on-arrival: {!
+Q.workers_govt = 0;
+Q.repression += 10;
+Q.readiness -= 8;
+Q.spd_relation += 4;
+!}
+
+= Reich Intervention in Saxony
+
+On 29 October, President Ebert uses his emergency powers against Saxony. Troops march into Dresden and a Reich commissioner removes Zeigner's government. Thuringia's KPD ministers leave office soon afterwards. The Bavarian government, openly defying Berlin from the right, faces no such action.
+
+The SPD left the Stresemann cabinet in protest. Many SPD workers are angry at their own leaders, which is a small opening for the united front.

@@ -1,0 +1,61 @@
+title: The Rote Fahne's Line
+subtitle: Whoever writes the party paper's front page tells 200,000 members what the party thinks.
+new-page: true
+is-card: true
+tags: rf_party
+view-if: rf_editorial_timer <= 0 and party_banned = 0
+on-arrival: month_actions += 1; rf_editorial_timer = 3
+
+= The Rote Fahne's Line
+
+[? if player_leads : As the leadership, you set the editorial line of the Rote Fahne. ?][? if player_leads = 0 : The leadership controls the paper, but your people write for it, and a well-placed article can still turn a district. ?]
+
+- @united_front: The united front: an open hand to SPD workers.
+- @offensive: The offensive: the crisis is revolutionary, prepare for power.
+- @unity: Unity: the party's strength is its discipline.
+- @moscow: The International: Moscow's lessons for the German party.
+
+@united_front
+on-arrival: {!
+var w = Q.player_leads ? 1 : 0.5;
+Q.right_strength += 5 * w;
+Q.spd_relation += 5 * w;
+Q.union_influence += 2 * w;
+Q.left_dissent += 5 * w;
+Q.right_dissent -= 3 * w;
+!}
+
+The paper calls on SPD workers to join the KPD in factory councils, price-control committees and defence units. Some SPD locals answer. The Left calls it begging.
+
+@offensive
+on-arrival: {!
+var w = Q.player_leads ? 1 : 0.5;
+Q.left_strength += 5 * w;
+Q.readiness += 3 * w;
+Q.spd_relation -= 5 * w;
+Q.right_dissent += 5 * w;
+Q.left_dissent -= 3 * w;
+!}
+
+The paper says what many members feel: the republic is finished and the question is who inherits it. Militants cheer. The SPD press quotes the article as proof that the Communists want civil war.
+
+@unity
+on-arrival: {!
+var w = Q.player_leads ? 1 : 0.5;
+Q.center_strength += 4 * w;
+for (var f of window.RF.factions) {
+    Q[f + '_dissent'] -= 3 * w;
+}
+!}
+
+The paper prints a long appeal for party discipline and avoids the questions that divide the factions. Tempers cool, for now.
+
+@moscow
+on-arrival: {!
+var w = Q.player_leads ? 1 : 0.5;
+Q.stalin_strength += 3 * w;
+Q[Q.player + '_moscow'] += 4;
+Q.autonomy -= 2;
+!}
+
+The paper reprints the latest resolutions of the Executive Committee of the Communist International (ECCI) with a respectful commentary. Moscow notices who wrote it.

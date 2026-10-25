@@ -1,0 +1,93 @@
+title: Party Discipline
+subtitle: You hold the Zentrale. Use it against your rivals.
+new-page: true
+is-card: true
+tags: rf_party
+view-if: rf_discipline_timer <= 0 and player_leads = 1
+on-arrival: month_actions += 1; rf_discipline_timer = 3
+
+= Party Discipline
+
+The leadership controls appointments, the paper and the party's money. The statutes allow it to remove functionaries who break discipline, and to expel members.
+
+- @warn: Issue a formal warning to all factions.
+- @remove_right: Remove Right functionaries from their posts.
+- @remove_left: Remove Left functionaries from their posts.
+- @remove_center: Remove Middle Group functionaries from their posts.
+- @remove_stalin: Remove Thälmann's people from their posts.
+- @expel: Expel the most rebellious faction's leaders.
+
+@warn
+on-arrival: {!
+Q.apparatus += 3;
+for (var f of window.RF.factions) {
+    if (f != Q.player) { Q[f + '_dissent'] += 3; }
+}
+!}
+
+The Zentrale warns that factional work will be punished. The factions take note and go on.
+
+@remove_right
+view-if: player != "right" and right_expelled = 0
+on-arrival: {!
+Q.apparatus += 4;
+Q.members -= 4;
+Q.right_dissent += 12;
+window.RF.shift(Q, 'right', Q.player, 6);
+!}
+
+Brandler's supporters lose their editorships and district posts.
+
+@remove_left
+view-if: player != "left" and left_expelled = 0
+on-arrival: {!
+Q.apparatus += 4;
+Q.members -= 4;
+Q.left_dissent += 12;
+window.RF.shift(Q, 'left', Q.player, 6);
+!}
+
+Left functionaries in Berlin and Hamburg are replaced by reliable people.
+
+@remove_center
+view-if: player != "center" and center_expelled = 0
+on-arrival: {!
+Q.apparatus += 4;
+Q.members -= 3;
+Q.center_dissent += 12;
+window.RF.shift(Q, 'center', Q.player, 5);
+!}
+
+The Middle Group loses its seats on the party commissions.
+
+@remove_stalin
+view-if: player != "stalin" and stalin_expelled = 0
+on-arrival: {!
+Q.apparatus += 4;
+Q.members -= 3;
+Q.stalin_dissent += 12;
+window.RF.shift(Q, 'stalin', Q.player, 5);
+!}
+
+Thälmann's Hamburg allies are moved out of their posts.
+
+@expel
+choose-if: (player != "right" and right_dissent >= 50 and right_expelled = 0) or (player != "left" and left_dissent >= 50 and left_expelled = 0) or (player != "center" and center_dissent >= 50 and center_expelled = 0) or (player != "stalin" and stalin_dissent >= 50 and stalin_expelled = 0)
+unavailable-subtitle: No rival faction is rebellious enough to justify expulsion (dissent 50 or more).
+on-arrival: {!
+var target = null;
+for (var f of window.RF.factions) {
+    if (f != Q.player && !Q[f + '_expelled'] && (target === null || Q[f + '_dissent'] > Q[target + '_dissent'])) {
+        target = f;
+    }
+}
+Q.expelled_name = window.RF.names[target];
+Q.members -= Math.round(Q[target + '_strength'] * 1.2);
+Q.union_influence -= 5;
+Q.apparatus += 8;
+Q[target + '_expelled'] = 1;
+Q[Q.player + '_moscow'] -= 5;
+window.RF.normalize(Q);
+!}
+
+The leaders of the [+ expelled_name +] are expelled for factional activity. Many of their followers leave with them. The party is more obedient and smaller. Moscow asks why it was not consulted.

@@ -1,0 +1,31 @@
+title: Friends in Moscow
+subtitle: Every German faction has someone in the Russian leadership. Use yours.
+new-page: true
+is-card: true
+tags: rf_moscow
+view-if: rf_patron_timer <= 0
+on-arrival: month_actions += 1; rf_patron_timer = 4
+
+= Friends in Moscow
+
+[? if player == "right" : Karl Radek knows Germany better than any Russian leader and has defended Brandler before. ?][? if player == "left" : Grigory Zinoviev chairs the International and is happy to have a German faction of his own. ?][? if player == "center" : You have no patron of your own. You can lobby the ECCI's officials and hope to be seen as the safe choice. ?][? if player == "stalin" : Stalin is General Secretary of the Russian party but has little say in the International yet. His people are building a network, and they are looking for Germans. ?]
+
+- @write: Ask your friends to speak for you.
+- @offer: Offer your faction's loyalty in the Russian party's own disputes.
+
+@write
+on-arrival: {!
+var gain = {right: 6, left: 6, center: 4, stalin: Q.year >= 1924 ? 8 : 3};
+Q[Q.player + '_moscow'] += gain[Q.player];
+!}
+
+Your friends in Moscow speak for you. [? if player == "stalin" : For now, Stalin's word counts for less in the International than Zinoviev's. ?]
+
+@offer
+on-arrival: {!
+Q[Q.player + '_moscow'] += 9;
+Q.autonomy -= 3;
+Q[Q.player + '_dissent'] += 3;
+!}
+
+You let it be known that your faction will take the right side in the Russian leadership's struggle with Trotsky. It earns you favour, and ties your fate to men you cannot control.

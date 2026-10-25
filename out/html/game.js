@@ -368,7 +368,15 @@
   // TODO: have some code for tabbed sidebar browsing.
   window.updateSidebar = function() {
       $('#qualities').empty();
-      var scene = dendryUI.game.scenes[window.statusTab];
+      var tab = window.statusTab;
+      // Die Rote Fahne mode has its own sidebar scenes (rf_status, rf_status.politics, ...)
+      if (dendryUI.dendryEngine.state.qualities.rf_mode) {
+          tab = tab.replace('status', 'rf_status');
+          if (!dendryUI.game.scenes[tab]) {
+              tab = 'rf_status';
+          }
+      }
+      var scene = dendryUI.game.scenes[tab];
       dendryUI.dendryEngine._runActions(scene.onArrival);
       var displayContent = dendryUI.dendryEngine._makeDisplayContent(scene.content, true);
       $('#qualities').append(dendryUI.contentToHTML.convert(displayContent));

@@ -1,0 +1,27 @@
+title: Next month
+is-hand: true
+max-cards: 3
+
+#The three decks of the Die Rote Fahne mode. Clicking a deck draws a card into the hand.
+
+- @rf_party
+- @rf_mass
+- @rf_moscow
+
+@rf_party
+title: Party Affairs
+is-deck: true
+
+- #rf_party
+
+@rf_mass
+title: Mass Work
+is-deck: true
+
+- #rf_mass
+
+@rf_moscow
+title: Moscow
+is-deck: true
+
+- #rf_moscow
