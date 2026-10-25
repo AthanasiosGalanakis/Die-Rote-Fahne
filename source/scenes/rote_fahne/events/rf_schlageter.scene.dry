@@ -23,6 +23,8 @@ window.RF.obey(Q, 6);
 window.RF.lean(Q, {right: 2});
 Q.members += 8;
 Q.spd_relation -= 6;
+Q.dnvp_relation += 4;
+Q.nsdap_relation += 3;
 !}
 
 Communist and nationalist speakers share platforms. A few young nationalists join the party. The <span class="p-spd">SPD</span> press is delighted to quote the *Rote Fahne* next to the völkisch papers.

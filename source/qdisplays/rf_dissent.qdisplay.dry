@@ -1,0 +1,9 @@
+
+# KPD faction dissent (0-99; a faction outside the leadership splits at 85)
+
+(..10) loyal
+(10..25) restless
+(25..45) discontented
+(45..65) angry
+(65..85) rebellious
+(85..) ready to split

@@ -1,0 +1,8 @@
+
+# chance in percent that an armed rising would win now
+
+(..0.5) out of reach
+(0.5..25) poor
+(25..50) uncertain
+(50..75) fair
+(75..) good

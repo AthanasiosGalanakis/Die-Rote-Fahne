@@ -32,8 +32,8 @@
       var text_label_map_ids = {
           // top-level
           'main_tab': "Haupt",
+          'party_tab': "Partei",
           'politics_tab': "Politik",
-          'paramilitary_tab': "Militär",
           'poll_tab': "Wahl",
           'stats-link': "Bibliothek",
           'save-link': "Speichern/Laden",
@@ -82,8 +82,8 @@
       var text_label_map_ids = {
           // top-level
           'main_tab': "Main",
+          'party_tab': "Party",
           'politics_tab': "Politics",
-          'paramilitary_tab': "Defense",
           'poll_tab': "Polls",
           'stats-link': "Library",
           'save-link': "Save/Load",
@@ -372,6 +372,9 @@
       dendryUI.dendryEngine._runActions(scene.onArrival);
       var displayContent = dendryUI.dendryEngine._makeDisplayContent(scene.content, true);
       $('#qualities').append(dendryUI.contentToHTML.convert(displayContent));
+      if (window.RF) {
+          window.RF.renderSidebar(dendryUI.dendryEngine.state.qualities);
+      }
   };
 
   window.changeTab = function(newTab, tabId) {
@@ -424,6 +427,93 @@
       return bar;
   };
 
+
+  // Hover text boxes. The browser's own title tooltips and the cards'
+  // built-in tooltips can run off the screen, so one floating box is placed
+  // next to whatever is hovered and kept inside the window.
+  var tip = null;
+  var showTip = function(target, html) {
+      if (!tip) {
+          tip = document.createElement('div');
+          tip.id = 'rf-tip';
+          document.body.appendChild(tip);
+      }
+      tip.innerHTML = html;
+      tip.style.display = 'block';
+      tip.style.left = '0px';
+      tip.style.top = '0px';
+      var margin = 8;
+      var r = target.getBoundingClientRect();
+      var w = tip.offsetWidth, h = tip.offsetHeight;
+      var vw = document.documentElement.clientWidth, vh = window.innerHeight;
+      // to the right of the target, else to the left, else below it
+      var left = r.right + margin;
+      var top = r.top;
+      if (left + w > vw - margin) {
+          left = r.left - w - margin;
+      }
+      if (left < margin) {
+          left = Math.min(Math.max(margin, r.left), vw - w - margin);
+          top = r.bottom + margin;
+          if (top + h > vh - margin) {
+              top = r.top - h - margin;
+          }
+      }
+      top = Math.min(Math.max(margin, top), Math.max(margin, vh - h - margin));
+      left = Math.max(margin, left);
+      tip.style.left = left + 'px';
+      tip.style.top = top + 'px';
+  };
+  var hideTip = function() {
+      if (tip) {
+          tip.style.display = 'none';
+      }
+  };
+  var tipFor = function(el) {
+      var card = el.closest('a.card');
+      if (card) {
+          var inner = card.querySelector('.card-tooltip');
+          // drop the browser's tooltip, which only repeats the card's title
+          if (card.getAttribute('title')) {
+              card.setAttribute('data-title', card.getAttribute('title'));
+              card.removeAttribute('title');
+          }
+          // the engine stores the subtitle as text; it is our own markup, so render it
+          return inner ? {target: card, html: inner.textContent} : null;
+      }
+      var t = el.closest('[title], [data-tip]');
+      if (!t) {
+          return null;
+      }
+      if (t.getAttribute('title')) {
+          t.setAttribute('data-tip', t.getAttribute('title'));
+          t.removeAttribute('title');
+      }
+      var text = t.getAttribute('data-tip');
+      var div = document.createElement('div');
+      div.textContent = text;
+      return text ? {target: t, html: div.innerHTML} : null;
+  };
+  document.addEventListener('mouseover', function(evt) {
+      if (!(evt.target instanceof Element)) {
+          return;
+      }
+      var found = tipFor(evt.target);
+      if (found) {
+          showTip(found.target, found.html);
+      } else {
+          hideTip();
+      }
+  });
+  document.addEventListener('focusin', function(evt) {
+      var found = evt.target instanceof Element ? tipFor(evt.target) : null;
+      if (found) {
+          showTip(found.target, found.html);
+      }
+  });
+  document.addEventListener('focusout', hideTip);
+  document.addEventListener('click', hideTip);
+  window.addEventListener('scroll', hideTip, true);
 
   window.justLoaded = true;
   window.statusTab = "rf_status";

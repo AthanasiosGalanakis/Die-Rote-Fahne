@@ -29,6 +29,22 @@ if (Q.month_actions >= 1) {
         Q.rev_situation -= 5;
     }
 
+    // the Ruhr occupation feeds nationalism; hyperinflation eats the
+    // Republic's support until the Rentenmark, then it slowly recovers
+    if (Q.year == 1923 && Q.month <= 9) {
+        Q.nationalism += 2;
+        Q.pro_republic -= 2;
+    } else if (Q.year == 1923 && Q.month <= 11) {
+        Q.pro_republic -= 1;
+    } else {
+        Q.nationalism -= 1;
+        Q.pro_republic += 2;
+    }
+    // the SPD's entry into Stresemann's grand coalition (August 1923)
+    if (Q.year == 1923 && Q.month == 8) {
+        Q.spd_discredit += 5;
+    }
+
     // the leadership consolidates; factions out of step with the line grow restless
     Q[Q.leader + '_strength'] += 1;
     Q[Q.leader + '_dissent'] -= 1;
@@ -69,7 +85,7 @@ if (choices && choices[0].title != "Continue...") {
     Q.has_event = 1;
 }
 !}
-go-to: rf_endings if rf_over = 1; events_choice if rf_over = 0 and has_event = 1; rf_main if rf_over = 0 and has_event = 0
+go-to: rf_endings if rf_over = 1; events_choice if rf_over = 0 and has_event = 1; rf_main if rf_over = 0 and has_event = 0 and hand_size != 4; rf_main.four if rf_over = 0 and has_event = 0 and hand_size = 4
 
 = [+ month : month +] [+ year +]
 

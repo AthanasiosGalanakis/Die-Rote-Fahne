@@ -9,7 +9,8 @@ Q.month = 1;
 Q.month_actions = 0;
 // the base game's difficulty switches; this game uses normal rules
 Q.difficulty = 0;
-Q.hand_size = 3;
+// three cards in hand, or four if chosen on the title screen
+Q.hand_size = Q.rf_four_cards ? 4 : 3;
 
 // factions inside the KPD; starting strengths are gameplay estimates,
 // not delegate counts
@@ -56,6 +57,19 @@ Q.spd_relation = 35;
 Q.union_influence = 35;
 Q.repression = 10;
 
+// the KPD's relations with the other parties (0-100)
+Q.uspd_relation = 40;
+Q.z_relation = 10;
+Q.ddp_relation = 8;
+Q.dvp_relation = 4;
+Q.dnvp_relation = 2;
+Q.nsdap_relation = 0;
+// public mood, used by the polls
+Q.pro_republic = 50;
+Q.nationalism = 55;
+// workers' anger at the SPD's coalitions, which feeds the KPD vote
+Q.spd_discredit = 0;
+
 // story flags
 Q.october_plan = 0;
 Q.workers_govt = 0;
@@ -96,4 +110,4 @@ Factions that grow strong can take the leadership at a congress. Factions that g
 
 This version covers the revolutionary year: January 1923 to the Frankfurt congress of April 1924.
 
-- @rf_main: Begin.
+- @rf_hand: Begin.

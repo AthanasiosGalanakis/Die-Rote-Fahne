@@ -1,0 +1,8 @@
+
+# chance in percent that Moscow overturns the leadership at a congress
+
+(..0.5) none: Moscow backs the leadership
+(0.5..15) low
+(15..35) real
+(35..60) high
+(60..) very high
