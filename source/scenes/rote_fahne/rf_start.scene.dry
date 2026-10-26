@@ -14,11 +14,13 @@ Q.hand_size = 4;
 // factions inside the KPD. In January 1923 there are two camps: the
 // Zentrale's majority around Brandler and Thalheimer, and the Left
 // opposition of Berlin and Hamburg (Fischer, Maslow, Thälmann). At Leipzig
-// the majority beat the Left by about two to one. The Middle Group, the
-// Ultra-Left and the Thälmann circle form later through events.
+// the majority beat the Left by about two to one. Minor currents follow
+// neither camp. The Middle Group, the Ultra-Left and the Thälmann circle
+// form later through events.
 window.RF.startFactions(Q);
-Q.right_strength = 64;   // Brandler, Thalheimer, Walcher, Pieck, Remmele, Eberlein
-Q.left_strength = 36;    // Fischer, Maslow, Thälmann, Scholem, Rosenberg
+Q.right_strength = 60;   // Brandler, Thalheimer, Walcher, Pieck, Remmele, Eberlein
+Q.left_strength = 32;    // Fischer, Maslow, Thälmann, Scholem, Rosenberg
+Q.minor_strength = 8;
 Q.center_strength = 0;
 Q.ultra_strength = 0;
 Q.stalin_strength = 0;
@@ -27,17 +29,20 @@ Q.center_dissent = 5;
 Q.left_dissent = 30;
 Q.ultra_dissent = 25;
 Q.stalin_dissent = 10;
+Q.minor_dissent = 10;
 // how Moscow sees each faction (0-100)
 Q.right_moscow = 55;
 Q.center_moscow = 35;
 Q.left_moscow = 40;
 Q.ultra_moscow = 15;
 Q.stalin_moscow = 25;
+Q.minor_moscow = 10;
 Q.right_expelled = 0;
 Q.center_expelled = 0;
 Q.left_expelled = 0;
 Q.ultra_expelled = 0;
 Q.stalin_expelled = 0;
+Q.minor_expelled = 0;
 Q.splits = 0;
 
 // which faction holds the Zentrale
@@ -67,7 +72,6 @@ Q.autonomy = 70;
 Q.apparatus = 10;
 
 // the party and Germany
-Q.members = 220; // thousands; an estimate, published figures differ
 Q.funds = 3;
 Q.rev_situation = 45;
 Q.readiness = 10;

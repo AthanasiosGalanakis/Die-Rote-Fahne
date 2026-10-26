@@ -5,8 +5,8 @@ max-cards: 4
 on-arrival: {! Q.handDescription = "Hand"; !}
 
 #The leader's portrait with the Provinces and Executive cards beside it,
-#then the Party Affairs deck above the hand, then the advisors with the
-#Replace card (RF.layoutMain arranges them).
+#then the Party Affairs deck above the hand, then the three advisor slots
+#(RF.layoutMain arranges them).
 
 {!<div class="rf-portrait"><div class="rf-portrait-img">Portrait</div><div class="rf-portrait-name">!}[+ leader_person +]{!</div><div class="rf-portrait-role">!}Leads the <span class="p-kpd">KPD</span> · <span class="f-[+ leader +]">[+ leader_name +]</span>{!</div></div>!}
 

@@ -1,0 +1,105 @@
+title: Executive
+subtitle: The Zentrale: the party's leadership between congresses.
+is-pinned-card: true
+tags: rf_top
+new-page: true
+on-arrival: {!
+var RF = window.RF;
+Q.exec_ready = Q.exec_month == Q.time ? 0 : 1;
+Q.next_congress = RF.nextCongressText(Q);
+var t = Q.year * 12 + Q.month;
+Q.congress_soon = Q.congress_number > 8 && Q.congress_due - t <= 3 ? 1 : 0;
+Q.congress_far = Q.congress_number > 8 && Q.congress_due - t > 3 ? 1 : 0;
+!}
+
+= The Zentrale
+
+The Zentrale runs the party between congresses: the press, the districts, the money and the line. Between congresses the Zentralausschuss, the Zentrale together with the district leaders, is the party's highest body. The Executive can take one decision a month.
+
+Next party congress: [+ next_congress +]
+
+- @za
+- @postpone
+- @early
+- @delegation
+- @rf_hand: Back to the party.
+
+@za
+title: Convene the Zentralausschuss.
+subtitle: The district leaders air their grievances. Calms every faction a little; the leadership's faction gains.
+choose-if: exec_ready = 1
+unavailable-subtitle: The Executive has already acted this month.
+new-page: true
+on-arrival: {!
+for (var f of window.RF.factions) { Q[f + '_dissent'] -= 3; }
+Q[Q.leader + '_strength'] += 1;
+Q.exec_month = Q.time;
+window.RF.normalize(Q);
+!}
+
+= The Zentralausschuss
+
+For two days the district leaders argue with the Zentrale over the line, the money and the paper. Nothing much is decided, but everyone has been heard.
+
+- @rf_hand: Back to the party.
+
+@postpone
+title: Put off the next congress.
+subtitle: Four more months before the delegates meet. The other factions are angered, and Moscow dislikes it.
+view-if: congress_soon = 1 and congress_postponed = 0
+choose-if: exec_ready = 1
+unavailable-subtitle: The Executive has already acted this month.
+new-page: true
+on-arrival: {!
+Q.congress_due += 4;
+Q.congress_postponed = 1;
+for (var f of window.RF.factions) { if (f != Q.leader) { Q[f + '_dissent'] += 5; } }
+Q[Q.leader + '_moscow'] -= 3;
+Q.exec_month = Q.time;
+window.RF.normalize(Q);
+!}
+
+= The Congress Is Put Off
+
+The Zentrale cites the situation, the cost and the danger of police raids. The opposition says the leadership is afraid of the delegates.
+
+- @rf_hand: Back to the party.
+
+@early
+title: Call the congress early.
+subtitle: The delegates meet next month. The leadership gets less time to prepare; the opposition is pleased.
+view-if: congress_far = 1
+choose-if: exec_ready = 1
+unavailable-subtitle: The Executive has already acted this month.
+new-page: true
+on-arrival: {!
+Q.congress_due = Q.year * 12 + Q.month + 1;
+for (var f of window.RF.factions) { if (f != Q.leader) { Q[f + '_dissent'] -= 4; } }
+Q.exec_month = Q.time;
+window.RF.normalize(Q);
+!}
+
+= An Early Congress
+
+The Zentrale calls the delegates together next month. The districts begin electing them at once.
+
+- @rf_hand: Back to the party.
+
+@delegation
+title: Send a delegation to Moscow.
+subtitle: The leadership explains itself to the International. More standing in Moscow for the leadership, less autonomy for the party.
+choose-if: exec_ready = 1
+unavailable-subtitle: The Executive has already acted this month.
+new-page: true
+on-arrival: {!
+Q[Q.leader + '_moscow'] += 5;
+Q.autonomy -= 3;
+Q.exec_month = Q.time;
+window.RF.normalize(Q);
+!}
+
+= A Delegation to Moscow
+
+The delegates spend a fortnight in the Hotel Lux and the corridors of the International. They come back with praise, advice and a list of things Moscow expects.
+
+- @rf_hand: Back to the party.

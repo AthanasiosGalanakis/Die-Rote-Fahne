@@ -605,12 +605,14 @@ table {
 .f-left { color: #b00020; font-weight: bold; }
 .f-ultra { color: #2b2b2b; font-weight: bold; }
 .f-stalin { color: #5a0f2e; font-weight: bold; }
+.f-minor { color: #7a7a7a; font-weight: bold; }
 
 body.dark-mode .f-right { color: #f0925a; }
 body.dark-mode .f-center { color: #d2b27a; }
 body.dark-mode .f-left { color: #ff5c6e; }
 body.dark-mode .f-ultra { color: #c8c8c8; }
 body.dark-mode .f-stalin { color: #d0607f; }
+body.dark-mode .f-minor { color: #b8b8b8; }
 
 /* faction strength bars in the sidebar */
 .rf-bar { height: 0.45em; margin: 0.15em 0 0.6em 0; background: rgba(0, 0, 0, 0.08); }
@@ -621,6 +623,7 @@ body.dark-mode .rf-bar { background: rgba(255, 255, 255, 0.12); }
 .b-left { background: #b00020; }
 .b-ultra { background: #2b2b2b; }
 .b-stalin { background: #5a0f2e; }
+.b-minor { background: #9a9a9a; }
 body.dark-mode .b-ultra { background: #c8c8c8; }
 
 /* Die Rote Fahne: hover text boxes. game.js places one floating box
@@ -1348,7 +1351,7 @@ body.dark-mode .m-zinoviev, body.dark-mode .m-radek, body.dark-mode .m-trotsky,
 body.dark-mode .m-bukharin, body.dark-mode .m-stalin {
   color: var(--c-comintern-dark, #ff6060);
 }
-.rf-kremlin-backs {
+.rf-kremlin-backs, .rf-subline {
   font-size: 0.85em;
   opacity: 0.85;
   margin-top: 1px;
@@ -1446,6 +1449,7 @@ body.dark-mode .bgf-z { fill: var(--c-z-dark, #d0d0d0); }
 .bff-left { fill: #b00020; }
 .bff-ultra { fill: #2b2b2b; }
 .bff-stalin { fill: #5a0f2e; }
+.bff-minor { fill: #9a9a9a; }
 body.dark-mode .bff-ultra { fill: #9a9a9a; }
 .rf-delegates .rf-legend {
   text-align: center;
@@ -1471,4 +1475,24 @@ table.rf-state-table th:first-child, table.rf-states th:first-child {
 }
 .rf-state-result {
   margin-bottom: 1.2em;
+}
+
+/* v0.11: party relations, armed forces and missions */
+.rf-relations td, .rf-forces td, .rf-missions td {
+  vertical-align: top;
+}
+.rf-subline {
+  font-weight: normal;
+}
+.rf-force, .rf-mission {
+  cursor: help;
+}
+.rf-mission-done td {
+  color: #2f7d32;
+}
+body.dark-mode .rf-mission-done td {
+  color: #7cc97f;
+}
+.rf-relations th:first-child {
+  text-align: left;
 }

@@ -534,10 +534,11 @@
       center: 'Leaders of the old majority who broke with Brandler: party unity and loyalty to the International above any line.',
       left: 'The Berlin and Hamburg opposition: no coalitions with reformists, prepare the offensive. Close to Zinoviev.',
       ultra: 'The Left\'s radical wing: suspicious of the unions, of parliament and of Moscow.',
-      stalin: 'Thälmann\'s Hamburg workers and young functionaries, loyal to the leaders of the International.'
+      stalin: 'Thälmann\'s Hamburg workers and young functionaries, loyal to the leaders of the International.',
+      minor: 'Small currents and unaligned members who follow neither camp: old Spartacists, syndicalist-minded workers, intellectuals and local leaders. They cannot lead the party, but their delegates count at a congress.'
   };
 
-  var FACTION_ACCENT = {right: '#c4622d', center: '#8a6d3b', left: '#b00020', ultra: '#2b2b2b', stalin: '#5a0f2e'};
+  var FACTION_ACCENT = {right: '#c4622d', center: '#8a6d3b', left: '#b00020', ultra: '#2b2b2b', stalin: '#5a0f2e', minor: '#7a7a7a'};
   var factionTip = function(f) {
       var RF = window.RF;
       if (!RF || !RF.names[f]) {
@@ -557,7 +558,7 @@
           }
       }
       return tipCard({
-          logo: RF.image('leader:' + f) || '', badge: RF.factionPersons[f].split(' ').pop().slice(0, 1),
+          logo: RF.image('leader:' + f) || '', badge: RF.canLead(f) ? RF.factionPersons[f].split(' ').pop().slice(0, 1) : '·',
           logoClass: 'b-' + f + ' rf-tip-portrait',
           title: escHtml(RF.names[f]), titleClass: 'f-' + f,
           subtitle: Q.leader == f ? 'Leads the party' : 'Faction inside the KPD',
@@ -580,7 +581,8 @@
           title: escHtml(person.name), titleClass: 'p-' + person.party,
           subtitle: escHtml(RF.personRole(Q, id)),
           rows: (info && person.party != 'other' ? [['Belongs to', escHtml(info.full)]] : [['Belongs to', 'no party']]).concat(
-              RF.patrons && RF.patrons[id] && qualities().rf_mode ? [['In the Kremlin', RF.patronWord(qualities(), id)]] : []),
+              RF.patrons && RF.patrons[id] && qualities().rf_mode ? [['In the Kremlin', RF.patronWord(qualities(), id)],
+                  ['Backs', RF.patronBacks(qualities(), id).join(', ') || 'no faction in the KPD']] : []),
           body: escHtml(RF.personText(Q, id)),
           accent: cssVar('--c-' + person.party, '')
       });
