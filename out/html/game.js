@@ -710,7 +710,7 @@
 
   window.onload = function() {
     window.dendryUI.loadSettings({show_portraits: false});
-    // images and achievements edited in the admin panel
+    // images and achievements from out/html/data
     if (window.RF) {
         window.RF.loadData(function() {
             window.onDisplayContent();
