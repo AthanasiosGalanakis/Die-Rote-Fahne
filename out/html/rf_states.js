@@ -353,10 +353,6 @@
     return html + '</table>';
   };
 
-  var standingWord = function(m) {
-    return m >= 4 ? 'rising fast' : m >= 1.5 ? 'rising' : m > -1.5 ? 'steady' : m > -4 ? 'slipping' : 'collapsing';
-  };
-
   // The page of one state (Q.st_view, HTML).
   RF.stateView = function(Q, id) {
     var s = byId[id];
@@ -370,12 +366,10 @@
     Q.state_left_gov = s.left;
     Q.state_spd_gov = (Q['st_' + id + '_govparty'] || s.govParty) == 'spd' ? 1 : 0;
     Q.state_kpd_seats = res.seats.kpd || 0;
-    var m = Q['st_' + id + '_mod'] || 0;
     Q.st_view = '<div class="rf-state">' +
         '<p class="rf-state-note">' + esc(s.note) + '</p>' +
         '<p><b>Government:</b> ' + esc(RF.stateGov(Q, id)) + '</p>' +
         '<p><b>Landtag</b> of ' + total + ' seats, elected ' + esc(res.elected) + '. Next election due ' + dateText(RF.stateNext(Q, id)) + '.</p>' +
-        '<p><b>The party here:</b> ' + standingWord(m) + (Q.show_numbers ? ' (' + (m >= 0 ? '+' : '') + m.toFixed(1) + ' points)' : '') + '</p>' +
         RF.hemicycle(res.seats, {label: s.name + ' Landtag'}) +
         shareList(res) + '</div>';
   };

@@ -402,7 +402,6 @@
     {q: 'rf_ending', label: 'Ending', values: ['revolution', 'frankfurt', 'collapse']},
     {q: 'grade', label: 'Ending grade (0 broken – 3 revolution)'},
     {q: 'leader', label: 'Faction leading the party', values: FACTION_VALUES},
-    {q: 'members', label: 'Members (thousands)'},
     {q: 'splits', label: 'Factions that split off'},
     {q: 'unity', label: 'Party unity (0–100)'},
     {q: 'autonomy', label: 'Party autonomy (0–100)'},
@@ -576,7 +575,7 @@
       var foot = h('<div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">' +
         '<button class="btn small">+ Rule</button><span class="muted small">Combine with</span>' +
         '<select style="width:auto"><option value="and">all rules (AND)</option><option value="or">any rule (OR)</option></select></div>');
-      foot.children[0].onclick = function() { d.rules.push({q: 'members', op: '>=', v: '200'}); renderRules(); refresh(); };
+      foot.children[0].onclick = function() { d.rules.push({q: 'autonomy', op: '>=', v: '50'}); renderRules(); refresh(); };
       foot.children[2].value = d.join || 'and';
       foot.children[2].onchange = function() { d.join = foot.children[2].value; refresh(); };
       box.appendChild(foot);

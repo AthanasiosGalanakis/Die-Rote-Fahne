@@ -6,27 +6,25 @@ A standalone game built on [Social Democracy: An Alternate History](https://gith
 
 You play the party as a whole, not one faction. Every card and event you choose strengthens some factions inside the KPD and angers others, and each choice says which.
 
-In January 1923 the party has two camps: the Brandler Right (the Zentrale's majority: united front with the SPD, workers' governments) and the Fischer–Maslow Left (Berlin and Hamburg; no coalitions, prepare the offensive). Three more factions form through events: the Middle Group (from the majority, after a crisis in late 1923), the Ultra-Left (the Left's radical wing, once the Left leads) and the Thälmann circle (once Stalin's star rises and the Left or Middle Group leads). Hidden split-offs and outsider takeovers (the Leninbund, the Right Opposition, National Bolsheviks, Trotskyists, a return to the SPD) are written but switched off (`rf_hidden_events`).
+The game is a bare foundation for now (version 0.11): no events, cards or advisors, so January 1923 does not end yet. The 0.10 content (Leipzig, Saxony, congress and faction events, Party Affairs cards, advisors, state decisions, the hidden split-offs) is in `archive/v0.10/`.
 
-The leadership changes only at party congresses. The Eighth meets at Leipzig at the end of January 1923; after that a congress falls due about every fourteen months, and the Executive card can put it off or bring it forward. Delegates follow faction strength. Moscow works through the Comintern's plenums (June 1923 to July 1929): each sets the line and a directive, and the next plenum praises or rebukes the leadership; two rebukes bring an Open Letter and a special congress. Four Kremlin patrons (Zinoviev, Trotsky and Radek, Bukharin, Stalin) rise and fall on approximate curves, and each faction's standing in Moscow drifts towards its patron's power. When Moscow's pressure peaks, it demands that the congress install its favourite; the delegates can refuse if the winners are strong and the party still runs its own affairs.
+In January 1923 the party has two camps, the Brandler Right and the Fischer–Maslow Left, plus Minor currents that follow neither and cannot lead. The Middle Group, the Ultra-Left and the Thälmann circle are meant to form through events. The leadership changes only at party congresses. Moscow works through the Comintern's plenums and four Kremlin patrons whose power follows the succession struggle.
 
-The main page shows the leader with the Provinces and Executive cards, the Party Affairs deck above a hand of four, and three advisor posts with a Replace card. Provinces lists all eighteen states with their Landtag (vote and seat shares, a parliament view), government and the party's local standing; one decision a month in the states. State elections come on their due dates; those of 1923 use the real results as a baseline.
+The main page shows the leader with the Provinces and Executive cards, the Party Affairs deck above a hand of four, and three advisor slots. Provinces lists eight states (Prussia, Bavaria, Saxony, Württemberg, Baden, Thuringia, Hesse, Hamburg) with their Landtag; `out/html/rf_states.js` keeps data for all eighteen. The Executive card is empty.
 
-The sidebar has two rows of tabs: Main (the party, the Reich government, the Reichstag, the currency), Party (the factions and the next congress), Politics, Polls, Moscow (line, directive, plenums, the Kremlin, pressure) and Balance of Forces (the army, police and leagues, the party's formations, support for the Republic, nationalism and revolution). Words replace numbers; Options can turn exact numbers on, which disables achievements for that game. Hover cards never know more than the player could at that date.
-
-The current content covers the first months of 1923, with eight Party Affairs cards to pass the time.
+The sidebar has two rows of tabs: Main (the party, the Reich government, the Reichstag), Party (the factions, the next congress and the other parties: the five big ones always, others from 5% in the polls), Polls, Missions (the leading faction's goals), Moscow and Balance of Forces (state forces and paramilitaries as words, the mood of the people). Words replace numbers; Options can turn exact numbers on, which disables achievements for that game. Hover cards never know more than the player could at that date.
 
 ## Where the code is
 
 - `source/scenes/rote_fahne/`: the game's scenes, prefixed `rf_` (start, hand, monthly update, sidebar, endings).
-- `source/scenes/rote_fahne/cards/`: playable cards for the Party Affairs deck, tagged `rf_party`. The 1923 cards are parked in `archive/cards/` while they are rewritten.
-- `source/scenes/rote_fahne/events/`: events, tagged `rf_event`.
+- `source/scenes/rote_fahne/cards/`: playable cards for the Party Affairs deck, tagged `rf_party`. Only a placeholder for now.
+- `source/scenes/rote_fahne/events/`: events, tagged `rf_event`. Only a placeholder for now.
 - `source/scenes/rote_fahne/rf_provinces.scene.dry`: generated by `tools/gen_states.py`; the state data and drawing are in `out/html/rf_states.js`.
 - `archive/`: cards, events, advisors and endings taken out while the game is rebuilt (see `archive/README.md`).
 - `source/scenes/rote_fahne/rf_status.scene.dry`: the sidebar tabs. Charts (Reichstag, polls) are drawn by `RF.renderSidebar` into placeholder divs.
 - `source/scenes/rote_fahne/rf_changelog.scene.dry` and `rf_achievements.scene.dry`: the title-screen pages. The title screen itself is `source/scenes/root.scene.dry`.
 - `source/qdisplays/rf_*.qdisplay.dry`: the words the sidebar uses instead of numbers.
-- `out/html/rote_fahne.js`: shared rules (faction leanings, congresses, Moscow verdicts, the rising, the Reich calendar, polls).
+- `out/html/rote_fahne.js`: shared rules (faction leanings, congresses, Moscow verdicts, the rising, the Reich calendar, polls) and the sidebar tables (relations, forces, missions; `MISSIONS`, `PARAMILITARIES`).
 - `out/html/game.css`: party colours (`p-kpd`, `p-spd`, ...) and faction colours (`f-right`, `f-left`, ...), after the Dynamic Social Democracy mod.
 - The original game's scenes are still in `source/scenes/` for reuse in later acts, but the title screen no longer offers them.
 

@@ -2,34 +2,40 @@
 // factions inside it grow or turn against the party line with each decision.
 // Scenes call these through window.RF with the quality object Q.
 (function() {
-  var FACTIONS = ['right', 'center', 'left', 'ultra', 'stalin'];
+  var FACTIONS = ['right', 'center', 'left', 'ultra', 'stalin', 'minor'];
+  // Factions that cannot take the Zentrale: the minor currents have no
+  // leader of their own, but their delegates count at a congress.
+  var NO_LEAD = {minor: 1};
   // who would chair the party for each faction: its best-known leader
   var PERSONS = {
     right: 'Heinrich Brandler',
     center: 'Hermann Remmele',
     left: 'Ruth Fischer',
     ultra: 'Werner Scholem',
-    stalin: 'Ernst Thälmann'
+    stalin: 'Ernst Thälmann',
+    minor: 'no single leader'
   };
   var NAMES = {
     right: 'Brandler Right',
     center: 'Middle Group',
     left: 'Fischer–Maslow Left',
     ultra: 'Ultra-Left',
-    stalin: 'Thälmann circle'
+    stalin: 'Thälmann circle',
+    minor: 'Minor currents'
   };
   // In January 1923 the party has two camps: the Zentrale's majority around
   // Brandler and Thalheimer, and the Left opposition of Berlin and Hamburg
   // (Fischer, Maslow, Thälmann, Scholem). The other three factions only
   // form through events (scenes tagged rf_event in rote_fahne/events).
-  var STARTING_FACTIONS = ['right', 'left'];
+  // Around them are minor currents that follow neither camp.
+  var STARTING_FACTIONS = ['right', 'left', 'minor'];
 
   // How much the current Comintern line favours each faction.
   var LINE_AFFINITY = {
-    united_front: {right: 20, center: 10, left: 0, ultra: -10, stalin: 0},
-    insurrection: {right: 5, center: 5, left: 20, ultra: 5, stalin: 10},
-    bolshevization: {right: 0, center: 5, left: 20, ultra: -10, stalin: 15},
-    class_against_class: {right: -15, center: -5, left: 5, ultra: 0, stalin: 25}
+    united_front: {right: 20, center: 10, left: 0, ultra: -10, stalin: 0, minor: 0},
+    insurrection: {right: 5, center: 5, left: 20, ultra: 5, stalin: 10, minor: 0},
+    bolshevization: {right: 0, center: 5, left: 20, ultra: -10, stalin: 15, minor: 0},
+    class_against_class: {right: -15, center: -5, left: 5, ultra: 0, stalin: 25, minor: 0}
   };
 
   var clamp = function(x, lo, hi) {
@@ -39,6 +45,10 @@
   var RF = {
     factions: FACTIONS,
     names: NAMES,
+
+    canLead: function(f) {
+      return !NO_LEAD[f];
+    },
 
     // A faction takes part in party life once it has formed and until it
     // is expelled. Saves from before factions could form count as formed.
@@ -107,7 +117,6 @@
       for (var s of stats) {
         Q[s] = Math.round(clamp(Q[s], 0, 100));
       }
-      Q.members = Math.round(Math.max(20, Q.members));
       Q.funds = Math.max(0, Q.funds);
       var dissent = 0;
       for (var h of FACTIONS) {
@@ -137,7 +146,7 @@
     moscowFavourite: function(Q, exclude) {
       var best = null;
       for (var f of FACTIONS) {
-        if (!RF.active(Q, f) || f == exclude) {
+        if (!RF.active(Q, f) || f == exclude || NO_LEAD[f]) {
           continue;
         }
         if (best === null || RF.moscowScore(Q, f) > RF.moscowScore(Q, best)) {
@@ -169,7 +178,7 @@
         }
         delegates[f] = weight;
         total += weight;
-        if (weight > best) {
+        if (weight > best && !NO_LEAD[f]) {
           best = weight;
           winner = f;
         }
@@ -286,9 +295,8 @@
       Q[to + '_strength'] += moved;
     },
 
-    // A faction leaves the party, taking members with it.
+    // A faction leaves the party.
     expel: function(Q, f) {
-      Q.members -= Math.round(Q[f + '_strength'] * 1.2);
       Q.union_influence -= 4;
       Q[f + '_expelled'] = 1;
       Q.splits += 1;
@@ -326,15 +334,6 @@
 
   var MONTHS = ['', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
                 'August', 'September', 'October', 'November', 'December'];
-
-  // Monthly average dollar rate of the paper mark in 1923, rounded
-  // (after the standard tables, e.g. Holtfrerich).
-  var DOLLAR_1923 = ['', 'about 18,000 marks', 'about 28,000 marks',
-                     'about 21,000 marks', 'about 24,000 marks', 'about 48,000 marks',
-                     'about 110,000 marks', 'about 350,000 marks',
-                     'about 4.6 million marks', 'about 99 million marks',
-                     'about 25 billion marks', 'about 2.2 trillion marks',
-                     '4.2 trillion marks (fixed)'];
 
   RF.monthName = function(m) {
     return MONTHS[m];
@@ -382,19 +381,6 @@
     }
 
     Q.next_election = 'May 1924';
-    if (t < at(1924, 1)) {
-      Q.currency = 'Paper mark, in hyperinflation';
-      Q.dollar_rate = y == 1923 ? DOLLAR_1923[m] : '';
-      if (m == 11 && y == 1923) {
-        Q.currency = 'Rentenmark introduced on 15 November';
-      }
-      if (m == 12 && y == 1923) {
-        Q.currency = 'Rentenmark (1 Rentenmark = 1 trillion paper marks)';
-      }
-    } else {
-      Q.currency = 'Rentenmark: prices stable, wages cut, unemployment high';
-      Q.dollar_rate = '4.2 Rentenmark';
-    }
   };
 
   // Chance that Moscow overturns the current leadership at the next congress.
@@ -443,14 +429,14 @@
   // Exact numbers next to the words in the sidebar, when the player has
   // turned them on in the options. Each value V gets a string n_V.
   var NUMBERED = ['right_strength', 'center_strength', 'left_strength', 'ultra_strength',
-                  'stalin_strength', 'right_dissent', 'center_dissent', 'left_dissent',
-                  'ultra_dissent', 'stalin_dissent', 'party_dissent', 'repression',
+                  'stalin_strength', 'minor_strength', 'right_dissent', 'center_dissent', 'left_dissent',
+                  'ultra_dissent', 'stalin_dissent', 'minor_dissent', 'party_dissent', 'repression',
                   'autonomy', 'overrule_risk', 'readiness', 'rev_situation',
                   'union_influence', 'spd_relation', 'rising_chance', 'rev_support', 'uspd_relation',
                   'z_relation', 'ddp_relation', 'dvp_relation', 'dnvp_relation',
                   'nsdap_relation'];
   var PERCENT = {right_strength: 1, center_strength: 1, left_strength: 1, ultra_strength: 1,
-                 stalin_strength: 1, overrule_risk: 1, rising_chance: 1};
+                 stalin_strength: 1, minor_strength: 1, overrule_risk: 1, rising_chance: 1};
 
   RF.numbers = function(Q) {
     for (var v of NUMBERED) {
@@ -479,12 +465,13 @@
   };
   var DEMOGRAPHICS = [
     // name, share of the electorate, baseline vote in the order of PARTIES
-    ['workers', 'Workers', 0.38, [16, 48, 12, 3, 4, 8, 3, 6]],
-    ['unemployed', 'Unemployed', 0.04, [30, 40, 8, 2, 2, 7, 5, 6]],
-    ['new_middle', 'New middle class', 0.16, [4, 22, 12, 16, 18, 17, 4, 7]],
-    ['old_middle', 'Old middle class', 0.14, [2, 8, 14, 10, 20, 28, 8, 10]],
-    ['rural', 'Rural', 0.16, [3, 12, 10, 4, 8, 38, 6, 19]],
-    ['catholics', 'Catholics', 0.12, [5, 12, 60, 3, 4, 7, 2, 7]]
+    // the völkisch vote starts small: in January 1923 it is a fringe
+    ['workers', 'Workers', 0.38, [16, 48, 12, 3, 4, 8, 1, 8]],
+    ['unemployed', 'Unemployed', 0.04, [30, 40, 8, 2, 2, 8, 2, 8]],
+    ['new_middle', 'New middle class', 0.16, [4, 22, 12, 16, 18, 18, 2, 8]],
+    ['old_middle', 'Old middle class', 0.14, [2, 8, 14, 10, 20, 30, 4, 12]],
+    ['rural', 'Rural', 0.16, [3, 12, 10, 4, 8, 40, 2, 21]],
+    ['catholics', 'Catholics', 0.12, [5, 12, 60, 3, 4, 7, 1, 8]]
   ];
 
   RF.parties = PARTIES;
@@ -494,7 +481,7 @@
   // polls and the state elections both scale their base shares by this.
   RF.pollMult = function(Q) {
     var kpd = clamp(1 + (Q.rev_situation - 45) / 50 + (Q.union_influence - 35) / 120
-                    + (Q.members - 220) / 500 - Q.repression / 200 - 0.08 * Q.splits
+                    - Q.repression / 200 - 0.08 * Q.splits
                     + (Q.spd_discredit || 0) / 40, 0.3, 3);
     var spd = clamp(1 + (Q.pro_republic - 50) / 150 - (Q.spd_discredit || 0) / 100
                     - (Q.rev_situation - 45) / 200, 0.4, 2);
@@ -793,20 +780,6 @@
     }
   };
 
-  RF.renderLeaders = function(Q) {
-    var el = document.getElementById('rf-leaders');
-    if (!el) {
-      return;
-    }
-    var html = '';
-    for (var p of ['kpd', 'spd', 'uspd', 'z', 'ddp', 'dvp', 'dnvp', 'nsdap']) {
-      var l = RF.partyLeadership(Q, p);
-      html += '<p><span class="p-' + p + '">' + PARTY_INFO[p].name + '</span>: ' +
-          esc(l && l.name ? l.name : '') + '</p>';
-    }
-    el.innerHTML = html;
-  };
-
   // ---- Data files: images and achievements --------------------------------
   // Edited from the admin panel (admin/). Missing files leave the game as it is.
 
@@ -970,28 +943,9 @@
     unions: {name: 'Trade Unions', role: 'Head of trade-union work'},
     military: {name: 'Military Affairs', role: 'Head of the military apparatus'}
   };
-  var ADVISORS = {
-    eberlein: {name: 'Hugo Eberlein', slot: 'org', faction: 'center',
-               note: 'Founding member and the party\'s organiser since 1919.'},
-    pieck: {name: 'Wilhelm Pieck', slot: 'org', faction: 'center',
-            note: 'A veteran of the Zentrale who keeps his distance from every faction.'},
-    geschke: {name: 'Ottomar Geschke', slot: 'org', faction: 'left',
-              note: 'A Berlin metalworker and organiser of the Left.'},
-    scholem: {name: 'Werner Scholem', slot: 'org', faction: 'ultra',
-              note: 'A sharp-tongued Berlin organiser of the Left.'},
-    walcher: {name: 'Jacob Walcher', slot: 'unions', faction: 'right',
-              note: 'Head of the party\'s trade-union department, close to Brandler.'},
-    heckert: {name: 'Fritz Heckert', slot: 'unions', faction: 'center',
-              note: 'A bricklayer and union man who bends with the majority.'},
-    merker: {name: 'Paul Merker', slot: 'unions', faction: 'stalin',
-             note: 'A young union militant who distrusts the reformist union leaders.'},
-    skoblevsky: {name: 'Pyotr Skoblevsky', slot: 'military', faction: 'moscow', from: 1923 * 12 + 8,
-                 note: 'A Red Army officer sent by Moscow to advise the party on military matters.'},
-    schneller: {name: 'Ernst Schneller', slot: 'military', faction: 'left',
-                note: 'A former officer who trains the party\'s defence units.'},
-    kippenberger: {name: 'Hans Kippenberger', slot: 'military', faction: 'stalin',
-                   note: 'A young Hamburg Communist with a talent for conspiracy.'}
-  };
+  // No advisors yet: the posts stay vacant. The 1923 candidates are in
+  // archive/v0.10 (rote_fahne.js in git history).
+  var ADVISORS = {};
 
   // An advisor whose faction has not formed yet sits with the camp it
   // comes from: the Middle Group's men with the majority, the Ultra-Left
@@ -1007,8 +961,8 @@
   RF.advisors = ADVISORS;
 
   RF.advisorStart = function(Q) {
-    Q.adv_org = 'eberlein';
-    Q.adv_unions = 'walcher';
+    Q.adv_org = '';
+    Q.adv_unions = '';
     Q.adv_military = '';
     for (var s in ADVISOR_SLOTS) {
       Q['adv_' + s + '_next'] = 0;
@@ -1110,10 +1064,9 @@
   // The other cards without a picture get a word on their face.
   RF.decorateAdvisors = function(Q) {
     var faces = {
-      'rf_advisors.replace': '⇄',
       'rf_main.rf_party': 'Draw',
       'rf_provinces': 'States',
-      'rf_executive': 'Zentrale'
+      'rf_executive': 'Executive'
     };
     for (var cid in faces) {
       var c = document.querySelector('#content a.card[card-id="' + cid + '"]');
@@ -1250,7 +1203,7 @@
     {year: 1926, month: 11, name: 'Seventh Enlarged Plenum of the ECCI', line: 'united_front',
      directive: 'Close ranks behind the leadership', stat: 'party_dissent', op: '<=', target: 30},
     {year: 1927, month: 5, name: 'Eighth Plenum of the ECCI', line: 'united_front',
-     directive: 'Build mass campaigns against the war danger', stat: 'members', op: '>=', target: 130},
+     directive: 'Build mass campaigns against the war danger', stat: 'union_influence', op: '>=', target: 50},
     {year: 1928, month: 2, name: 'Ninth Plenum of the ECCI', line: 'class_against_class',
      directive: 'Break with the Social Democrats', stat: 'spd_relation', op: '<=', target: 20},
     {year: 1928, month: 7, name: 'Sixth World Congress', line: 'class_against_class',
@@ -1334,23 +1287,26 @@
     return word + (Q.show_numbers ? ' (' + Math.round(power) + ')' : '');
   };
 
+  // The KPD factions that lean on a patron (shown in the patron's hover card).
+  RF.patronBacks = function(Q, id) {
+    var out = [];
+    for (var f of FACTIONS) {
+      if (RF.patronOf(Q, f) == id && RF.active(Q, f)) {
+        out.push(NAMES[f]);
+      }
+    }
+    return out;
+  };
+
   RF.renderKremlin = function(Q) {
     var el = document.getElementById('rf-kremlin');
     if (!el) {
       return;
     }
-    var backs = {};
-    for (var f of FACTIONS) {
-      var pa = RF.patronOf(Q, f);
-      if (pa && RF.active(Q, f)) {
-        (backs[pa] = backs[pa] || []).push('<span class="f-' + f + '">' + NAMES[f] + '</span>');
-      }
-    }
     var ids = Object.keys(PATRONS).sort(function(a, b) { return RF.patronPower(Q, b) - RF.patronPower(Q, a); });
     var html = '<table class="rf-table rf-kremlin">';
     for (var id of ids) {
       html += '<tr><td><span class="m-' + PATRONS[id].person + '">' + PATRONS[id].name + '</span>' +
-          (backs[id] ? '<div class="rf-kremlin-backs">backs ' + backs[id].join(', ') + '</div>' : '') +
           '</td><td class="rf-num">' + RF.patronWord(Q, id) + '</td></tr>';
     }
     el.innerHTML = html + '</table>';
@@ -1507,6 +1463,191 @@
                  text: 'The army\'s political general, who has made and unmade chancellors.'}
   };
 
+  // ---- Politics: the other parties ---------------------------------------
+  // The Party tab lists the parties from left to right. The five big
+  // parties of the Republic are always there; any other party shows up in
+  // its place on the spectrum once it polls 5% or more.
+  var SPECTRUM = ['uspd', 'spd', 'z', 'ddp', 'dvp', 'dnvp', 'nsdap'];
+  var ALWAYS_SHOWN = {spd: 1, z: 1, ddp: 1, dvp: 1, dnvp: 1};
+  var RELATION_WORDS = [[5, 'hostile'], [14.9, 'frigid'], [29.9, 'cold'], [39.9, 'cool'], [54.9, 'neutral'],
+                        [64.9, 'warm'], [74.9, 'friendly'], [Infinity, 'very friendly']];
+
+  var bandWord = function(v, bands) {
+    for (var b of bands) {
+      if (v < b[0]) {
+        return b[1];
+      }
+    }
+    return bands[bands.length - 1][1];
+  };
+
+  RF.shownParties = function(Q) {
+    var poll = RF.polls(Q).total;
+    return SPECTRUM.filter(function(p) {
+      return ALWAYS_SHOWN[p] || (poll[p] || 0) >= 5;
+    });
+  };
+
+  RF.renderRelations = function(Q) {
+    var el = document.getElementById('rf-relations');
+    if (!el) {
+      return;
+    }
+    var html = '<table class="rf-table rf-relations"><tr><th>Party</th><th>Relations</th></tr>';
+    for (var p of RF.shownParties(Q)) {
+      var rel = Q[p + '_relation'] || 0;
+      var l = RF.partyLeadership(Q, p);
+      html += '<tr><td><span class="p-' + p + '">' + PARTY_INFO[p].name + '</span>' +
+          (l && l.name ? '<div class="rf-subline">' + esc(l.name) + '</div>' : '') +
+          '</td><td class="rf-num">' + bandWord(rel, RELATION_WORDS) +
+          (Q.show_numbers ? ' (' + Math.round(rel) + ')' : '') + '</td></tr>';
+    }
+    el.innerHTML = html + '</table>';
+  };
+
+  // ---- Balance of forces ---------------------------------------------------
+  // Armed formations as words, never as head counts: the figures that
+  // survive are rough and often propaganda. Each entry: id, name, colour
+  // (a party id), from and until (months as year * 12 + month), strength
+  // (0-100, or a function of Q) and a hover text.
+  var FORCE_WORDS = [[8, 'negligible'], [20, 'weak'], [40, 'modest'], [60, 'considerable'],
+                     [80, 'strong'], [Infinity, 'overwhelming']];
+  var ym = function(y, m) {
+    return y * 12 + m;
+  };
+  var STATE_FORCES = [
+    {name: 'Reichswehr', colour: 'reichswehr', strength: 90,
+     text: 'The army of the Republic, held to a small professional force by the Treaty of Versailles. Disciplined, well armed and loyal to its generals more than to the Republic.'},
+    {name: 'Police', colour: 'other', strength: 75,
+     text: 'The states\' police forces, many of them in barracks with rifles, machine guns and armoured cars. Prussia\'s Schutzpolizei is the largest.'},
+    {name: 'Black Reichswehr', colour: 'reichswehr', until: ym(1923, 9), strength: 30,
+     text: 'Secret labour units the army keeps outside the Versailles limits, filled with former Freikorps men.'}
+  ];
+  var PARAMILITARIES = [
+    {name: 'Stahlhelm', colour: 'dnvp', strength: function(Q) { return 40 + Q.nationalism / 5; },
+     text: 'The league of front-line soldiers. Monarchist and close to the German Nationals; its members drill and march in field grey.'},
+    {name: 'Bavarian patriotic leagues', colour: 'bvp', until: ym(1924, 12), strength: 40,
+     text: 'Bund Bayern und Reich, Reichsflagge, Bund Oberland and their allies, armed and drilled with the tolerance of the Bavarian government.'},
+    {name: 'Freikorps remnants', colour: 'vlk', until: ym(1923, 12), strength: 25,
+     text: 'Veterans of the Freikorps and secret organisations such as the Organisation Consul, which murdered Erzberger and Rathenau.'},
+    {name: 'Young German Order', colour: 'dvp', strength: 25,
+     text: 'The Jungdeutscher Orden: a nationalist league of veterans and young men organised like a knightly order, hostile to both the Left and the völkisch movement.'},
+    {name: 'SA', colour: 'nsdap', until: ym(1923, 11), strength: function(Q) { return 10 + Math.max(0, Q.nationalism - 50) / 3; },
+     text: 'The National Socialists\' storm troops, in and around Munich.'},
+    {name: 'SA', colour: 'nsdap', from: ym(1925, 2), strength: function(Q) { return 10 + Math.max(0, Q.nationalism - 50) / 2; },
+     text: 'The National Socialists\' storm troops, refounded with the party.'},
+    {name: 'Reichsbanner', colour: 'spd', from: ym(1924, 2), strength: 60,
+     text: 'Black-Red-Gold: the league of the SPD, the Centre and the DDP to defend the Republic, mostly Social Democratic workers.'},
+    {name: 'Ordnerdienst', colour: 'kpd', until: ym(1923, 2), strength: 6,
+     text: 'The party\'s stewards, who guard meetings and demonstrations. The Leipzig congress is debating proletarian defence units.'},
+    {name: 'Proletarian Hundreds', colour: 'kpd', from: ym(1923, 3), until: ym(1923, 11),
+     strength: function(Q) { return Q.party_banned ? 0 : 12 + Q.readiness / 2; },
+     text: function(Q) {
+       return 'Factory-based workers\' defence units, formed with Social Democratic and non-party workers. ' +
+           (Q.month >= 5 ? 'Banned in Prussia; legal in Saxony and Thuringia.' : 'Legal for now.');
+     }},
+    {name: 'Proletarian Hundreds', colour: 'kpd', from: ym(1923, 12), until: ym(1924, 6), strength: 4,
+     text: 'Dissolved and banned. Remnants survive underground.'},
+    {name: 'Red Front Fighters\' League', colour: 'kpd', from: ym(1924, 7), strength: function(Q) { return 30 + Q.readiness / 2; },
+     text: 'The RFB: the party\'s uniformed league of workers and veterans.'},
+    {name: 'M-Apparat', colour: 'kpd', when: 'october_plan', strength: function(Q) { return 5 + Q.readiness / 3; },
+     text: 'The party\'s secret military apparatus, with Soviet advisers: weapons and plans for the rising.'}
+  ];
+
+  var forceRows = function(Q, list) {
+    var t = Q.year * 12 + Q.month;
+    var html = '<table class="rf-table rf-forces">';
+    for (var f of list) {
+      if ((f.from && t < f.from) || (f.until && t > f.until) || (f.when && !Q[f.when])) {
+        continue;
+      }
+      var v = typeof f.strength == 'function' ? f.strength(Q) : f.strength;
+      var text = typeof f.text == 'function' ? f.text(Q) : f.text;
+      html += '<tr><td><span class="col-' + f.colour + ' rf-person rf-force" data-tip="' + esc(text) + '">' +
+          esc(f.name) + '</span></td><td class="rf-num">' + bandWord(v, FORCE_WORDS) + '</td></tr>';
+    }
+    return html + '</table>';
+  };
+
+  RF.renderForces = function(Q) {
+    var a = document.getElementById('rf-state-forces');
+    if (a) {
+      a.innerHTML = forceRows(Q, STATE_FORCES);
+    }
+    var b = document.getElementById('rf-paramilitaries');
+    if (b) {
+      b.innerHTML = forceRows(Q, PARAMILITARIES);
+    }
+  };
+
+  // ---- Missions -------------------------------------------------------------
+  // What the faction in the Zentrale wants to achieve. Each mission has a
+  // name, a hover text and a test.
+  var MISSIONS = {
+    right: [
+      {name: 'Win the SPD\'s workers', text: 'Good relations with the SPD: the united front from below and, where possible, from above.',
+       done: function(Q) { return Q.spd_relation >= 50; }},
+      {name: 'Strength in the unions', text: 'Win the factory councils and the trade-union locals.',
+       done: function(Q) { return Q.union_influence >= 45; }},
+      {name: 'A workers\' government', text: 'Enter a state government with the left Social Democrats.',
+       done: function(Q) { return !!Q.workers_govt; }},
+      {name: 'A united party', text: 'Keep the opposition in check without a split.',
+       done: function(Q) { return Q.party_dissent <= 20; }}
+    ],
+    left: [
+      {name: 'No coalitions with the SPD', text: 'Stay out of every government with the reformists and keep the SPD\'s leaders at arm\'s length.',
+       done: function(Q) { return !Q.workers_govt && Q.spd_relation <= 40; }},
+      {name: 'Arm the working class', text: 'Build up the party\'s defence units and its weapons.',
+       done: function(Q) { return Q.readiness >= 30; }},
+      {name: 'Raise the revolutionary mood', text: 'Strikes, hunger marches and street politics.',
+       done: function(Q) { return Q.rev_situation >= 60; }},
+      {name: 'A Bolshevik party', text: 'A disciplined apparatus of full-time revolutionaries.',
+       done: function(Q) { return Q.apparatus >= 25; }}
+    ],
+    center: [
+      {name: 'Hold the party together', text: 'Calm the factions and avoid a split.',
+       done: function(Q) { return Q.party_dissent <= 15; }},
+      {name: 'Keep Moscow\'s confidence', text: 'Stay in good standing with the International.',
+       done: function(Q) { return Q.center_moscow >= 55; }},
+      {name: 'A careful united front', text: 'Neither too close to the SPD nor at war with it.',
+       done: function(Q) { return Q.spd_relation >= 35 && Q.spd_relation <= 55; }}
+    ],
+    ultra: [
+      {name: 'Independence from Moscow', text: 'A party that answers to the German workers, not to the Executive in Moscow.',
+       done: function(Q) { return Q.autonomy >= 80; }},
+      {name: 'No united front', text: 'No deals with Social Democrats of any kind.',
+       done: function(Q) { return Q.spd_relation <= 20; }},
+      {name: 'Prepare the offensive', text: 'Arms and plans for the coming rising.',
+       done: function(Q) { return Q.readiness >= 40; }}
+    ],
+    stalin: [
+      {name: 'Follow the International', text: 'Carry out the directive of the last plenum.',
+       done: function(Q) { var p = PLENUMS[Q.directive_index]; return !!p && RF.directiveMet(Q, p); }},
+      {name: 'Iron discipline', text: 'A strong apparatus loyal to the leadership.',
+       done: function(Q) { return Q.apparatus >= 40; }},
+      {name: 'Fight social democracy', text: 'Break the SPD\'s hold on the workers.',
+       done: function(Q) { return Q.spd_relation <= 15; }},
+      {name: 'No factions', text: 'A party without organised oppositions.',
+       done: function(Q) { return Q.party_dissent <= 10; }}
+    ]
+  };
+  RF.missions = MISSIONS;
+
+  RF.renderMissions = function(Q) {
+    var el = document.getElementById('rf-missions');
+    if (!el) {
+      return;
+    }
+    var list = MISSIONS[Q.leader] || [];
+    var html = '<table class="rf-table rf-missions">';
+    for (var m of list) {
+      var ok = m.done(Q);
+      html += '<tr class="' + (ok ? 'rf-mission-done' : '') + '"><td><span class="rf-mission" data-tip="' + esc(m.text) + '">' +
+          esc(m.name) + '</span></td><td class="rf-num">' + (ok ? '✓ achieved' : 'not yet') + '</td></tr>';
+    }
+    el.innerHTML = html + '</table>';
+  };
+
 
   RF.factionPersons = PERSONS;
   RF.reichstag1920 = REICHSTAG_1920;
@@ -1516,8 +1657,10 @@
     if (!Q.rf_mode) {
       return;
     }
-    RF.renderLeaders(Q);
+    RF.renderRelations(Q);
     RF.renderKremlin(Q);
+    RF.renderForces(Q);
+    RF.renderMissions(Q);
     RF.renderReichstag();
     RF.renderPolls(Q);
   };

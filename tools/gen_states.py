@@ -4,13 +4,16 @@
 #   python3 tools/gen_states.py
 # Keep STATES in step with RF.states in out/html/rf_states.js (the data and
 # the drawing live there; this file only writes the scenes).
+# Only the states that matter most to the party are shown: the big ones
+# and the centres of the 1923 crisis. rf_states.js keeps data for all 18.
 STATES = [
     ('prussia', 'Prussia'), ('bavaria', 'Bavaria'), ('saxony', 'Saxony'), ('wurttemberg', 'Württemberg'),
     ('baden', 'Baden'), ('thuringia', 'Thuringia'), ('hesse', 'Hesse'), ('hamburg', 'Hamburg'),
-    ('mschwerin', 'Mecklenburg-Schwerin'), ('oldenburg', 'Oldenburg'), ('brunswick', 'Brunswick'),
-    ('anhalt', 'Anhalt'), ('bremen', 'Bremen'), ('lippe', 'Lippe'), ('lubeck', 'Lübeck'),
-    ('mstrelitz', 'Mecklenburg-Strelitz'), ('waldeck', 'Waldeck'), ('slippe', 'Schaumburg-Lippe'),
 ]
+
+# The decisions below are switched off for now: the state pages show the
+# Landtag only. Set ENABLE_DECISIONS = True to bring them back.
+ENABLE_DECISIONS = False
 
 # Decisions every state offers. (id, title, subtitle, view-if, choose-if,
 # unavailable subtitle, local points, national effects as JS, result text)
@@ -77,17 +80,14 @@ SPECIFIC = {
 }
 
 out = [r"""title: Provinces
-subtitle: The German states: their parliaments, their governments and the party's work in them.
+subtitle: The German states, their governments and their parliaments.
 is-pinned-card: true
 tags: rf_top
 new-page: true
-on-arrival: {! window.RF.provincesView(Q); !}
 
 = The States
 
-The Reich is a federation of eighteen states, each with its own parliament, government and police. Choose a state to see its Landtag and the party's work there. The party can take one decision in the states each month.
-
-[+ states_view +]
+The Reich is a federation of states, each with its own parliament, government and police. Choose a state to see its Landtag.
 
 """]
 for sid, name in STATES:
@@ -95,7 +95,7 @@ for sid, name in STATES:
 out.append("- @rf_hand: Back to the party.\n\n")
 
 for sid, name in STATES:
-    decisions = GENERIC + SPECIFIC.get(sid, [])
+    decisions = GENERIC + SPECIFIC.get(sid, []) if ENABLE_DECISIONS else []
     out.append(f"""@{sid}
 title: {name}
 new-page: true
