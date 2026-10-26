@@ -17,22 +17,115 @@ Q.leipzig_districts = RF.districtsHtml(Q);
 
 = The Eighth Party Congress, Leipzig
 
-The delegates meet in Leipzig from 28 January, a fortnight after the French marched into the Ruhr. They come from the districts, and each district sends mostly its own majority's people.
+Leipzig, the last days of January 1923. A fortnight ago French and Belgian troops marched into Essen to take the coal Germany owes in reparations. The Cuno government, a cabinet of shipowners and bankers with no party behind it, has answered with passive resistance and the printing press, and the mark is falling faster than at any time since the war. Prices change between morning and evening. In Dresden the Saxon government has just fallen, and Social Democrats there are asking aloud whether they could govern with Communist votes. In Munich, this same week, Hitler's National Socialists parade under their new standards.
+
+The party that meets here is barely four years old. It has lived through the murder of its founders, a split, a merger with the left of the Independents, a failed rising and the expulsion of its former chairman. From the International's Fourth Congress in Moscow it has brought home two slogans, the united front and the workers' government, and no agreement on what they mean. The Zentrale's majority, led by <span class="m-brandler rf-person">Heinrich Brandler</span> and <span class="m-thalheimer rf-person">August Thalheimer</span>, reads them as a patient road through the factories, the unions and governments like Saxony's. The Berlin organisation of <span class="m-fischer rf-person">Ruth Fischer</span> and <span class="m-maslow rf-person">Arkadi Maslow</span>, with Hamburg behind it, calls that opportunism dressed up as tactics. <span class="m-radek rf-person">Karl Radek</span> and <span class="m-kolarov rf-person">Vasil Kolarov</span> have come from Moscow to keep the quarrel from becoming a split.
+
+The delegates come from the districts, and each district sends mostly its own majority's people.
 
 {!<div class="rf-district-wrap">!}[+ leipzig_districts +]{!</div>!}
 
 {!<div class="rf-delegates">!}[+ leipzig_delegates +]{!<div class="rf-legend">!}[+ leipzig_legend +]{!</div></div>!}
 
-The <span class="f-right">Brandler Right</span> has the majority, and the Zentrale's motions will decide the line. You decide which version of each motion the Zentrale tables. The factions vote by their convictions: the Right will not table what it stands against, and every compromise costs it some patience. <span class="m-radek rf-person col-comintern">Karl Radek</span> is here for the International.
+The motions are the Zentrale's, and it is the Zentrale that decides in what form they go before the hall. The <span class="f-right">Brandler Right</span> will not put its name to what it thinks wrong, and every concession made to Berlin is noted in the Saxon delegations.
 
-- @wg: Open the debate.
+- @agenda: Open the congress.
+
+@agenda
+new-page: true
+on-arrival: {! window.RF.motionIntro(Q, 'leipzig', 'agenda'); !}
+
+= [+ mo_title +]
+
+[+ mo_text +]
+
+- @agenda_keep
+- @agenda_report
+- @agenda_ruhr
+
+@agenda_keep
+title: Hold to the agenda as the Zentrale drew it up.
+subtitle: The Ruhr will have its place in the political report, and nowhere else. [+ mo_st_agenda_keep +]
+choose-if: mo_ok_agenda_keep = 1
+unavailable-subtitle: [+ mo_why_agenda_keep +]
+on-arrival: {! window.RF.motionVote(Q, 'leipzig', 'agenda', 'keep'); !}
+go-to: agenda_done
+
+@agenda_report
+title: Promise the Ruhr a full hour in the political report.
+subtitle: Brandler will answer Berlin from the rostrum, on ground of his choosing. [+ mo_st_agenda_report +]
+choose-if: mo_ok_agenda_report = 1
+unavailable-subtitle: [+ mo_why_agenda_report +]
+on-arrival: {! window.RF.motionVote(Q, 'leipzig', 'agenda', 'report'); !}
+go-to: agenda_done
+
+@agenda_ruhr
+title: Give the occupation a debate of its own, first on the agenda.
+subtitle: Berlin gets its debate, and the Zentrale must defend its record before it has made its case. [+ mo_st_agenda_ruhr +]
+choose-if: mo_ok_agenda_ruhr = 1
+unavailable-subtitle: [+ mo_why_agenda_ruhr +]
+on-arrival: {! window.RF.motionVote(Q, 'leipzig', 'agenda', 'ruhr'); !}
+go-to: agenda_done
+
+@agenda_done
+new-page: true
+
+= [+ mo_title +]
+
+[+ mo_result +]
+
+- @floor: Next: the hall.
+
+@floor
+new-page: true
+on-arrival: {! window.RF.motionIntro(Q, 'leipzig', 'floor'); !}
+
+= [+ mo_title +]
+
+[+ mo_text +]
+
+- @floor_cut
+- @floor_pieck
+- @floor_hear
+
+@floor_cut
+title: Back the chair and have her ruled out of order.
+subtitle: Order will be restored. Berlin will not forget how. [+ mo_st_floor_cut +]
+choose-if: mo_ok_floor_cut = 1
+unavailable-subtitle: [+ mo_why_floor_cut +]
+on-arrival: {! window.RF.motionVote(Q, 'leipzig', 'floor', 'cut'); !}
+go-to: floor_done
+
+@floor_pieck
+title: Send <span class="m-pieck rf-person">Wilhelm Pieck</span> to the rostrum to calm the hall.
+subtitle: Old Pieck has smoothed over worse quarrels than this one. [+ mo_st_floor_pieck +]
+choose-if: mo_ok_floor_pieck = 1
+unavailable-subtitle: [+ mo_why_floor_pieck +]
+on-arrival: {! window.RF.motionVote(Q, 'leipzig', 'floor', 'pieck'); !}
+go-to: floor_done
+
+@floor_hear
+title: Let her speak to the end.
+subtitle: The majority will sit through it, if not quietly. [+ mo_st_floor_hear +]
+choose-if: mo_ok_floor_hear = 1
+unavailable-subtitle: [+ mo_why_floor_hear +]
+on-arrival: {! window.RF.motionVote(Q, 'leipzig', 'floor', 'hear'); !}
+go-to: floor_done
+
+@floor_done
+new-page: true
+
+= [+ mo_title +]
+
+[+ mo_result +]
+
+- @wg: Next: the workers' government.
 
 @wg
-title: The workers' government
 new-page: true
 on-arrival: {! window.RF.motionIntro(Q, 'leipzig', 'wg'); !}
 
-= The workers' government
+= [+ mo_title +]
 
 [+ mo_text +]
 
@@ -42,154 +135,177 @@ on-arrival: {! window.RF.motionIntro(Q, 'leipzig', 'wg'); !}
 
 @wg_theses
 title: Table the Zentrale's theses as drafted.
-subtitle: <span class="f-right">Right</span> for, <span class="f-left">Left</span> against, <span class="f-minor">Minor currents</span> divided. SPD relations and the party's appeal up; Radek pleased, Zinoviev cool.
-choose-if: mo_ok_theses = 1
-unavailable-subtitle: The Right will not table this: it goes against its core ideas.
+subtitle: A workers' government is a road to power, and Saxony is where the road begins. [+ mo_st_wg_theses +]
+choose-if: mo_ok_wg_theses = 1
+unavailable-subtitle: [+ mo_why_wg_theses +]
 on-arrival: {! window.RF.motionVote(Q, 'leipzig', 'wg', 'theses'); !}
 go-to: wg_done
 
 @wg_amended
 title: Table the theses with the commission's amendments: "a step, not a road".
-subtitle: <span class="f-right">Right</span> for, <span class="f-left">Left</span> divided, <span class="f-minor">Minor currents</span> for. A smaller gain with the SPD, a little readiness; Radek and Zinoviev both pleased.
-choose-if: mo_ok_amended = 1
-unavailable-subtitle: The Right will not table this: it goes against its core ideas.
+subtitle: Such a government can only be born of the workers' struggle, and no Communist sits in it without the International's leave. [+ mo_st_wg_amended +]
+choose-if: mo_ok_wg_amended = 1
+unavailable-subtitle: [+ mo_why_wg_amended +]
 on-arrival: {! window.RF.motionVote(Q, 'leipzig', 'wg', 'amended'); !}
 go-to: wg_done
 
 @wg_counter
-title: Table the Left's counter-theses.
-subtitle: <span class="f-right">Right</span> against, <span class="f-left">Left</span> for, <span class="f-minor">Minor currents</span> divided. Breaks with the SPD; Zinoviev pleased.
-choose-if: mo_ok_counter = 1
-unavailable-subtitle: The Right will not table this: it goes against its core ideas.
+title: Table <span class="m-maslow rf-person">Maslow</span>'s counter-theses.
+subtitle: No coalitions with reformists: the workers' government is another name for the dictatorship of the proletariat, or it is nothing. [+ mo_st_wg_counter +]
+choose-if: mo_ok_wg_counter = 1
+unavailable-subtitle: [+ mo_why_wg_counter +]
 on-arrival: {! window.RF.motionVote(Q, 'leipzig', 'wg', 'counter'); !}
 go-to: wg_done
 
 @wg_done
 new-page: true
 
-= The workers' government
+= [+ mo_title +]
 
 [+ mo_result +]
 
 - @uf: Next: the united front.
 
 @uf
-title: The united front
 new-page: true
 on-arrival: {! window.RF.motionIntro(Q, 'leipzig', 'uf'); !}
 
-= The united front
+= [+ mo_title +]
 
 [+ mo_text +]
 
 - @uf_above
 - @uf_below
+- @uf_appeal
 
 @uf_above
 title: The united front from above and below.
-subtitle: <span class="f-right">Right</span> for, <span class="f-left">Left</span> against, <span class="f-minor">Minor currents</span> divided. SPD relations up; Radek pleased.
-choose-if: mo_ok_above = 1
-unavailable-subtitle: The Right will not table this: it goes against its core ideas.
+subtitle: Approach the SPD's leaders, and make sure their members hear it when the leaders say no. [+ mo_st_uf_above +]
+choose-if: mo_ok_uf_above = 1
+unavailable-subtitle: [+ mo_why_uf_above +]
 on-arrival: {! window.RF.motionVote(Q, 'leipzig', 'uf', 'above'); !}
 go-to: uf_done
 
 @uf_below
 title: The united front from below only.
-subtitle: <span class="f-right">Right</span> divided, <span class="f-left">Left</span> for, <span class="f-minor">Minor currents</span> for. Unions up, SPD relations down; Zinoviev pleased. Your own faction grumbles.
-choose-if: mo_ok_below = 1
-unavailable-subtitle: The Right will not table this: it goes against its core ideas.
+subtitle: Over the heads of Wels and Dittmann, straight to the Social Democratic workers in the factories. [+ mo_st_uf_below +]
+choose-if: mo_ok_uf_below = 1
+unavailable-subtitle: [+ mo_why_uf_below +]
 on-arrival: {! window.RF.motionVote(Q, 'leipzig', 'uf', 'below'); !}
+go-to: uf_done
+
+@uf_appeal
+title: Offer the SPD a common fight against Cuno and the occupation.
+subtitle: An open letter to the SPD Executive, signed by the new Zentrale on the day the congress closes. [+ mo_st_uf_appeal +]
+choose-if: mo_ok_uf_appeal = 1
+unavailable-subtitle: [+ mo_why_uf_appeal +]
+on-arrival: {! window.RF.motionVote(Q, 'leipzig', 'uf', 'appeal'); !}
 go-to: uf_done
 
 @uf_done
 new-page: true
 
-= The united front
+= [+ mo_title +]
 
 [+ mo_result +]
 
 - @def: Next: workers' defence.
 
 @def
-title: Workers' defence
 new-page: true
 on-arrival: {! window.RF.motionIntro(Q, 'leipzig', 'def'); !}
 
-= Workers' defence
+= [+ mo_title +]
 
 [+ mo_text +]
 
 - @def_hundreds
 - @def_unions
+- @def_armed
 
 @def_hundreds
 title: Proletarian Hundreds in the factories, open to all workers.
-subtitle: <span class="f-right">Right</span> for, <span class="f-left">Left</span> for, <span class="f-minor">Minor currents</span> for. Readiness up; the police take note.
-choose-if: mo_ok_hundreds = 1
-unavailable-subtitle: The Right will not table this: it goes against its core ideas.
+subtitle: Elected by the workforce, Social Democrats and non-party men alongside Communists. [+ mo_st_def_hundreds +]
+choose-if: mo_ok_def_hundreds = 1
+unavailable-subtitle: [+ mo_why_def_hundreds +]
 on-arrival: {! window.RF.motionVote(Q, 'leipzig', 'def', 'hundreds'); !}
 go-to: def_done
 
 @def_unions
 title: Leave defence to the trade unions for now.
-subtitle: <span class="f-right">Right</span> divided, <span class="f-left">Left</span> against, <span class="f-minor">Minor currents</span> divided. No risk, but the party looks timid. Your own faction grumbles.
-choose-if: mo_ok_unions = 1
-unavailable-subtitle: The Right will not table this: it goes against its core ideas.
+subtitle: The unions have the numbers. Let the party push them to act. [+ mo_st_def_unions +]
+choose-if: mo_ok_def_unions = 1
+unavailable-subtitle: [+ mo_why_def_unions +]
 on-arrival: {! window.RF.motionVote(Q, 'leipzig', 'def', 'unions'); !}
+go-to: def_done
+
+@def_armed
+title: Armed squads under the party's own command.
+subtitle: Picked comrades, hidden rifles, and a chain of command that runs to the Zentrale. [+ mo_st_def_armed +]
+choose-if: mo_ok_def_armed = 1
+unavailable-subtitle: [+ mo_why_def_armed +]
+on-arrival: {! window.RF.motionVote(Q, 'leipzig', 'def', 'armed'); !}
 go-to: def_done
 
 @def_done
 new-page: true
 
-= Workers' defence
+= [+ mo_title +]
 
 [+ mo_result +]
 
 - @ruhr: Next: the Ruhr.
 
 @ruhr
-title: The Ruhr
 new-page: true
 on-arrival: {! window.RF.motionIntro(Q, 'leipzig', 'ruhr'); !}
 
-= The Ruhr
+= [+ mo_title +]
 
 [+ mo_text +]
 
 - @ruhr_both
 - @ruhr_french
+- @ruhr_republic
 
 @ruhr_both
-title: "Beat Poincaré on the Ruhr and Cuno on the Spree."
-subtitle: <span class="f-right">Right</span> for, <span class="f-left">Left</span> for, <span class="f-minor">Minor currents</span> for. The revolutionary mood rises; nationalism dips.
-choose-if: mo_ok_both = 1
-unavailable-subtitle: The Right will not table this: it goes against its core ideas.
+title: Fight the occupiers and the Cuno government alike.
+subtitle: Against Poincaré's soldiers and against the industrialists who hide behind them, in one breath. [+ mo_st_ruhr_both +]
+choose-if: mo_ok_ruhr_both = 1
+unavailable-subtitle: [+ mo_why_ruhr_both +]
 on-arrival: {! window.RF.motionVote(Q, 'leipzig', 'ruhr', 'both'); !}
 go-to: ruhr_done
 
 @ruhr_french
-title: Put the fight against the French occupiers first.
-subtitle: <span class="f-right">Right</span> divided, <span class="f-left">Left</span> against, <span class="f-minor">Minor currents</span> against. Wins some nationalist-minded workers; the Left and Zinoviev object.
-choose-if: mo_ok_french = 1
-unavailable-subtitle: The Right will not table this: it goes against its core ideas.
+title: Put the fight against the occupiers first.
+subtitle: Stand with the whole nation against the French, and settle accounts with Cuno afterwards. [+ mo_st_ruhr_french +]
+choose-if: mo_ok_ruhr_french = 1
+unavailable-subtitle: [+ mo_why_ruhr_french +]
 on-arrival: {! window.RF.motionVote(Q, 'leipzig', 'ruhr', 'french'); !}
+go-to: ruhr_done
+
+@ruhr_republic
+title: Call for a workers' republic on the Ruhr.
+subtitle: Take the pits and the works, arm the miners, and let the Ruhr show the rest of Germany the way. [+ mo_st_ruhr_republic +]
+choose-if: mo_ok_ruhr_republic = 1
+unavailable-subtitle: [+ mo_why_ruhr_republic +]
+on-arrival: {! window.RF.motionVote(Q, 'leipzig', 'ruhr', 'republic'); !}
 go-to: ruhr_done
 
 @ruhr_done
 new-page: true
 
-= The Ruhr
+= [+ mo_title +]
 
 [+ mo_result +]
 
 - @zentrale: Next: the new Zentrale.
 
 @zentrale
-title: The new Zentrale
 new-page: true
 on-arrival: {! window.RF.motionIntro(Q, 'leipzig', 'zentrale'); !}
 
-= The new Zentrale
+= [+ mo_title +]
 
 [+ mo_text +]
 
@@ -198,33 +314,33 @@ on-arrival: {! window.RF.motionIntro(Q, 'leipzig', 'zentrale'); !}
 - @zentrale_leaders
 
 @zentrale_closed
-title: The majority's list only: shut the Left out.
-subtitle: <span class="f-right">Right</span> for, <span class="f-left">Left</span> against, <span class="f-minor">Minor currents</span> divided. The Right is calm, the Left furious; Moscow dislikes the split.
-choose-if: mo_ok_closed = 1
-unavailable-subtitle: The Right will not table this: it goes against its core ideas.
+title: Elect the majority's twenty-one as drafted.
+subtitle: A Zentrale of one mind, and a third of the party without a voice in it. [+ mo_st_zentrale_closed +]
+choose-if: mo_ok_zentrale_closed = 1
+unavailable-subtitle: [+ mo_why_zentrale_closed +]
 on-arrival: {! window.RF.motionVote(Q, 'leipzig', 'zentrale', 'closed'); !}
 go-to: zentrale_done
 
 @zentrale_moderate
-title: Make room for three moderate Leftists.
-subtitle: <span class="f-right">Right</span> for, <span class="f-left">Left</span> divided, <span class="f-minor">Minor currents</span> for. The Left grumbles less.
-choose-if: mo_ok_moderate = 1
-unavailable-subtitle: The Right will not table this: it goes against its core ideas.
+title: Take <span class="m-radek rf-person">Radek</span>'s list, with Ewert, Lindau and Pfeiffer on it.
+subtitle: Three men from the Left whom the majority can live with, and whom the Left does not count as its own. [+ mo_st_zentrale_moderate +]
+choose-if: mo_ok_zentrale_moderate = 1
+unavailable-subtitle: [+ mo_why_zentrale_moderate +]
 on-arrival: {! window.RF.motionVote(Q, 'leipzig', 'zentrale', 'moderate'); !}
 go-to: zentrale_done
 
 @zentrale_leaders
-title: Bring in the Left's leaders, Fischer and Maslow.
-subtitle: <span class="f-right">Right</span> divided, <span class="f-left">Left</span> for, <span class="f-minor">Minor currents</span> for. The Left calms down and Moscow approves; your own faction grumbles.
-choose-if: mo_ok_leaders = 1
-unavailable-subtitle: The Right will not table this: it goes against its core ideas.
+title: Seats in proportion: <span class="m-fischer rf-person">Ruth Fischer</span>, Geschke, Katz and König.
+subtitle: The Left's own candidates, put forward by Berlin, Hamburg, Frankfurt and Cologne. [+ mo_st_zentrale_leaders +]
+choose-if: mo_ok_zentrale_leaders = 1
+unavailable-subtitle: [+ mo_why_zentrale_leaders +]
 on-arrival: {! window.RF.motionVote(Q, 'leipzig', 'zentrale', 'leaders'); !}
 go-to: zentrale_done
 
 @zentrale_done
 new-page: true
 
-= The new Zentrale
+= [+ mo_title +]
 
 [+ mo_result +]
 
@@ -251,8 +367,8 @@ RF.congressDone(Q);
 
 {!<div class="rf-delegates">!}[+ leipzig_zentrale +]{!</div>!}
 
-The new Zentrale has [+ leipzig_zentrale_text +]. The <span class="f-right">Brandler Right</span> keeps the leadership.
+The new Zentrale has [+ leipzig_zentrale_text +]. <span class="m-brandler rf-person">Heinrich Brandler</span> takes the chair in place of <span class="m-meyer rf-person">Ernst Meyer</span>, and the <span class="f-right">Brandler Right</span> holds the leadership.
 
 [? if leipzig_left_mood = 2 : The Left leaves Leipzig bitter. In Berlin and Hamburg its people talk of a leadership that has shut them out, and Radek reports to Moscow that the party is close to a split. ?][? if leipzig_left_mood = 1 : The Left goes home outvoted but still inside the tent. Radek reports to Moscow that the split has been avoided, for now. ?][? if leipzig_left_mood = 0 : Even the Left goes home half satisfied. Radek reports to Moscow that the German party has come out of Leipzig united. ?]
 
-The next congress is due in about a year.
+The delegates take the night trains home to the Ruhr, to Hamburg, to the Erzgebirge. The next congress is due in about a year.

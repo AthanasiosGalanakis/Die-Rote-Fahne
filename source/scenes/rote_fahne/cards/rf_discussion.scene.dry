@@ -1,5 +1,5 @@
 title: Party Discussion
-subtitle: The party press opens a debate on the line. Back one faction's theses.
+subtitle: The party press opens a debate on the line, and the Zentrale must say where it stands.
 new-page: true
 is-card: true
 tags: rf_party
@@ -24,60 +24,60 @@ The *Rote Fahne* opens its pages to a discussion on the party's tasks. Each fact
 
 @right
 title: Back the theses of the Brandler Right.
-subtitle: The united front and workers' governments. Strengthens the <span class="f-right">Right</span>; better relations with the SPD.
+subtitle: Win the Social Democratic workers first, and govern with the left of their party where it can be done.
 view-if: right_formed = 1 and right_expelled = 0
 choose-if: pd_ok_right = 1
-unavailable-subtitle: The leadership's own faction will not let the Zentrale back its rivals now.
+unavailable-subtitle: The Zentrale's own people have had enough of concessions to their rivals.
 on-arrival: {! window.RF.discussion(Q, 'right'); !}
 
 The Zentrale endorses the Right's theses: win the Social Democratic workers, and wherever possible form workers' governments with the left of their party.
 
 @left
 title: Back the theses of the Fischer–Maslow Left.
-subtitle: No coalitions, prepare the offensive. Strengthens the <span class="f-left">Left</span>; more readiness, cooler relations with the SPD.
+subtitle: No coalitions with reformists. Every effort for the coming struggle for power.
 view-if: left_formed = 1 and left_expelled = 0
 choose-if: pd_ok_left = 1
-unavailable-subtitle: The leadership's own faction will not let the Zentrale back its rivals now.
+unavailable-subtitle: The Zentrale's own people have had enough of concessions to their rivals.
 on-arrival: {! window.RF.discussion(Q, 'left'); !}
 
 The Zentrale endorses the Left's theses: no coalitions with the reformists, and every effort to prepare the working class for the struggle for power.
 
 @minor
 title: Back the proposals of the minor currents.
-subtitle: The factory councils first. Strengthens the <span class="f-minor">Minor currents</span>; more influence in the unions.
+subtitle: Neither camp's quarrel. Put the factory councils at the centre of the party's work.
 view-if: minor_formed = 1 and minor_expelled = 0
 choose-if: pd_ok_minor = 1
-unavailable-subtitle: The leadership's own faction will not let the Zentrale back its rivals now.
+unavailable-subtitle: The Zentrale's own people have had enough of concessions to their rivals.
 on-arrival: {! window.RF.discussion(Q, 'minor'); !}
 
 The Zentrale takes up proposals from outside the big camps: put the factory councils at the centre of the party's work.
 
 @center
 title: Back the theses of the Middle Group.
-subtitle: Unity and loyalty to the International. Strengthens the <span class="f-center">Middle Group</span>; calms every faction a little.
+subtitle: Close the ranks, end the feuding, and keep faith with the International.
 view-if: center_formed = 1 and center_expelled = 0
 choose-if: pd_ok_center = 1
-unavailable-subtitle: The leadership's own faction will not let the Zentrale back its rivals now.
+unavailable-subtitle: The Zentrale's own people have had enough of concessions to their rivals.
 on-arrival: {! window.RF.discussion(Q, 'center'); !}
 
 The Zentrale endorses the Middle Group's call to close ranks.
 
 @ultra
 title: Back the theses of the Ultra-Left.
-subtitle: A party that answers to the German workers. Strengthens the <span class="f-ultra">Ultra-Left</span>; more autonomy.
+subtitle: A party that answers to the German workers, not to the Executive in Moscow.
 view-if: ultra_formed = 1 and ultra_expelled = 0
 choose-if: pd_ok_ultra = 1
-unavailable-subtitle: The leadership's own faction will not let the Zentrale back its rivals now.
+unavailable-subtitle: The Zentrale's own people have had enough of concessions to their rivals.
 on-arrival: {! window.RF.discussion(Q, 'ultra'); !}
 
 The Zentrale endorses the Ultra-Left's demand for a party that decides for itself.
 
 @stalin
 title: Back the theses of the Thälmann circle.
-subtitle: Loyalty to the International. Strengthens the <span class="f-stalin">Thälmann circle</span>; Moscow approves.
+subtitle: Iron discipline, and the International's line without reservations.
 view-if: stalin_formed = 1 and stalin_expelled = 0
 choose-if: pd_ok_stalin = 1
-unavailable-subtitle: The leadership's own faction will not let the Zentrale back its rivals now.
+unavailable-subtitle: The Zentrale's own people have had enough of concessions to their rivals.
 on-arrival: {! window.RF.discussion(Q, 'stalin'); !}
 
 The Zentrale endorses the Thälmann circle's call for discipline and loyalty to the International.

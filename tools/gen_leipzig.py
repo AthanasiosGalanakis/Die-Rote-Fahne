@@ -1,66 +1,84 @@
 # Generates source/scenes/rote_fahne/events/rf_leipzig.scene.dry: the
-# Eighth Party Congress (Leipzig, January 1923) as a run of motions. Run
-# from the repository root:
+# Eighth Party Congress (Leipzig, 28 January to 1 February 1923) as a run
+# of motions. Run from the repository root:
 #   python3 tools/gen_leipzig.py
-# The votes and effects live in RF.motions.leipzig (out/html/rf_congress.js);
-# keep the stances in the subtitles below in step with it.
-R = '<span class="f-right">Right</span>'
-L = '<span class="f-left">Left</span>'
-M = '<span class="f-minor">Minor currents</span>'
+# The texts, stances, effects and the reasons a version is unavailable live
+# in RF.motions.leipzig (out/html/rf_congress.js); this file only holds the
+# choice titles and subtitles. The keys must match.
 
 
-def st(r, l, m):
-    return f"{R} {r}, {L} {l}, {M} {m}."
+def p(pid, name):
+    return f'<span class="m-{pid} rf-person">{name}</span>'
 
 
-NO = "The Right will not table this: it goes against its core ideas."
-
-# (motion id, heading, next label, [(version, title, subtitle, historical)])
+# (motion id, next label, [(version, title, subtitle)])
 MOTIONS = [
-    ('wg', "The workers' government", "Next: the united front.", [
+    ('agenda', "Next: the hall.", [
+        ('keep', "Hold to the agenda as the Zentrale drew it up.",
+         "The Ruhr will have its place in the political report, and nowhere else."),
+        ('report', "Promise the Ruhr a full hour in the political report.",
+         "Brandler will answer Berlin from the rostrum, on ground of his choosing."),
+        ('ruhr', "Give the occupation a debate of its own, first on the agenda.",
+         "Berlin gets its debate, and the Zentrale must defend its record before it has made its case."),
+    ]),
+    ('floor', "Next: the workers' government.", [
+        ('cut', "Back the chair and have her ruled out of order.",
+         "Order will be restored. Berlin will not forget how."),
+        ('pieck', f"Send {p('pieck', 'Wilhelm Pieck')} to the rostrum to calm the hall.",
+         "Old Pieck has smoothed over worse quarrels than this one."),
+        ('hear', "Let her speak to the end.",
+         "The majority will sit through it, if not quietly."),
+    ]),
+    ('wg', "Next: the united front.", [
         ('theses', "Table the Zentrale's theses as drafted.",
-         st('for', 'against', 'divided') + " SPD relations and the party's appeal up; Radek pleased, Zinoviev cool.", True),
+         "A workers' government is a road to power, and Saxony is where the road begins."),
         ('amended', "Table the theses with the commission's amendments: \"a step, not a road\".",
-         st('for', 'divided', 'for') + " A smaller gain with the SPD, a little readiness; Radek and Zinoviev both pleased.", False),
-        ('counter', "Table the Left's counter-theses.",
-         st('against', 'for', 'divided') + " Breaks with the SPD; Zinoviev pleased.", False),
+         "Such a government can only be born of the workers' struggle, and no Communist sits in it without the International's leave."),
+        ('counter', f"Table {p('maslow', 'Maslow')}'s counter-theses.",
+         "No coalitions with reformists: the workers' government is another name for the dictatorship of the proletariat, or it is nothing."),
     ]),
-    ('uf', "The united front", "Next: workers' defence.", [
+    ('uf', "Next: workers' defence.", [
         ('above', "The united front from above and below.",
-         st('for', 'against', 'divided') + " SPD relations up; Radek pleased.", True),
+         "Approach the SPD's leaders, and make sure their members hear it when the leaders say no."),
         ('below', "The united front from below only.",
-         st('divided', 'for', 'for') + " Unions up, SPD relations down; Zinoviev pleased. Your own faction grumbles.", False),
+         "Over the heads of Wels and Dittmann, straight to the Social Democratic workers in the factories."),
+        ('appeal', "Offer the SPD a common fight against Cuno and the occupation.",
+         "An open letter to the SPD Executive, signed by the new Zentrale on the day the congress closes."),
     ]),
-    ('def', "Workers' defence", "Next: the Ruhr.", [
+    ('def', "Next: the Ruhr.", [
         ('hundreds', "Proletarian Hundreds in the factories, open to all workers.",
-         st('for', 'for', 'for') + " Readiness up; the police take note.", True),
+         "Elected by the workforce, Social Democrats and non-party men alongside Communists."),
         ('unions', "Leave defence to the trade unions for now.",
-         st('divided', 'against', 'divided') + " No risk, but the party looks timid. Your own faction grumbles.", False),
+         "The unions have the numbers. Let the party push them to act."),
+        ('armed', "Armed squads under the party's own command.",
+         "Picked comrades, hidden rifles, and a chain of command that runs to the Zentrale."),
     ]),
-    ('ruhr', "The Ruhr", "Next: the new Zentrale.", [
-        ('both', "\"Beat Poincaré on the Ruhr and Cuno on the Spree.\"",
-         st('for', 'for', 'for') + " The revolutionary mood rises; nationalism dips.", True),
-        ('french', "Put the fight against the French occupiers first.",
-         st('divided', 'against', 'against') + " Wins some nationalist-minded workers; the Left and Zinoviev object.", False),
+    ('ruhr', "Next: the new Zentrale.", [
+        ('both', "Fight the occupiers and the Cuno government alike.",
+         "Against Poincaré's soldiers and against the industrialists who hide behind them, in one breath."),
+        ('french', "Put the fight against the occupiers first.",
+         "Stand with the whole nation against the French, and settle accounts with Cuno afterwards."),
+        ('republic', "Call for a workers' republic on the Ruhr.",
+         "Take the pits and the works, arm the miners, and let the Ruhr show the rest of Germany the way."),
     ]),
-    ('zentrale', "The new Zentrale", "Close the congress.", [
-        ('closed', "The majority's list only: shut the Left out.",
-         st('for', 'against', 'divided') + " The Right is calm, the Left furious; Moscow dislikes the split.", False),
-        ('moderate', "Make room for three moderate Leftists.",
-         st('for', 'divided', 'for') + " The Left grumbles less.", True),
-        ('leaders', "Bring in the Left's leaders, Fischer and Maslow.",
-         st('divided', 'for', 'for') + " The Left calms down and Moscow approves; your own faction grumbles.", False),
+    ('zentrale', "Close the congress.", [
+        ('closed', "Elect the majority's twenty-one as drafted.",
+         "A Zentrale of one mind, and a third of the party without a voice in it."),
+        ('moderate', f"Take {p('radek', 'Radek')}'s list, with Ewert, Lindau and Pfeiffer on it.",
+         "Three men from the Left whom the majority can live with, and whom the Left does not count as its own."),
+        ('leaders', f"Seats in proportion: {p('fischer', 'Ruth Fischer')}, Geschke, Katz and König.",
+         "The Left's own candidates, put forward by Berlin, Hamburg, Frankfurt and Cologne."),
     ]),
 ]
 
-out = [r"""title: The Leipzig Congress
+INTRO = rf"""title: The Leipzig Congress
 subtitle: The Eighth Party Congress meets at the end of January.
 new-page: true
 tags: rf_event
 view-if: congress_number = 8 and time >= 2
 max-visits: 1
 priority: 3
-on-arrival: {!
+on-arrival: {{!
 var RF = window.RF;
 RF.normalize(Q);
 Q.mo_passed_news = '';
@@ -68,42 +86,74 @@ var d = RF.delegateShares(Q);
 Q.leipzig_delegates = RF.delegateHemicycle(d, 150);
 Q.leipzig_legend = RF.factionLegend(d);
 Q.leipzig_districts = RF.districtsHtml(Q);
-!}
+!}}
 
 = The Eighth Party Congress, Leipzig
 
-The delegates meet in Leipzig from 28 January, a fortnight after the French marched into the Ruhr. They come from the districts, and each district sends mostly its own majority's people.
+Leipzig, the last days of January 1923. A fortnight ago French and Belgian troops marched into Essen to take the coal Germany owes in reparations. The Cuno government, a cabinet of shipowners and bankers with no party behind it, has answered with passive resistance and the printing press, and the mark is falling faster than at any time since the war. Prices change between morning and evening. In Dresden the Saxon government has just fallen, and Social Democrats there are asking aloud whether they could govern with Communist votes. In Munich, this same week, Hitler's National Socialists parade under their new standards.
 
-{!<div class="rf-district-wrap">!}[+ leipzig_districts +]{!</div>!}
+The party that meets here is barely four years old. It has lived through the murder of its founders, a split, a merger with the left of the Independents, a failed rising and the expulsion of its former chairman. From the International's Fourth Congress in Moscow it has brought home two slogans, the united front and the workers' government, and no agreement on what they mean. The Zentrale's majority, led by {p('brandler', 'Heinrich Brandler')} and {p('thalheimer', 'August Thalheimer')}, reads them as a patient road through the factories, the unions and governments like Saxony's. The Berlin organisation of {p('fischer', 'Ruth Fischer')} and {p('maslow', 'Arkadi Maslow')}, with Hamburg behind it, calls that opportunism dressed up as tactics. {p('radek', 'Karl Radek')} and {p('kolarov', 'Vasil Kolarov')} have come from Moscow to keep the quarrel from becoming a split.
 
-{!<div class="rf-delegates">!}[+ leipzig_delegates +]{!<div class="rf-legend">!}[+ leipzig_legend +]{!</div></div>!}
+The delegates come from the districts, and each district sends mostly its own majority's people.
 
-The <span class="f-right">Brandler Right</span> has the majority, and the Zentrale's motions will decide the line. You decide which version of each motion the Zentrale tables. The factions vote by their convictions: the Right will not table what it stands against, and every compromise costs it some patience. <span class="m-radek rf-person col-comintern">Karl Radek</span> is here for the International.
+{{!<div class="rf-district-wrap">!}}[+ leipzig_districts +]{{!</div>!}}
 
-- @wg: Open the debate.
+{{!<div class="rf-delegates">!}}[+ leipzig_delegates +]{{!<div class="rf-legend">!}}[+ leipzig_legend +]{{!</div></div>!}}
 
-"""]
+The motions are the Zentrale's, and it is the Zentrale that decides in what form they go before the hall. The <span class="f-right">Brandler Right</span> will not put its name to what it thinks wrong, and every concession made to Berlin is noted in the Saxon delegations.
 
-for i, (mid, head, nxt, opts) in enumerate(MOTIONS):
+- @agenda: Open the congress.
+
+"""
+
+CLOSE = rf"""@close
+new-page: true
+on-arrival: {{!
+var RF = window.RF;
+Q.congress_before = Q.leader;
+Q.moscow_overruled = 0;
+Q.moscow_rejected = 0;
+Q.leipzig_summary = RF.motionSummary(Q);
+var z = RF.zentrale(Q);
+Q.leipzig_zentrale = RF.delegateHemicycle(z, Object.keys(z).reduce(function(a, f) {{ return a + z[f]; }}, 0), 'Zentrale');
+Q.leipzig_zentrale_text = RF.zentraleText(Q);
+Q.leipzig_left_mood = Q.left_dissent >= 50 ? 2 : Q.left_dissent >= 30 ? 1 : 0;
+RF.congressDone(Q);
+!}}
+
+= The Congress Closes
+
+[+ leipzig_summary +]
+
+{{!<div class="rf-delegates">!}}[+ leipzig_zentrale +]{{!</div>!}}
+
+The new Zentrale has [+ leipzig_zentrale_text +]. {p('brandler', 'Heinrich Brandler')} takes the chair in place of {p('meyer', 'Ernst Meyer')}, and the <span class="f-right">Brandler Right</span> holds the leadership.
+
+[? if leipzig_left_mood = 2 : The Left leaves Leipzig bitter. In Berlin and Hamburg its people talk of a leadership that has shut them out, and Radek reports to Moscow that the party is close to a split. ?][? if leipzig_left_mood = 1 : The Left goes home outvoted but still inside the tent. Radek reports to Moscow that the split has been avoided, for now. ?][? if leipzig_left_mood = 0 : Even the Left goes home half satisfied. Radek reports to Moscow that the German party has come out of Leipzig united. ?]
+
+The delegates take the night trains home to the Ruhr, to Hamburg, to the Erzgebirge. The next congress is due in about a year.
+"""
+
+out = [INTRO]
+for i, (mid, nxt, opts) in enumerate(MOTIONS):
     out.append(f"""@{mid}
-title: {head}
 new-page: true
 on-arrival: {{! window.RF.motionIntro(Q, 'leipzig', '{mid}'); !}}
 
-= {head}
+= [+ mo_title +]
 
 [+ mo_text +]
 
 """)
-    for key, title, sub, hist in opts:
+    for key, title, sub in opts:
         out.append(f"- @{mid}_{key}\n")
     out.append("\n")
-    for key, title, sub, hist in opts:
+    for key, title, sub in opts:
         out.append(f"""@{mid}_{key}
 title: {title}
-subtitle: {sub}
-choose-if: mo_ok_{key} = 1
-unavailable-subtitle: {NO}
+subtitle: {sub} [+ mo_st_{mid}_{key} +]
+choose-if: mo_ok_{mid}_{key} = 1
+unavailable-subtitle: [+ mo_why_{mid}_{key} +]
 on-arrival: {{! window.RF.motionVote(Q, 'leipzig', '{mid}', '{key}'); !}}
 go-to: {mid}_done
 
@@ -112,41 +162,14 @@ go-to: {mid}_done
     out.append(f"""@{mid}_done
 new-page: true
 
-= {head}
+= [+ mo_title +]
 
 [+ mo_result +]
 
 - @{target}: {nxt}
 
 """)
-
-out.append(r"""@close
-new-page: true
-on-arrival: {!
-var RF = window.RF;
-Q.congress_before = Q.leader;
-Q.moscow_overruled = 0;
-Q.moscow_rejected = 0;
-Q.leipzig_summary = RF.motionSummary(Q);
-var z = RF.zentrale(Q);
-Q.leipzig_zentrale = RF.delegateHemicycle(z, Object.keys(z).reduce(function(a, f) { return a + z[f]; }, 0), 'Zentrale');
-Q.leipzig_zentrale_text = RF.zentraleText(Q);
-Q.leipzig_left_mood = Q.left_dissent >= 50 ? 2 : Q.left_dissent >= 30 ? 1 : 0;
-RF.congressDone(Q);
-!}
-
-= The Congress Closes
-
-[+ leipzig_summary +]
-
-{!<div class="rf-delegates">!}[+ leipzig_zentrale +]{!</div>!}
-
-The new Zentrale has [+ leipzig_zentrale_text +]. The <span class="f-right">Brandler Right</span> keeps the leadership.
-
-[? if leipzig_left_mood = 2 : The Left leaves Leipzig bitter. In Berlin and Hamburg its people talk of a leadership that has shut them out, and Radek reports to Moscow that the party is close to a split. ?][? if leipzig_left_mood = 1 : The Left goes home outvoted but still inside the tent. Radek reports to Moscow that the split has been avoided, for now. ?][? if leipzig_left_mood = 0 : Even the Left goes home half satisfied. Radek reports to Moscow that the German party has come out of Leipzig united. ?]
-
-The next congress is due in about a year.
-""")
+out.append(CLOSE)
 
 with open('source/scenes/rote_fahne/events/rf_leipzig.scene.dry', 'w') as f:
     f.write(''.join(out).rstrip() + '\n')
