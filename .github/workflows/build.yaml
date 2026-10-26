@@ -33,11 +33,15 @@ jobs:
       - name: setup node
         uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: 20
       - name: Install
         run: npm install
       - name: Build game
         run: npm run dendrynexus make-html -- --pretty
+      - name: Install browser
+        run: npm install --no-save playwright && npx playwright install --with-deps chromium
+      - name: Play the game (a broken game is not deployed)
+        run: node tests/smoke.js
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

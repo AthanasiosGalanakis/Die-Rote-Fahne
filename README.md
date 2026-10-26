@@ -49,4 +49,8 @@ Achievements and images are plain data files, edited by hand and published throu
 
 3. Serve `out/html` with any static web server, for example `python3 -m http.server` inside that folder, and open it in a browser.
 
+## Checking the game
+
+`tests/smoke.js` opens the built game in a browser, visits the title pages and every sidebar tab, then plays until the game runs out of choices. It fails on any console error, missing file or if the game never reaches a later month. It runs on every pull request (`.github/workflows/check.yaml`) and before every deploy. To run it yourself: `npm install --no-save playwright && npx playwright install chromium`, build the game, then `node tests/smoke.js`.
+
 To update dendrynexus in `package-lock.json`, run `npm install --upgrade https://github.com/aucchen/dendrynexus`

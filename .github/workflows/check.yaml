@@ -1,0 +1,29 @@
+# Builds the game and plays it in a browser on every pull request, so a change
+# that breaks the game is caught before it is merged.
+name: Check the game
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install
+        run: npm install
+      - name: Build game
+        run: npm run dendrynexus make-html
+      - name: Install browser
+        run: npm install --no-save playwright && npx playwright install --with-deps chromium
+      - name: Play the game
+        run: node tests/smoke.js
