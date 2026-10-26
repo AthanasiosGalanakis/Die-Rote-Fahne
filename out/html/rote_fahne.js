@@ -793,7 +793,7 @@
   };
 
   // ---- Data files: images and achievements --------------------------------
-  // Edited from the admin panel (admin/). Missing files leave the game as it is.
+  // out/html/data/*.json. Missing files leave the game as it is.
 
   RF.data = {images: {}, achievements: []};
 
@@ -1710,7 +1710,7 @@
   };
   RF.missions = MISSIONS;
 
-  // The Missions tab: an image for the leading faction (admin key
+  // The Missions tab: an image for the leading faction (images.json key
   // mission:<faction>, a framed placeholder until one is set), then one
   // card per mission with its description and status.
   RF.renderMissions = function(Q) {
