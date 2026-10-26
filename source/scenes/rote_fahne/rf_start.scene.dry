@@ -44,6 +44,11 @@ Q.ultra_expelled = 0;
 Q.stalin_expelled = 0;
 Q.minor_expelled = 0;
 Q.splits = 0;
+// the Zentrale elected at Jena in 1921 and changed since: the majority
+// with a token Left and one unaligned member (the split is approximate)
+window.RF.setZentrale(Q, {right: 12, left: 1, minor: 1});
+// the KPD's public appeal (-20 to 20): congresses and cards move it
+Q.kpd_appeal = 0;
 
 // which faction holds the Zentrale
 Q.leader = 'right';

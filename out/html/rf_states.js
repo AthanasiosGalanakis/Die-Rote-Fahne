@@ -320,9 +320,9 @@
 
   // A congress as a hemicycle of delegates, from shares in percent
   // ({faction: share}); n dots in all.
-  RF.delegateHemicycle = function(shares, n) {
+  RF.delegateHemicycle = function(shares, n, label) {
     var seats = {}, given = 0, keys = [];
-    for (var f of ['ultra', 'left', 'stalin', 'center', 'right']) {
+    for (var f of ['ultra', 'left', 'stalin', 'minor', 'center', 'right']) {
       if (shares[f]) {
         seats[f] = Math.round(n * shares[f] / 100);
         given += seats[f];
@@ -332,7 +332,7 @@
     if (keys.length) {
       seats[keys[0]] += n - given;
     }
-    return RF.hemicycle(seats, {order: ['ultra', 'left', 'stalin', 'center', 'right'], cls: 'bff-', label: 'Delegates'});
+    return RF.hemicycle(seats, {order: ['ultra', 'left', 'stalin', 'minor', 'center', 'right'], cls: 'bff-', label: label || 'Delegates'});
   };
 
   // Seat shares as a list, largest first.

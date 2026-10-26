@@ -41,6 +41,7 @@ var RF = window.RF;
 Q.overrule_risk = Math.round(100 * RF.overruleChance(Q));
 RF.moscowStatus(Q);
 Q.next_congress = RF.nextCongressText(Q);
+Q.zentrale_text = RF.zentraleText(Q);
 RF.numbers(Q);
 !}
 
@@ -50,17 +51,23 @@ Leadership: <span class="f-[+ leader +]">[+ leader_name +]</span>
 
 {!<span class="tooltip-text" title="The leadership only changes at a party congress, where the delegates elect a new Zentrale. The statutes call for a congress about once a year, and Moscow may try to overturn the delegates' choice.">Next party congress</span>!}: [+ next_congress +]
 
-[? if right_formed = 1 and right_expelled = 0 : {!<div class="rf-faction">!}<span class="f-right">Brandler Right</span>{!<div class="rf-stat">!}Strength: [+ right_strength : strength +][+ n_right_strength +]{!</div><div class="rf-stat">!}Dissent: [+ right_dissent : rf_dissent +][+ n_right_dissent +]{!</div>!}{!<div class="rf-bar"><span class="b-right" style="width: !}[+ right_strength +]{!%"></span></div></div>!} ?][? if right_formed = 1 and right_expelled = 1 : <span class="f-right">Brandler Right</span>: left the party ?]
+[? if right_formed = 1 and right_expelled = 0 : {!<div class="rf-faction">!}<span class="f-right">Brandler Right</span>{!<div class="rf-stat">!}Strength: [+ right_strength : strength +][+ n_right_strength +]{!</div><div class="rf-stat">!}Dissent: [+ right_dissent : rf_dissent +][+ n_right_dissent +]{!</div>!}{!</div>!} ?][? if right_formed = 1 and right_expelled = 1 : <span class="f-right">Brandler Right</span>: left the party ?]
 
-[? if center_formed = 1 and center_expelled = 0 : {!<div class="rf-faction">!}<span class="f-center">Middle Group</span>{!<div class="rf-stat">!}Strength: [+ center_strength : strength +][+ n_center_strength +]{!</div><div class="rf-stat">!}Dissent: [+ center_dissent : rf_dissent +][+ n_center_dissent +]{!</div>!}{!<div class="rf-bar"><span class="b-center" style="width: !}[+ center_strength +]{!%"></span></div></div>!} ?][? if center_formed = 1 and center_expelled = 1 : <span class="f-center">Middle Group</span>: left the party ?]
+[? if center_formed = 1 and center_expelled = 0 : {!<div class="rf-faction">!}<span class="f-center">Middle Group</span>{!<div class="rf-stat">!}Strength: [+ center_strength : strength +][+ n_center_strength +]{!</div><div class="rf-stat">!}Dissent: [+ center_dissent : rf_dissent +][+ n_center_dissent +]{!</div>!}{!</div>!} ?][? if center_formed = 1 and center_expelled = 1 : <span class="f-center">Middle Group</span>: left the party ?]
 
-[? if left_formed = 1 and left_expelled = 0 : {!<div class="rf-faction">!}<span class="f-left">Fischer–Maslow Left</span>{!<div class="rf-stat">!}Strength: [+ left_strength : strength +][+ n_left_strength +]{!</div><div class="rf-stat">!}Dissent: [+ left_dissent : rf_dissent +][+ n_left_dissent +]{!</div>!}{!<div class="rf-bar"><span class="b-left" style="width: !}[+ left_strength +]{!%"></span></div></div>!} ?][? if left_formed = 1 and left_expelled = 1 : <span class="f-left">Fischer–Maslow Left</span>: left the party ?]
+[? if left_formed = 1 and left_expelled = 0 : {!<div class="rf-faction">!}<span class="f-left">Fischer–Maslow Left</span>{!<div class="rf-stat">!}Strength: [+ left_strength : strength +][+ n_left_strength +]{!</div><div class="rf-stat">!}Dissent: [+ left_dissent : rf_dissent +][+ n_left_dissent +]{!</div>!}{!</div>!} ?][? if left_formed = 1 and left_expelled = 1 : <span class="f-left">Fischer–Maslow Left</span>: left the party ?]
 
-[? if ultra_formed = 1 and ultra_expelled = 0 : {!<div class="rf-faction">!}<span class="f-ultra">Ultra-Left</span>{!<div class="rf-stat">!}Strength: [+ ultra_strength : strength +][+ n_ultra_strength +]{!</div><div class="rf-stat">!}Dissent: [+ ultra_dissent : rf_dissent +][+ n_ultra_dissent +]{!</div>!}{!<div class="rf-bar"><span class="b-ultra" style="width: !}[+ ultra_strength +]{!%"></span></div></div>!} ?][? if ultra_formed = 1 and ultra_expelled = 1 : <span class="f-ultra">Ultra-Left</span>: left the party ?]
+[? if ultra_formed = 1 and ultra_expelled = 0 : {!<div class="rf-faction">!}<span class="f-ultra">Ultra-Left</span>{!<div class="rf-stat">!}Strength: [+ ultra_strength : strength +][+ n_ultra_strength +]{!</div><div class="rf-stat">!}Dissent: [+ ultra_dissent : rf_dissent +][+ n_ultra_dissent +]{!</div>!}{!</div>!} ?][? if ultra_formed = 1 and ultra_expelled = 1 : <span class="f-ultra">Ultra-Left</span>: left the party ?]
 
-[? if stalin_formed = 1 and stalin_expelled = 0 : {!<div class="rf-faction">!}<span class="f-stalin">Thälmann circle</span>{!<div class="rf-stat">!}Strength: [+ stalin_strength : strength +][+ n_stalin_strength +]{!</div><div class="rf-stat">!}Dissent: [+ stalin_dissent : rf_dissent +][+ n_stalin_dissent +]{!</div>!}{!<div class="rf-bar"><span class="b-stalin" style="width: !}[+ stalin_strength +]{!%"></span></div></div>!} ?][? if stalin_formed = 1 and stalin_expelled = 1 : <span class="f-stalin">Thälmann circle</span>: left the party ?]
+[? if stalin_formed = 1 and stalin_expelled = 0 : {!<div class="rf-faction">!}<span class="f-stalin">Thälmann circle</span>{!<div class="rf-stat">!}Strength: [+ stalin_strength : strength +][+ n_stalin_strength +]{!</div><div class="rf-stat">!}Dissent: [+ stalin_dissent : rf_dissent +][+ n_stalin_dissent +]{!</div>!}{!</div>!} ?][? if stalin_formed = 1 and stalin_expelled = 1 : <span class="f-stalin">Thälmann circle</span>: left the party ?]
 
-[? if minor_formed = 1 : {!<div class="rf-faction">!}<span class="f-minor">Minor currents</span>{!<div class="rf-stat">!}Strength: [+ minor_strength : strength +][+ n_minor_strength +]{!</div><div class="rf-stat">!}Dissent: [+ minor_dissent : rf_dissent +][+ n_minor_dissent +]{!</div>!}{!<div class="rf-bar"><span class="b-minor" style="width: !}[+ minor_strength +]{!%"></span></div></div>!} ?]
+[? if minor_formed = 1 : {!<div class="rf-faction">!}<span class="f-minor">Minor currents</span>{!<div class="rf-stat">!}Strength: [+ minor_strength : strength +][+ n_minor_strength +]{!</div><div class="rf-stat">!}Dissent: [+ minor_dissent : rf_dissent +][+ n_minor_dissent +]{!</div>!}{!</div>!} ?]
+
+{!<span class="tooltip-text" title="The party's leadership between congresses, elected by the congress. The majority decides how many seats the other factions get; a faction with fewer seats than its strength grows angrier every month.">Zentrale</span>!}: [+ zentrale_text +]
+
+= Districts
+
+{!<div class="rf-district-wrap"><div id="rf-districts"></div></div>!}
 
 = Politics
 
@@ -96,30 +103,32 @@ RF.numbers(Q);
 
 = Moscow
 
-{!<span class="tooltip-text" title="The Comintern's strategy for Germany, set at each plenum in Moscow. Factions that fit the line gain standing there.">Comintern line</span>!}: [? if line == "united_front" : united front with the SPD's workers ?][? if line == "insurrection" : prepare the insurrection ?][? if line == "bolshevization" : Bolshevization of the party ?][? if line == "class_against_class" : class against class ?]
+{!<div class="rf-block"><div class="rf-block-head">The line</div>!}
 
-{!<span class="tooltip-text" title="What the last plenum asked of the KPD. The next plenum judges the leadership on it: success wins Moscow's favour, failure brings a rebuke.">Directive</span>!}: [+ directive +] [? if directive_on_track = 1 : (on track) ?][? if directive_on_track = 0 : (behind) ?]
+{!<p><span class="tooltip-text" title="The Comintern's strategy for Germany, set at each plenum. Factions whose ideas fit it gain standing in Moscow.">Line</span>: !}[? if line == "united_front" : united front ?][? if line == "insurrection" : insurrection ?][? if line == "bolshevization" : Bolshevisation ?][? if line == "class_against_class" : class against class ?]{!</p>!}
 
-{!<span class="tooltip-text" title="The plenums of the Comintern's Executive Committee and the World Congresses, where the line is set.">Next plenum</span>!}: [+ next_plenum +]
+{!<p><span class="tooltip-text" title="The last plenum's task for the KPD. The next plenum praises the leadership if it is met and rebukes it if not; two rebukes bring an Open Letter.">Directive</span>: !}[+ directive +] [? if directive_on_track = 1 : {!<span class="rf-chip rf-chip-good">on track</span>!} ?][? if directive_on_track = 0 : {!<span class="rf-chip rf-chip-bad">behind</span>!} ?]{!</p>!}
 
-{!<span class="tooltip-text" title="How far the KPD still decides for itself. Each intervention from Moscow wears it down, and the lower it is, the easier Moscow overturns a congress.">Party autonomy</span>!}: [+ autonomy : rf_autonomy +][+ n_autonomy +]
+{!<p><span class="tooltip-text" title="When Moscow next judges the party.">Next plenum</span>: !}[+ next_plenum +]{!</p></div>!}
 
-{!<span class="tooltip-text" title="How hard Moscow is pushing to replace the leadership with its favourite. It grows with the gap between them and as autonomy falls. At its peak, Moscow will demand that the next congress installs its favourite. The delegates can refuse if the leadership is strong and the party still runs its own affairs, but Moscow does not forget.">Moscow's pressure</span>!}: [+ overrule_risk : rf_overrule +][+ n_overrule_risk +]
+{!<div class="rf-block"><div class="rf-block-head">The party and Moscow</div>!}
 
-[? if moscow_news != "" : *[+ moscow_news +]* ?]
+{!<p><span class="tooltip-text" title="How far the KPD still decides for itself. Every intervention wears it down; the lower it is, the faster Moscow's pressure grows and the easier Moscow overturns a congress.">Autonomy</span>: !}[+ autonomy : rf_autonomy +][+ n_autonomy +]{!</p>!}
 
-[? if open_letter = 1 : **Moscow has condemned the leadership in an Open Letter and demands a special congress to replace it.** ?][? if open_letter = 0 and moscow_rebukes = 1 : **Moscow has rebuked the leadership once. A second rebuke brings an Open Letter.** ?]
+{!<p><span class="tooltip-text" title="How hard Moscow is pushing to put its favourite in charge. At its peak Moscow demands that the next congress install its favourite; a strong, self-governing party can refuse.">Pressure</span>: !}[+ overrule_risk : rf_overrule +][+ n_overrule_risk +]{!</p>!}
 
-{!<span class="tooltip-text" title="The Russian leaders who decide the Comintern's course. Each KPD faction leans on one of them and rises or falls with its patron; hover over a name to see whom they back.">The Kremlin</span>!}:
+{!<p>Moscow favours: !}<span class="f-[+ favourite +]">[+ favourite_name +]</span>{!</p>!}
 
-{!<div id="rf-kremlin"></div>!}
+[? if open_letter = 1 : {!<p><span class="rf-chip rf-chip-bad">Open Letter</span> Moscow demands a special congress to replace the leadership.</p>!} ?][? if open_letter = 0 and moscow_rebukes = 1 : {!<p><span class="rf-chip rf-chip-bad">Rebuked once</span> A second rebuke brings an Open Letter.</p>!} ?]
 
-Moscow favours: <span class="f-[+ favourite +]">[+ favourite_name +]</span>
+[? if moscow_news != "" : {!<p><i>!}[+ moscow_news +]{!</i></p>!} ?]{!</div>!}
+
+{!<div class="rf-block"><div class="rf-block-head"><span class="tooltip-text" title="The Russian leaders who decide the Comintern's course. Their power depends partly on the Russian party and partly on what the KPD does. Hover a name to see which faction he backs.">The Kremlin</span></div><div id="rf-kremlin"></div></div>!}
 
 [? if congress_news != "" : *Last congress: [+ congress_news +]* ?]
 
 @forces
-title: Balance of Forces
+title: Forces
 new-page: true
 is-special: true
 on-arrival: {!
@@ -131,7 +140,8 @@ RF.numbers(Q);
 !}
 
 #The armed formations are drawn by RF.renderForces (rote_fahne.js):
-#strength as words, details in the hover cards, never head counts.
+#strength and militarisation as words, details in the hover cards; head
+#counts only with exact numbers switched on.
 
 = The armed power of the state
 
@@ -168,8 +178,8 @@ title: Missions
 new-page: true
 is-special: true
 
-= Missions of the <span class="f-[+ leader +]">[+ leader_name +]</span>
+= Missions
 
-What the faction in the Zentrale wants to achieve. The missions change when another faction takes over.
+{!<p class="rf-mission-head">!}What the <span class="f-[+ leader +]">[+ leader_name +]</span> wants to achieve while it holds the Zentrale.{!</p>!}
 
 {!<div id="rf-missions"></div>!}

@@ -118,6 +118,7 @@
         Q[s] = Math.round(clamp(Q[s], 0, 100));
       }
       Q.funds = Math.max(0, Q.funds);
+      Q.kpd_appeal = clamp(Q.kpd_appeal || 0, -20, 20);
       var dissent = 0;
       for (var h of FACTIONS) {
         dissent += RF.active(Q, h) ? Q[h + '_strength'] * Q[h + '_dissent'] / 100 : 0;
@@ -168,7 +169,7 @@
         if (!RF.active(Q, f)) {
           continue;
         }
-        var weight = Q[f + '_strength'];
+        var weight = RF.delegateShares ? (RF.delegateShares(Q)[f] || 0) : Q[f + '_strength'];
         if (f == Q.leader) {
           weight += 5 + Q.apparatus / 10;
         }
@@ -482,7 +483,8 @@
   RF.pollMult = function(Q) {
     var kpd = clamp(1 + (Q.rev_situation - 45) / 50 + (Q.union_influence - 35) / 120
                     - Q.repression / 200 - 0.08 * Q.splits
-                    + (Q.spd_discredit || 0) / 40, 0.3, 3);
+                    + (Q.spd_discredit || 0) / 40 + (Q.kpd_appeal || 0) / 60
+                    - Math.max(0, (Q.party_dissent || 0) - 20) / 150, 0.3, 3);
     var spd = clamp(1 + (Q.pro_republic - 50) / 150 - (Q.spd_discredit || 0) / 100
                     - (Q.rev_situation - 45) / 200, 0.4, 2);
     var republic = clamp(1 + (Q.pro_republic - 50) / 100, 0.4, 2);
@@ -696,30 +698,37 @@
           ideology: 'Revolutionary Marxism, section of the Communist International.'},
     spd: {name: 'SPD', full: 'Social Democratic Party of Germany',
           ideology: 'Reformist social democracy: defend the Republic, work with the bourgeois centre. The largest party of the working class.',
-          leaders: [{until: null, name: 'Otto Wels, Hermann Müller', colours: ['#c00000', '#ff5c5c']}]},
+          leaders: [{until: null, name: 'Otto Wels, Hermann Müller', ideo: 'Reformist social democracy', colours: ['#c00000', '#ff5c5c']}]},
     uspd: {name: 'USPD', full: 'Independent Social Democratic Party of Germany',
            ideology: 'Left socialists who stayed out of both the KPD (1920) and the reunited SPD (1922). A small group by now.',
-           leaders: [{until: null, name: 'Georg Ledebour, Theodor Liebknecht', colours: ['#9B0000', '#ff7070']}]},
+           leaders: [{until: null, name: 'Georg Ledebour, Theodor Liebknecht', ideo: 'Left socialism', colours: ['#9B0000', '#ff7070']}]},
     z: {name: 'Z', full: 'Centre Party',
         ideology: 'The Catholic party of the centre, with its Bavarian sister the BVP. A partner in almost every Reich government.',
-        leaders: [{until: null, name: 'Wilhelm Marx', colours: ['#1A1A1A', '#d0d0d0']}]},
+        leaders: [{to: [1928, 12], name: 'Wilhelm Marx', ideo: 'Political Catholicism', colours: ['#1A1A1A', '#d0d0d0']},
+                  {until: null, name: 'Ludwig Kaas', ideo: 'Catholic conservatism', colours: ['#1A1A1A', '#d0d0d0']}]},
     bvp: {name: 'BVP', full: 'Bavarian People\'s Party',
           ideology: 'Bavarian Catholic conservatives, federalist and further right than the Centre.',
           leaders: [{until: null, name: '', colours: ['#4a6fa5', '#8fb0e0']}]},
     ddp: {name: 'DDP', full: 'German Democratic Party',
           ideology: 'Left liberals, one of the founding parties of the Republic.',
-          leaders: [{until: null, name: 'Carl Petersen', colours: ['#B8A000', '#f0d64a']}]},
+          leaders: [{to: [1924, 12], name: 'Carl Petersen', ideo: 'Social liberalism', colours: ['#B8A000', '#f0d64a']},
+                    {until: null, name: 'Erich Koch-Weser', ideo: 'Social liberalism', colours: ['#B8A000', '#f0d64a']}]},
     dvp: {name: 'DVP', full: 'German People\'s Party',
           ideology: 'National liberals close to industry. Stresemann is moving them towards accepting the Republic.',
-          leaders: [{until: null, name: 'Gustav Stresemann', colours: ['#C0A054', '#e0c070']}]},
+          leaders: [{to: [1929, 10], name: 'Gustav Stresemann', ideo: 'National liberalism', colours: ['#C0A054', '#e0c070']},
+                    {until: null, name: 'Ernst Scholz', ideo: 'National liberalism, moving right', colours: ['#C0A054', '#e0c070']}]},
     dnvp: {name: 'DNVP', full: 'German National People\'s Party',
            ideology: 'Monarchist conservatives of the landowners, the officer corps and the old elites.',
-           leaders: [{until: null, name: 'Oskar Hergt', colours: ['#3E88B3', '#6fb3dc']}]},
+           leaders: [{to: [1924, 10], name: 'Oskar Hergt', ideo: 'Monarchist conservatism', colours: ['#3E88B3', '#6fb3dc']},
+                     {to: [1926, 3], name: 'Johann Friedrich Winckler', ideo: 'Monarchist conservatism', colours: ['#3E88B3', '#6fb3dc']},
+                     {to: [1928, 10], name: 'Kuno von Westarp', ideo: 'Monarchist conservatism', colours: ['#3E88B3', '#6fb3dc']},
+                     {until: null, name: 'Alfred Hugenberg', ideo: 'Radical nationalism', colours: ['#2f6f99', '#5fa3cc']}]},
     nsdap: {name: 'NSDAP', full: 'National Socialist German Workers\' Party',
             ideology: 'Völkisch nationalists, strongest in Bavaria.',
             leaders: [
-              {until: 'beer_hall_seen', name: 'Adolf Hitler', colours: ['#7A3C00', '#c8874a']},
-              {until: null, name: 'banned; Hitler in prison', colours: ['#8c6a4f', '#b89a7f']}
+              {to: [1923, 12], name: 'Adolf Hitler', ideo: 'Völkisch nationalism', colours: ['#7A3C00', '#c8874a']},
+              {to: [1925, 2], name: 'banned; Hitler in prison', ideo: 'Völkisch nationalism', colours: ['#8c6a4f', '#b89a7f']},
+              {until: null, name: 'Adolf Hitler', ideo: 'Völkisch nationalism', colours: ['#7A3C00', '#c8874a']}
             ]},
     agr: {name: 'Agrarians', full: 'Agrarian leagues',
           ideology: 'Farmers\' and rural leagues standing in the state elections: the Landbund, the peasants\' leagues and their allies. Mostly conservative, some close to the DNVP.',
@@ -759,8 +768,11 @@
     if (!info || !info.leaders) {
       return null;
     }
+    var t = (Q.year || 1923) * 12 + (Q.month || 1);
     for (var l of info.leaders) {
-      if (l.until === null || !Q[l.until]) {
+      // a leadership ends at a story flag (until) or a date (to, the month
+      // its successor takes over)
+      if (l.to ? t < l.to[0] * 12 + l.to[1] : (l.until == null || !Q[l.until])) {
         return l;
       }
     }
@@ -1139,15 +1151,19 @@
   // The Russian leadership is four patrons whose power follows the
   // succession struggle (keyframes by year and month, linearly in between).
   // Each KPD faction leans on one patron. Dates are approximate.
+  // The curves are the Russian base: the part of the succession struggle
+  // Germany cannot change, chiefly the General Secretary's hold on the
+  // Russian party machine. They are flatter than history, so the KPD's own
+  // path (patron_<id>_mod, up to 35 either way) can decide who wins.
   var PATRONS = {
     zinoviev: {name: 'Zinoviev', person: 'zinoviev',
-               curve: [[1923, 1, 90], [1924, 12, 85], [1925, 12, 55], [1926, 10, 20], [1927, 11, 3], [1934, 1, 0]]},
+               curve: [[1923, 1, 85], [1924, 12, 70], [1926, 10, 35], [1928, 1, 20], [1934, 1, 10]]},
     trotsky: {name: 'Trotsky and Radek', person: 'trotsky',
-              curve: [[1923, 1, 55], [1923, 12, 45], [1924, 2, 25], [1925, 1, 15], [1926, 6, 20], [1927, 11, 2], [1934, 1, 0]]},
+              curve: [[1923, 1, 55], [1924, 6, 35], [1926, 1, 25], [1928, 1, 12], [1934, 1, 5]]},
     bukharin: {name: 'Bukharin', person: 'bukharin',
-               curve: [[1923, 1, 40], [1925, 6, 55], [1926, 10, 70], [1927, 12, 72], [1928, 7, 50], [1929, 4, 25], [1929, 11, 5], [1934, 1, 0]]},
+               curve: [[1923, 1, 40], [1926, 1, 55], [1928, 6, 50], [1930, 1, 30], [1934, 1, 20]]},
     stalin: {name: 'Stalin', person: 'stalin',
-             curve: [[1923, 1, 35], [1924, 6, 50], [1925, 12, 70], [1926, 10, 80], [1927, 12, 90], [1929, 12, 100], [1934, 1, 100]]}
+             curve: [[1923, 1, 35], [1925, 1, 50], [1927, 1, 62], [1929, 1, 72], [1934, 1, 80]]}
   };
   RF.patrons = PATRONS;
 
@@ -1179,6 +1195,31 @@
       }
     }
     return clamp(v + (Q['patron_' + id + '_mod'] || 0), 0, 100);
+  };
+
+  // The KPD's path strengthens or weakens a Kremlin leader.
+  RF.nudgePatron = function(Q, id, v) {
+    Q['patron_' + id + '_mod'] = clamp((Q['patron_' + id + '_mod'] || 0) + v, -35, 35);
+  };
+
+  // Once a month: what the KPD is doing tells in Moscow. A working united
+  // front helps Radek and Bukharin, a revolutionary course Zinoviev (and
+  // Trotsky a little), a disciplined party Stalin. Old influence fades.
+  RF.kremlinSignals = function(Q) {
+    for (var id in PATRONS) {
+      Q['patron_' + id + '_mod'] = (Q['patron_' + id + '_mod'] || 0) * 0.99;
+    }
+    if (Q.spd_relation >= 45) {
+      RF.nudgePatron(Q, 'trotsky', 0.25);
+      RF.nudgePatron(Q, 'bukharin', 0.25);
+    }
+    if (Q.readiness >= 30 || Q.rev_situation >= 65) {
+      RF.nudgePatron(Q, 'zinoviev', 0.3);
+      RF.nudgePatron(Q, 'trotsky', 0.15);
+    }
+    if (Q.apparatus >= 30 && Q.party_dissent <= 15) {
+      RF.nudgePatron(Q, 'stalin', 0.3);
+    }
   };
 
   // Plenums and congresses of the Comintern on the historical calendar.
@@ -1245,6 +1286,7 @@
     Q.moscow_news = '';
     Q.stalin_power = Math.round(RF.patronPower(Q, 'stalin'));
     Q.trotsky_power = Math.round(RF.patronPower(Q, 'trotsky'));
+    RF.kremlinSignals(Q);
     // a faction's standing in Moscow drifts towards its patron's power
     for (var f of FACTIONS) {
       var pa = RF.patronOf(Q, f);
@@ -1258,12 +1300,20 @@
       }
       var prev = Q.directive_index >= 0 ? PLENUMS[Q.directive_index] : null;
       if (prev) {
+        var lp = RF.patronOf(Q, Q.leader);
         if (RF.directiveMet(Q, prev)) {
+          if (lp) {
+            RF.nudgePatron(Q, lp, 3);
+          }
           Q[Q.leader + '_moscow'] += 8;
           Q.autonomy += 3;
           Q.moscow_rebukes = Math.max(0, Q.moscow_rebukes - 1);
           Q.moscow_news = p.name + ': Moscow praises the KPD for its work on "' + prev.directive + '".';
         } else {
+          if (lp) {
+            RF.nudgePatron(Q, lp, -3);
+          }
+          RF.nudgePatron(Q, 'stalin', 1);
           Q[Q.leader + '_moscow'] -= 10;
           Q.autonomy -= 5;
           Q.moscow_rebukes += 1;
@@ -1499,74 +1549,101 @@
       var l = RF.partyLeadership(Q, p);
       html += '<tr><td><span class="p-' + p + '">' + PARTY_INFO[p].name + '</span>' +
           (l && l.name ? '<div class="rf-subline">' + esc(l.name) + '</div>' : '') +
+          (l && l.ideo ? '<div class="rf-subline rf-ideo">' + esc(l.ideo) + '</div>' : '') +
           '</td><td class="rf-num">' + bandWord(rel, RELATION_WORDS) +
           (Q.show_numbers ? ' (' + Math.round(rel) + ')' : '') + '</td></tr>';
     }
     el.innerHTML = html + '</table>';
   };
 
-  // ---- Balance of forces ---------------------------------------------------
-  // Armed formations as words, never as head counts: the figures that
-  // survive are rough and often propaganda. Each entry: id, name, colour
-  // (a party id), from and until (months as year * 12 + month), strength
-  // (0-100, or a function of Q) and a hover text.
-  var FORCE_WORDS = [[8, 'negligible'], [20, 'weak'], [40, 'modest'], [60, 'considerable'],
-                     [80, 'strong'], [Infinity, 'overwhelming']];
+  // ---- Forces ---------------------------------------------------------------
+  // Each armed formation: its strength (thousands of men, rough estimates,
+  // the leagues inflated their own figures) and how militarised it is. The
+  // sidebar shows words; the head count only appears with exact numbers on.
+  // Entries: name, colour (a party id), from and until (year * 12 + month),
+  // men (thousands: a number, a [year, month, value] curve or a function of
+  // Q), militarisation (a word or a function of Q) and a hover text.
   var ym = function(y, m) {
     return y * 12 + m;
   };
+  // a value from a [year, month, value] curve, linear in between
+  var curve = function(Q, c) {
+    var t = Q.year * 12 + Q.month;
+    if (t <= ym(c[0][0], c[0][1])) {
+      return c[0][2];
+    }
+    for (var i = 0; i + 1 < c.length; i++) {
+      var a = ym(c[i][0], c[i][1]), b = ym(c[i + 1][0], c[i + 1][1]);
+      if (t < b) {
+        return c[i][2] + (c[i + 1][2] - c[i][2]) * (t - a) / (b - a);
+      }
+    }
+    return c[c.length - 1][2];
+  };
+  RF.curve = curve;
+  var MEN_WORDS = [[5, 'tiny'], [25, 'small'], [80, 'modest'], [200, 'large'], [500, 'very large'], [Infinity, 'massive']];
+  var readinessWord = function(Q) {
+    return Q.readiness >= 60 ? 'medium-high' : Q.readiness >= 35 ? 'medium' : Q.readiness >= 15 ? 'medium-low' : 'low';
+  };
   var STATE_FORCES = [
-    {name: 'Reichswehr', colour: 'reichswehr', strength: 90,
+    {name: 'Reichswehr', colour: 'reichswehr', men: 100, mil: 'very high',
      text: 'The army of the Republic, held to a small professional force by the Treaty of Versailles. Disciplined, well armed and loyal to its generals more than to the Republic.'},
-    {name: 'Police', colour: 'other', strength: 75,
-     text: 'The states\' police forces, many of them in barracks with rifles, machine guns and armoured cars. Prussia\'s Schutzpolizei is the largest.'},
-    {name: 'Black Reichswehr', colour: 'reichswehr', until: ym(1923, 9), strength: 30,
-     text: 'Secret labour units the army keeps outside the Versailles limits, filled with former Freikorps men.'}
+    {name: 'Police', colour: 'other', men: 150, mil: 'high',
+     text: 'The states\' police forces, many of them in barracks with rifles, machine guns and armoured cars. Prussia\'s Schutzpolizei is the largest.'}
   ];
   var PARAMILITARIES = [
-    {name: 'Stahlhelm', colour: 'dnvp', strength: function(Q) { return 40 + Q.nationalism / 5; },
-     text: 'The league of front-line soldiers. Monarchist and close to the German Nationals; its members drill and march in field grey.'},
-    {name: 'Bavarian patriotic leagues', colour: 'bvp', until: ym(1924, 12), strength: 40,
-     text: 'Bund Bayern und Reich, Reichsflagge, Bund Oberland and their allies, armed and drilled with the tolerance of the Bavarian government.'},
-    {name: 'Freikorps remnants', colour: 'vlk', until: ym(1923, 12), strength: 25,
-     text: 'Veterans of the Freikorps and secret organisations such as the Organisation Consul, which murdered Erzberger and Rathenau.'},
-    {name: 'Young German Order', colour: 'dvp', strength: 25,
-     text: 'The Jungdeutscher Orden: a nationalist league of veterans and young men organised like a knightly order, hostile to both the Left and the völkisch movement.'},
-    {name: 'SA', colour: 'nsdap', until: ym(1923, 11), strength: function(Q) { return 10 + Math.max(0, Q.nationalism - 50) / 3; },
+    {name: 'Stahlhelm', colour: 'dnvp', mil: 'medium',
+     men: function(Q) { return curve(Q, [[1923, 1, 100], [1925, 1, 170], [1928, 1, 260], [1930, 1, 400], [1932, 1, 500]]) * (0.8 + Q.nationalism / 250); },
+     text: 'The league of front-line soldiers, the largest of the right-wing leagues. Monarchist and close to the German Nationals; its members drill and march in field grey.'},
+    {name: 'Bavarian patriotic leagues', colour: 'bvp', until: ym(1923, 12), men: 60, mil: 'high',
+     text: 'Bund Bayern und Reich, Reichsflagge, Bund Oberland and their allies, armed and drilled with the tolerance of the Bavarian government. Many former Freikorps men have found a home here.'},
+    {name: 'SA', colour: 'nsdap', until: ym(1923, 11), mil: 'high',
+     men: function(Q) { return 2 + Math.max(0, Q.nationalism - 55) / 10; },
      text: 'The National Socialists\' storm troops, in and around Munich.'},
-    {name: 'SA', colour: 'nsdap', from: ym(1925, 2), strength: function(Q) { return 10 + Math.max(0, Q.nationalism - 50) / 2; },
+    {name: 'SA', colour: 'nsdap', from: ym(1925, 2), mil: 'high',
+     men: function(Q) { return curve(Q, [[1925, 2, 2], [1929, 1, 30], [1930, 6, 80], [1931, 6, 170], [1932, 6, 400]]); },
      text: 'The National Socialists\' storm troops, refounded with the party.'},
-    {name: 'Reichsbanner', colour: 'spd', from: ym(1924, 2), strength: 60,
+    {name: 'Reichsbanner', colour: 'spd', from: ym(1924, 2),
+     men: function(Q) { return curve(Q, [[1924, 2, 200], [1925, 1, 800], [1932, 1, 1000]]); },
+     mil: function(Q) { return Q.year >= 1931 ? 'medium-low' : 'low'; },
      text: 'Black-Red-Gold: the league of the SPD, the Centre and the DDP to defend the Republic, mostly Social Democratic workers.'},
-    {name: 'Ordnerdienst', colour: 'kpd', until: ym(1923, 2), strength: 6,
-     text: 'The party\'s stewards, who guard meetings and demonstrations. The Leipzig congress is debating proletarian defence units.'},
+    {name: 'Ordnerdienst', colour: 'kpd', until: ym(1923, 2), men: 5, mil: 'low',
+     text: 'The party\'s stewards, who guard meetings and demonstrations.'},
     {name: 'Proletarian Hundreds', colour: 'kpd', from: ym(1923, 3), until: ym(1923, 11),
-     strength: function(Q) { return Q.party_banned ? 0 : 12 + Q.readiness / 2; },
+     men: function(Q) { return Q.party_banned ? 3 : 20 + Q.readiness; }, mil: readinessWord,
      text: function(Q) {
        return 'Factory-based workers\' defence units, formed with Social Democratic and non-party workers. ' +
            (Q.month >= 5 ? 'Banned in Prussia; legal in Saxony and Thuringia.' : 'Legal for now.');
      }},
-    {name: 'Proletarian Hundreds', colour: 'kpd', from: ym(1923, 12), until: ym(1924, 6), strength: 4,
+    {name: 'Proletarian Hundreds', colour: 'kpd', from: ym(1923, 12), until: ym(1924, 6), men: 3, mil: 'low',
      text: 'Dissolved and banned. Remnants survive underground.'},
-    {name: 'Red Front Fighters\' League', colour: 'kpd', from: ym(1924, 7), strength: function(Q) { return 30 + Q.readiness / 2; },
-     text: 'The RFB: the party\'s uniformed league of workers and veterans.'},
-    {name: 'M-Apparat', colour: 'kpd', when: 'october_plan', strength: function(Q) { return 5 + Q.readiness / 3; },
-     text: 'The party\'s secret military apparatus, with Soviet advisers: weapons and plans for the rising.'}
+    {name: 'Red Front Fighters\' League', colour: 'kpd', from: ym(1924, 7),
+     men: function(Q) { return curve(Q, [[1924, 7, 15], [1925, 6, 50], [1927, 6, 110], [1929, 5, 100], [1929, 6, 30]]) * (0.8 + Q.readiness / 100); },
+     mil: function(Q) { return Q.year * 12 + Q.month >= ym(1929, 6) ? 'medium (illegal)' : readinessWord(Q); },
+     text: function(Q) {
+       return 'The RFB: the party\'s uniformed league of workers and veterans.' +
+           (Q.year * 12 + Q.month >= ym(1929, 6) ? ' Banned since May 1929; it carries on illegally.' : '');
+     }}
   ];
 
   var forceRows = function(Q, list) {
     var t = Q.year * 12 + Q.month;
-    var html = '<table class="rf-table rf-forces">';
+    var html = '';
+    var val = function(v) {
+      return typeof v == 'function' ? v(Q) : (Array.isArray(v) ? curve(Q, v) : v);
+    };
     for (var f of list) {
-      if ((f.from && t < f.from) || (f.until && t > f.until) || (f.when && !Q[f.when])) {
+      if ((f.from && t < f.from) || (f.until && t > f.until)) {
         continue;
       }
-      var v = typeof f.strength == 'function' ? f.strength(Q) : f.strength;
-      var text = typeof f.text == 'function' ? f.text(Q) : f.text;
-      html += '<tr><td><span class="col-' + f.colour + ' rf-person rf-force" data-tip="' + esc(text) + '">' +
-          esc(f.name) + '</span></td><td class="rf-num">' + bandWord(v, FORCE_WORDS) + '</td></tr>';
+      var men = val(f.men);
+      var name = '<span class="col-' + f.colour + ' rf-person rf-force" data-tip="' + esc(val(f.text)) + '">' + esc(f.name) + '</span>';
+      var strength = Q.show_numbers ? 'about ' + (men >= 20 ? Math.round(men / 5) * 5 : Math.max(1, Math.round(men))) + ' thousand' :
+          bandWord(men, MEN_WORDS);
+      html += '<div class="rf-force-block"><p>' + name + ' Strength: ' + strength + '</p>' +
+          '<p>' + name + ' Militarisation: ' + esc(val(f.mil)) + '</p></div>';
     }
-    return html + '</table>';
+    return html;
   };
 
   RF.renderForces = function(Q) {
@@ -1633,21 +1710,30 @@
   };
   RF.missions = MISSIONS;
 
+  // The Missions tab: an image for the leading faction (admin key
+  // mission:<faction>, a framed placeholder until one is set), then one
+  // card per mission with its description and status.
   RF.renderMissions = function(Q) {
     var el = document.getElementById('rf-missions');
     if (!el) {
       return;
     }
+    var img = RF.image('mission:' + Q.leader);
+    var html = '<div class="rf-mission-img b-border-' + Q.leader + '">' +
+        (img ? '<img src="' + esc(img) + '" alt="">' : '<span>Image</span>') + '</div>';
     var list = MISSIONS[Q.leader] || [];
-    var html = '<table class="rf-table rf-missions">';
+    var done = 0;
     for (var m of list) {
       var ok = m.done(Q);
-      html += '<tr class="' + (ok ? 'rf-mission-done' : '') + '"><td><span class="rf-mission" data-tip="' + esc(m.text) + '">' +
-          esc(m.name) + '</span></td><td class="rf-num">' + (ok ? '✓ achieved' : 'not yet') + '</td></tr>';
+      done += ok ? 1 : 0;
+      html += '<div class="rf-mission-card' + (ok ? ' rf-mission-done' : '') + '">' +
+          '<div class="rf-mission-mark">' + (ok ? '✓' : '○') + '</div>' +
+          '<div><div class="rf-mission-name">' + esc(m.name) + '</div>' +
+          '<div class="rf-mission-text">' + esc(m.text) + '</div>' +
+          '<div class="rf-mission-status">' + (ok ? 'Achieved' : 'Not yet achieved') + '</div></div></div>';
     }
-    el.innerHTML = html + '</table>';
+    el.innerHTML = '<p class="rf-mission-count">' + done + ' of ' + list.length + ' achieved</p>' + html;
   };
-
 
   RF.factionPersons = PERSONS;
   RF.reichstag1920 = REICHSTAG_1920;
@@ -1658,6 +1744,9 @@
       return;
     }
     RF.renderRelations(Q);
+    if (RF.renderDistricts) {
+      RF.renderDistricts(Q);
+    }
     RF.renderKremlin(Q);
     RF.renderForces(Q);
     RF.renderMissions(Q);

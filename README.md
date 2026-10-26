@@ -6,13 +6,13 @@ A standalone game built on [Social Democracy: An Alternate History](https://gith
 
 You play the party as a whole, not one faction. Every card and event you choose strengthens some factions inside the KPD and angers others, and each choice says which.
 
-The game is a bare foundation for now (version 0.11): no events, cards or advisors, so January 1923 does not end yet. The 0.10 content (Leipzig, Saxony, congress and faction events, Party Affairs cards, advisors, state decisions, the hidden split-offs) is in `archive/v0.10/`.
+The game is a bare foundation (version 0.12): one card, Party Discussion, and one event, the Leipzig congress of January 1923, played motion by motion. The 0.10 content (Saxony, congress and faction events, more Party Affairs cards, advisors, state decisions, the hidden split-offs) is in `archive/v0.10/`. How the systems work is written up in the design doc: https://claude.ai/artifact/Fj6zRAaaWWYyxBvDmZBF3R
 
 In January 1923 the party has two camps, the Brandler Right and the Fischer–Maslow Left, plus Minor currents that follow neither and cannot lead. The Middle Group, the Ultra-Left and the Thälmann circle are meant to form through events. The leadership changes only at party congresses. Moscow works through the Comintern's plenums and four Kremlin patrons whose power follows the succession struggle.
 
 The main page shows the leader with the Provinces and Executive cards, the Party Affairs deck above a hand of four, and three advisor slots. Provinces lists eight states (Prussia, Bavaria, Saxony, Württemberg, Baden, Thuringia, Hesse, Hamburg) with their Landtag; `out/html/rf_states.js` keeps data for all eighteen. The Executive card is empty.
 
-The sidebar has two rows of tabs: Main (the party, the Reich government, the Reichstag), Party (the factions, the next congress and the other parties: the five big ones always, others from 5% in the polls), Polls, Missions (the leading faction's goals), Moscow and Balance of Forces (state forces and paramilitaries as words, the mood of the people). Words replace numbers; Options can turn exact numbers on, which disables achievements for that game. Hover cards never know more than the player could at that date.
+The sidebar has two rows of tabs: Main (the party, the Reich government, the Reichstag), Party (the factions, the next congress and the other parties: the five big ones always, others from 5% in the polls), Polls, Missions (the leading faction's goals), Moscow and Forces (state forces and paramilitaries with strength and militarisation, the mood of the people). Words replace numbers; Options can turn exact numbers on, which disables achievements for that game. Hover cards never know more than the player could at that date.
 
 ## Where the code is
 
@@ -24,6 +24,8 @@ The sidebar has two rows of tabs: Main (the party, the Reich government, the Rei
 - `source/scenes/rote_fahne/rf_status.scene.dry`: the sidebar tabs. Charts (Reichstag, polls) are drawn by `RF.renderSidebar` into placeholder divs.
 - `source/scenes/rote_fahne/rf_changelog.scene.dry` and `rf_achievements.scene.dry`: the title-screen pages. The title screen itself is `source/scenes/root.scene.dry`.
 - `source/qdisplays/rf_*.qdisplay.dry`: the words the sidebar uses instead of numbers.
+- `out/html/rf_congress.js`: districts, delegates, the Zentrale, congress motions (`RF.motions`) and the Party Discussion card.
+- `tools/gen_leipzig.py`: generates the Leipzig congress scene.
 - `out/html/rote_fahne.js`: shared rules (faction leanings, congresses, Moscow verdicts, the rising, the Reich calendar, polls) and the sidebar tables (relations, forces, missions; `MISSIONS`, `PARAMILITARIES`).
 - `out/html/game.css`: party colours (`p-kpd`, `p-spd`, ...) and faction colours (`f-right`, `f-left`, ...), after the Dynamic Social Democracy mod.
 - The original game's scenes are still in `source/scenes/` for reuse in later acts, but the title screen no longer offers them.
