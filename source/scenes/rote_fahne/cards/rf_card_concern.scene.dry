@@ -1,0 +1,47 @@
+title: An Ideological Concern
+subtitle: A district conference questions the line.
+new-page: true
+is-card: true
+tags: rf_party
+view-if: rf_concern_timer <= 0
+on-arrival: month_actions += 1; rf_concern_timer = 3
+
+= An Ideological Concern
+
+A district conference has passed a resolution against the Zentrale's course: too soft on the Social Democrats, it says, and too slow to prepare for power. The Zentrale must answer.
+
+- @debate
+- @discipline
+- @ignore
+
+@debate
+title: Answer it in an open debate.
+subtitle: Calms the <span class="f-left">Left</span>; the leadership looks less sure of itself.
+on-arrival: {!
+Q.left_dissent -= 5;
+Q[Q.leader + '_dissent'] += 2;
+window.RF.normalize(Q);
+!}
+
+The debate fills a special supplement of the party paper.
+
+@discipline
+title: Remind the district of party discipline.
+subtitle: Pleases the leadership's faction; the opposition is angered.
+on-arrival: {!
+Q[Q.leader + '_dissent'] -= 3;
+for (var f of window.RF.factions) { if (f != Q.leader) { Q[f + '_dissent'] += 4; } }
+window.RF.normalize(Q);
+!}
+
+A letter from the Zentrale is read out at every local meeting.
+
+@ignore
+title: Let it pass.
+subtitle: No change, but nothing settled.
+on-arrival: {!
+
+window.RF.normalize(Q);
+!}
+
+The resolution is filed away.

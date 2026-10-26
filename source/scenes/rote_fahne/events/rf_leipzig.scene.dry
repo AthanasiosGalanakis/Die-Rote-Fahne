@@ -1,0 +1,76 @@
+title: The Leipzig Congress
+subtitle: The Eighth Party Congress meets at the end of January.
+new-page: true
+tags: rf_event
+view-if: congress_number = 8 and time >= 2
+max-visits: 1
+priority: 3
+on-arrival: {!
+var RF = window.RF;
+RF.normalize(Q);
+Q.leipzig_delegates = RF.delegateHemicycle({right: Q.right_strength, left: Q.left_strength}, 150);
+!}
+
+= The Eighth Party Congress, Leipzig
+
+The delegates meet in Leipzig from 28 January, a fortnight after the French marched into the Ruhr. The fight is over the "workers' government". The Zentrale's theses say that joint governments with the left of the SPD, like those the party supports in Saxony and Thuringia, can lead the working class towards power. The Left of Berlin and Hamburg answers that such governments are coalitions with reformists that will tie the party's hands.
+
+Heinrich Brandler gives the main report, Arkadi Maslow the counter-report. The Zentrale has about two thirds of the delegates behind it.
+
+{!<div class="rf-delegates">!}[+ leipzig_delegates +]{!<div class="rf-legend"><span class="f-right">Brandler Right</span> · <span class="f-left">Fischer–Maslow Left</span></div></div>!}
+
+The Left has threatened to walk out if it is simply voted down. {!<span class="m-radek rf-person col-comintern">Karl Radek</span>!}, sent by the International, is working on both sides.
+
+- @theses
+- @amend
+- @radek
+
+@theses
+title: Carry the Zentrale's theses as they stand.
+subtitle: Pleases the <span class="f-right">Right</span>. The <span class="f-left">Left</span> is outvoted and angry.
+on-arrival: {!
+window.RF.lean(Q, {right: 4, left: -5});
+Q.spd_relation += 3;
+Q.leipzig_line = 'theses';
+!}
+go-to: result
+
+@amend
+title: Carry the theses, with the Left's warnings written in.
+subtitle: The workers' government becomes "a step, not a road". Calms both camps a little.
+on-arrival: {!
+window.RF.lean(Q, {right: 1, left: 1});
+Q.right_dissent -= 3;
+Q.left_dissent -= 5;
+Q.leipzig_line = 'amend';
+!}
+go-to: result
+
+@radek
+title: Let Radek broker a compromise over the new Zentrale.
+subtitle: Moderate men of the Left join the Zentrale. Calms the <span class="f-left">Left</span>; Moscow approves.
+on-arrival: {!
+Q.left_dissent -= 8;
+Q.right_dissent += 2;
+Q.right_moscow += 3;
+Q.left_moscow += 3;
+Q.autonomy -= 2;
+Q.leipzig_line = 'radek';
+!}
+go-to: result
+
+@result
+on-arrival: {!
+var RF = window.RF;
+Q.congress_before = Q.leader;
+Q.moscow_overruled = 0;
+Q.moscow_rejected = 0;
+RF.normalize(Q);
+RF.congressDone(Q);
+!}
+
+= The Vote
+
+The theses are carried by the Zentrale's majority against the Left. A split is avoided at the last minute. The congress elects a larger Zentrale of twenty-one: Brandler and Thalheimer's majority, with Clara Zetkin, Wilhelm Pieck and Hermann Remmele[? if leipzig_line == "radek" : , and three moderate Leftists, Arthur Ewert, Rudolf Lindau and Hans Pfeiffer, under Radek's compromise. ?][? if leipzig_line != "radek" : . Three moderate Leftists, Ewert, Lindau and Pfeiffer, get in by secret ballot. ?] Ruth Fischer, Maslow and Thälmann are left out.
+
+The <span class="f-right">Brandler Right</span> keeps the Zentrale. The next congress is due in about a year.

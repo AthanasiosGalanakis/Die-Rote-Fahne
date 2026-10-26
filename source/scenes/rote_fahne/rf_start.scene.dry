@@ -11,16 +11,20 @@ Q.month_actions = 0;
 Q.difficulty = 0;
 Q.hand_size = 4;
 
-// factions inside the KPD; starting strengths are gameplay estimates,
-// not delegate counts
-Q.right_strength = 42;   // Brandler, Thalheimer
-Q.center_strength = 15;  // Meyer, Eberlein, Pieck
-Q.left_strength = 25;    // Fischer, Maslow
-Q.ultra_strength = 6;    // Korsch, Scholem, Rosenberg, Katz
-Q.stalin_strength = 12;  // Thälmann's Hamburg circle, still inside the Left
+// factions inside the KPD. In January 1923 there are two camps: the
+// Zentrale's majority around Brandler and Thalheimer, and the Left
+// opposition of Berlin and Hamburg (Fischer, Maslow, Thälmann). At Leipzig
+// the majority beat the Left by about two to one. The Middle Group, the
+// Ultra-Left and the Thälmann circle form later through events.
+window.RF.startFactions(Q);
+Q.right_strength = 64;   // Brandler, Thalheimer, Walcher, Pieck, Remmele, Eberlein
+Q.left_strength = 36;    // Fischer, Maslow, Thälmann, Scholem, Rosenberg
+Q.center_strength = 0;
+Q.ultra_strength = 0;
+Q.stalin_strength = 0;
 Q.right_dissent = 5;
 Q.center_dissent = 5;
-Q.left_dissent = 20;
+Q.left_dissent = 30;
 Q.ultra_dissent = 25;
 Q.stalin_dissent = 10;
 // how Moscow sees each faction (0-100)
@@ -46,6 +50,17 @@ Q.moscow_rebukes = 0;
 Q.open_letter = 0;
 Q.moscow_news = '';
 Q.congress_news = '';
+// party congresses: the Eighth meets at Leipzig at the end of January
+Q.congress_number = 8;
+Q.congress_due = 1923 * 12 + 2;
+Q.congress_pending = 0;
+Q.congress_postponed = 0;
+Q.defied_moscow = 0;
+// one decision a month in the states, one from the Executive
+Q.prov_month = 0;
+Q.exec_month = 0;
+// hidden split-offs and outsider takeovers stay off until they are approved
+Q.rf_hidden_events = 0;
 // party autonomy falls with every intervention from Moscow
 Q.autonomy = 70;
 // paid functionaries loyal to the leadership

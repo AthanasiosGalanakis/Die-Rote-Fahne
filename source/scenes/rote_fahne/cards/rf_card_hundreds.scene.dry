@@ -1,0 +1,38 @@
+title: Proletarian Defence
+subtitle: Workers ask how to defend themselves against the völkisch bands.
+new-page: true
+is-card: true
+tags: rf_party
+view-if: rf_hundreds_timer <= 0 and year = 1923
+on-arrival: month_actions += 1; rf_hundreds_timer = 3
+
+= Proletarian Defence
+
+Völkisch bands break up workers' meetings, and the police do little. In the factories, workers are forming defence units, Proletarian Hundreds, often with Social Democrats.
+
+- @build
+- @party
+
+@build
+title: Build the Hundreds with SPD and non-party workers.
+subtitle: More readiness; better relations with SPD workers. Draws the police.
+on-arrival: {!
+Q.readiness += 4;
+Q.spd_relation += 2;
+Q.repression += 2;
+window.RF.normalize(Q);
+!}
+
+Hundreds drill in the factory yards after the shift.
+
+@party
+title: Keep them under the party's control.
+subtitle: More readiness; pleases the <span class="f-left">Left</span>. Draws the police.
+on-arrival: {!
+Q.readiness += 5;
+window.RF.lean(Q, {left: 2});
+Q.repression += 3;
+window.RF.normalize(Q);
+!}
+
+Only reliable comrades are admitted.

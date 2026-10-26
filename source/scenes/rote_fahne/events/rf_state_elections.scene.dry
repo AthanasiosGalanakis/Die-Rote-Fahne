@@ -1,0 +1,60 @@
+title: State Elections
+subtitle: The votes are counted.
+new-page: true
+tags: rf_event
+view-if: state_news_pending = 1
+priority: 2
+on-arrival: state_news_pending = 0
+
+= State Elections
+
+[+ state_news +]
+
+@rf_state_campaign
+title: An Election Next Month
+subtitle: A state votes for a new Landtag next month.
+new-page: true
+tags: rf_event
+view-if: state_campaign_pending = 1
+priority: 1
+on-arrival: state_campaign_pending = 0
+
+= An Election in [+ upcoming_state_name +]
+
+[+ upcoming_state_name +] elects a new Landtag next month. The district leadership asks the Zentrale for speakers, money and the party press.
+
+- @all_in
+- @modest
+- @local
+
+@all_in
+title: Throw the party into the campaign.
+subtitle: Speakers from Berlin, a special edition of the paper. A strong boost here. Costs 2 resources.
+choose-if: funds >= 2
+unavailable-subtitle: Needs 2 resources.
+on-arrival: {!
+Q.funds -= 2;
+Q['st_' + Q.upcoming_state + '_mod'] = (Q['st_' + Q.upcoming_state + '_mod'] || 0) + 3;
+window.RF.normalize(Q);
+!}
+
+The Zentrale sends its best speakers. For three weeks the party is everywhere.
+
+@modest
+title: A modest campaign.
+subtitle: Some help from the centre. A small boost here. Costs 1 resource.
+choose-if: funds >= 1
+unavailable-subtitle: Needs 1 resource.
+on-arrival: {!
+Q.funds -= 1;
+Q['st_' + Q.upcoming_state + '_mod'] = (Q['st_' + Q.upcoming_state + '_mod'] || 0) + 1.5;
+window.RF.normalize(Q);
+!}
+
+Leaflets, posters and a speaker for the biggest towns.
+
+@local
+title: Leave it to the local comrades.
+subtitle: No cost. The local party is on its own.
+
+The district fights the election with what it has.

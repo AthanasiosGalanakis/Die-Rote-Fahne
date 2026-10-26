@@ -1,0 +1,36 @@
+title: The Unemployed
+subtitle: The labour exchanges fill up.
+new-page: true
+is-card: true
+tags: rf_party
+view-if: rf_unemployed_timer <= 0 and (year > 1923 or month >= 4)
+on-arrival: month_actions += 1; rf_unemployed_timer = 4
+
+= The Unemployed
+
+Short time and unemployment spread as the occupation strangles the Ruhr. The unemployed have time, anger and nothing to lose.
+
+- @councils
+- @unions
+
+@councils
+title: Organise unemployed councils.
+subtitle: Raises the revolutionary mood and the party's numbers; the police take note.
+on-arrival: {!
+Q.rev_situation += 2;
+Q.members += 2;
+Q.repression += 1;
+window.RF.normalize(Q);
+!}
+
+Councils of the unemployed march on the welfare offices.
+
+@unions
+title: Push the unions to fight for them.
+subtitle: More union influence; slower results.
+on-arrival: {!
+Q.union_influence += 2;
+window.RF.normalize(Q);
+!}
+
+Communist union members raise the unemployed at every branch meeting.

@@ -1,0 +1,129 @@
+title: A Middle Group Forms
+subtitle: Part of the majority breaks with Brandler.
+new-page: true
+tags: rf_event
+view-if: center_formed = 0 and leader = "right" and (year > 1923 or (year = 1923 and month >= 11)) and (moscow_rebukes >= 1 or right_dissent >= 30 or line != "united_front")
+max-visits: 1
+priority: 2
+
+#The Middle Group (Mittelgruppe) formed from the majority after the
+#failures of autumn 1923: Remmele, Pieck, Eberlein, Koenen and Kleine.
+
+= A Middle Group Forms
+
+The autumn has shaken the majority. A group of its leaders, Hermann Remmele, Wilhelm Pieck, Hugo Eberlein and Wilhelm Koenen among them, says that Brandler and Thalheimer have lost the party's trust and that the Left cannot be trusted with it either. They offer themselves as the centre that holds the party together, and they have friends in Moscow.
+
+- @welcome
+- @resist
+
+@welcome
+title: Welcome them as a bridge between the camps.
+subtitle: A strong Middle Group forms from the majority and part of the Left. Calms the party.
+on-arrival: {!
+window.RF.formFaction(Q, 'center', {right: 0.4, left: 0.1}, 10);
+Q.center_moscow = Math.max(Q.center_moscow, Q.right_moscow + 5);
+for (var f of window.RF.factions) { Q[f + '_dissent'] -= 3; }
+window.RF.normalize(Q);
+!}
+
+The new group takes its seats in the Zentrale as a faction of its own.
+
+@resist
+title: Call it what it is: a revolt against the leadership.
+subtitle: A smaller Middle Group forms, and it is angry. The <span class="f-right">Right</span> closes ranks.
+on-arrival: {!
+window.RF.formFaction(Q, 'center', {right: 0.25}, 30);
+Q.center_moscow = Math.max(Q.center_moscow, Q.right_moscow);
+Q.right_dissent -= 5;
+window.RF.normalize(Q);
+!}
+
+Brandler's supporters denounce the new group as careerists. It organises anyway.
+
+@rf_ultra_forms
+title: The Ultra-Left
+subtitle: The Left's radical wing turns against its own leaders.
+new-page: true
+tags: rf_event
+view-if: ultra_formed = 0 and left_formed = 1 and leader = "left" and (year > 1924 or (year = 1924 and month >= 10))
+max-visits: 1
+priority: 2
+
+#Historically the "Ultra-Left" (Scholem, Rosenberg, Katz, Korsch) broke
+#with Fischer and Maslow in 1925 over the turn back to the unions and the
+#united front that Moscow demanded.
+
+= The Ultra-Left
+
+Fischer and Maslow are bending to Moscow: back into the trade unions, back to the united front. Werner Scholem, Arthur Rosenberg, Iwan Katz and Karl Korsch call it a betrayal of everything the Left fought for. They want a party that answers to the German workers, not to the Executive in Moscow.
+
+- @tolerate
+- @discipline
+
+@tolerate
+title: Let them argue inside the party.
+subtitle: The Ultra-Left forms as a faction. The <span class="f-left">Left</span> is relieved; Moscow is not.
+on-arrival: {!
+window.RF.formFaction(Q, 'ultra', {left: 0.35}, 25);
+Q.left_moscow -= 3;
+window.RF.normalize(Q);
+!}
+
+The Ultra-Left takes its fight to the party papers and the district conferences.
+
+@discipline
+title: Demand discipline.
+subtitle: A smaller, angrier Ultra-Left forms. Moscow approves.
+on-arrival: {!
+window.RF.formFaction(Q, 'ultra', {left: 0.2}, 45);
+Q.left_moscow += 3;
+window.RF.normalize(Q);
+!}
+
+The Zentrale threatens expulsions. The Ultra-Left goes quiet in public and organises in private.
+
+@rf_thaelmann_forms
+title: Thälmann Breaks with Fischer
+subtitle: The Hamburg workers' leader chooses Moscow over his old allies.
+new-page: true
+tags: rf_event
+view-if: stalin_formed = 0 and left_formed = 1 and left_expelled = 0 and (year >= 1925) and stalin_power >= 60 and (leader = "left" or leader = "center")
+max-visits: 1
+priority: 2
+
+#Historically Thälmann, a docker from Hamburg and a leader of the Left,
+#sided with the International against Fischer and Maslow in the summer of
+#1925 and became chairman after the Open Letter of September 1925. In the
+#game his circle forms once Stalin's star is rising and the Left (or the
+#Middle Group) leads the party.
+
+= Thälmann Breaks with Fischer
+
+Ernst Thälmann has stood with the Left since Hamburg. Now, with the International turning against Fischer and Maslow, he is turning too. He is a worker among intellectuals, popular in the factories, and loyal to whoever leads the International. Moscow sees in him the party's future.
+
+- @embrace
+- @contain
+
+@embrace
+title: Give Thälmann a place at the top.
+subtitle: A strong Thälmann circle forms from the Left. Moscow is pleased.
+on-arrival: {!
+window.RF.formFaction(Q, 'stalin', {left: 0.45, center: 0.15}, 5);
+Q.stalin_moscow = Math.max(Q.stalin_moscow, 60);
+Q[Q.leader + '_moscow'] += 3;
+window.RF.normalize(Q);
+!}
+
+Thälmann becomes the man to watch. His supporters, the Hamburg dockers and the young functionaries, gather behind him.
+
+@contain
+title: Keep him in his place.
+subtitle: A smaller Thälmann circle forms. Moscow takes note.
+on-arrival: {!
+window.RF.formFaction(Q, 'stalin', {left: 0.3}, 20);
+Q.stalin_moscow = Math.max(Q.stalin_moscow, 55);
+Q[Q.leader + '_moscow'] -= 4;
+window.RF.normalize(Q);
+!}
+
+Thälmann's friends are kept out of the key posts. They write to Moscow.

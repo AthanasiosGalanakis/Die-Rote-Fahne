@@ -1,0 +1,1829 @@
+title: Provinces
+subtitle: The German states: their parliaments, their governments and the party's work in them.
+is-pinned-card: true
+tags: rf_top
+new-page: true
+on-arrival: {! window.RF.provincesView(Q); !}
+
+= The States
+
+The Reich is a federation of eighteen states, each with its own parliament, government and police. Choose a state to see its Landtag and the party's work there. The party can take one decision in the states each month.
+
+[+ states_view +]
+
+- @prussia
+- @bavaria
+- @saxony
+- @wurttemberg
+- @baden
+- @thuringia
+- @hesse
+- @hamburg
+- @mschwerin
+- @oldenburg
+- @brunswick
+- @anhalt
+- @bremen
+- @lippe
+- @lubeck
+- @mstrelitz
+- @waldeck
+- @slippe
+- @rf_hand: Back to the party.
+
+@prussia
+title: Prussia
+new-page: true
+on-arrival: {! window.RF.stateView(Q, 'prussia'); !}
+
+= Prussia
+
+[+ st_view +]
+
+- @prussia_campaign
+- @prussia_councils
+- @prussia_support
+- @prussia_attack
+- @prussia_ruhr
+- @rf_provinces: Back to the states.
+- @rf_hand: Back to the party.
+
+@prussia_campaign
+title: Campaign in Prussia.
+subtitle: Meetings, leaflets and the party press. Raises the party's standing here. Costs 1 resource.
+new-page: true
+choose-if: prov_ready = 1 and funds >= 1
+unavailable-subtitle: One decision in the states a month; needs 1 resource.
+on-arrival: {!
+Q.funds -= 1;
+Q.members += 1;
+window.RF.stateAction(Q, 'prussia', 2.0);
+!}
+
+= Prussia
+
+Speakers tour the industrial towns, the local party paper doubles its run for a week, and the comrades go door to door in the workers' districts.
+
+- @prussia: Back to Prussia.
+- @rf_hand: Back to the party.
+
+@prussia_councils
+title: Organise the factory councils and the unemployed in Prussia.
+subtitle: More influence in the unions, a little more standing here. The police take note.
+new-page: true
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.union_influence += 2;
+Q.repression += 1;
+window.RF.stateAction(Q, 'prussia', 1.0);
+!}
+
+= Prussia
+
+Communist slates contest the council elections in the big works; unemployed committees march on the town halls to demand relief.
+
+- @prussia: Back to Prussia.
+- @rf_hand: Back to the party.
+
+@prussia_support
+title: Back the Social Democratic government in Prussia against the right.
+subtitle: Better relations with the SPD; pleases the Right, angers the Left. Some radical voters are disappointed.
+new-page: true
+view-if: state_spd_gov = 1 and state_kpd_seats > 0
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.spd_relation += 3;
+window.RF.lean(Q, {right: 2, left: -2});
+window.RF.stateAction(Q, 'prussia', -0.5);
+!}
+
+= Prussia
+
+The Communist deputies vote with the Social Democrats against the bourgeois motions. The SPD press grudgingly notes it; the Left calls it parliamentary cretinism.
+
+- @prussia: Back to Prussia.
+- @rf_hand: Back to the party.
+
+@prussia_attack
+title: Attack the government in Prussia from the left.
+subtitle: More standing with radical voters; worse relations with the SPD. Pleases the Left.
+new-page: true
+view-if: state_kpd_seats > 0
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.spd_relation -= 2;
+window.RF.lean(Q, {left: 2, right: -1});
+window.RF.stateAction(Q, 'prussia', 1.0);
+!}
+
+= Prussia
+
+Communist deputies table motions for free school meals, price controls and the disarming of the right-wing leagues, knowing the government will vote them down.
+
+- @prussia: Back to Prussia.
+- @rf_hand: Back to the party.
+
+@prussia_ruhr
+title: Organise in the occupied Ruhr.
+subtitle: The miners are on passive resistance, the French on the pitheads. Raises standing in Prussia and the revolutionary mood; draws repression.
+new-page: true
+view-if: year = 1923 and month <= 9
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.rev_situation += 2;
+Q.repression += 2;
+Q.nationalism -= 1;
+window.RF.stateAction(Q, 'prussia', 1.5);
+!}
+
+= Prussia
+
+Party organisers move between the pits and the occupation authorities' checkpoints, preaching a struggle against both the French and the German coal barons.
+
+- @prussia: Back to Prussia.
+- @rf_hand: Back to the party.
+
+@bavaria
+title: Bavaria
+new-page: true
+on-arrival: {! window.RF.stateView(Q, 'bavaria'); !}
+
+= Bavaria
+
+[+ st_view +]
+
+- @bavaria_campaign
+- @bavaria_councils
+- @bavaria_support
+- @bavaria_attack
+- @bavaria_underground
+- @rf_provinces: Back to the states.
+- @rf_hand: Back to the party.
+
+@bavaria_campaign
+title: Campaign in Bavaria.
+subtitle: Meetings, leaflets and the party press. Raises the party's standing here. Costs 1 resource.
+new-page: true
+choose-if: prov_ready = 1 and funds >= 1
+unavailable-subtitle: One decision in the states a month; needs 1 resource.
+on-arrival: {!
+Q.funds -= 1;
+Q.members += 1;
+window.RF.stateAction(Q, 'bavaria', 2.0);
+!}
+
+= Bavaria
+
+Speakers tour the industrial towns, the local party paper doubles its run for a week, and the comrades go door to door in the workers' districts.
+
+- @bavaria: Back to Bavaria.
+- @rf_hand: Back to the party.
+
+@bavaria_councils
+title: Organise the factory councils and the unemployed in Bavaria.
+subtitle: More influence in the unions, a little more standing here. The police take note.
+new-page: true
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.union_influence += 2;
+Q.repression += 1;
+window.RF.stateAction(Q, 'bavaria', 1.0);
+!}
+
+= Bavaria
+
+Communist slates contest the council elections in the big works; unemployed committees march on the town halls to demand relief.
+
+- @bavaria: Back to Bavaria.
+- @rf_hand: Back to the party.
+
+@bavaria_support
+title: Back the Social Democratic government in Bavaria against the right.
+subtitle: Better relations with the SPD; pleases the Right, angers the Left. Some radical voters are disappointed.
+new-page: true
+view-if: state_spd_gov = 1 and state_kpd_seats > 0
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.spd_relation += 3;
+window.RF.lean(Q, {right: 2, left: -2});
+window.RF.stateAction(Q, 'bavaria', -0.5);
+!}
+
+= Bavaria
+
+The Communist deputies vote with the Social Democrats against the bourgeois motions. The SPD press grudgingly notes it; the Left calls it parliamentary cretinism.
+
+- @bavaria: Back to Bavaria.
+- @rf_hand: Back to the party.
+
+@bavaria_attack
+title: Attack the government in Bavaria from the left.
+subtitle: More standing with radical voters; worse relations with the SPD. Pleases the Left.
+new-page: true
+view-if: state_kpd_seats > 0
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.spd_relation -= 2;
+window.RF.lean(Q, {left: 2, right: -1});
+window.RF.stateAction(Q, 'bavaria', 1.0);
+!}
+
+= Bavaria
+
+Communist deputies table motions for free school meals, price controls and the disarming of the right-wing leagues, knowing the government will vote them down.
+
+- @bavaria: Back to Bavaria.
+- @rf_hand: Back to the party.
+
+@bavaria_underground
+title: Build illegal cells in Bavaria.
+subtitle: Protects the party against the Bavarian authorities. Less repression; a little more readiness.
+new-page: true
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.repression -= 2;
+Q.readiness += 1;
+window.RF.stateAction(Q, 'bavaria', 0.0);
+!}
+
+= Bavaria
+
+Membership lists are kept out of the offices, meetings move to back rooms, and every cell knows a second address.
+
+- @bavaria: Back to Bavaria.
+- @rf_hand: Back to the party.
+
+@saxony
+title: Saxony
+new-page: true
+on-arrival: {! window.RF.stateView(Q, 'saxony'); !}
+
+= Saxony
+
+[+ st_view +]
+
+- @saxony_campaign
+- @saxony_councils
+- @saxony_support
+- @saxony_attack
+- @saxony_control
+- @rf_provinces: Back to the states.
+- @rf_hand: Back to the party.
+
+@saxony_campaign
+title: Campaign in Saxony.
+subtitle: Meetings, leaflets and the party press. Raises the party's standing here. Costs 1 resource.
+new-page: true
+choose-if: prov_ready = 1 and funds >= 1
+unavailable-subtitle: One decision in the states a month; needs 1 resource.
+on-arrival: {!
+Q.funds -= 1;
+Q.members += 1;
+window.RF.stateAction(Q, 'saxony', 2.0);
+!}
+
+= Saxony
+
+Speakers tour the industrial towns, the local party paper doubles its run for a week, and the comrades go door to door in the workers' districts.
+
+- @saxony: Back to Saxony.
+- @rf_hand: Back to the party.
+
+@saxony_councils
+title: Organise the factory councils and the unemployed in Saxony.
+subtitle: More influence in the unions, a little more standing here. The police take note.
+new-page: true
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.union_influence += 2;
+Q.repression += 1;
+window.RF.stateAction(Q, 'saxony', 1.0);
+!}
+
+= Saxony
+
+Communist slates contest the council elections in the big works; unemployed committees march on the town halls to demand relief.
+
+- @saxony: Back to Saxony.
+- @rf_hand: Back to the party.
+
+@saxony_support
+title: Back the Social Democratic government in Saxony against the right.
+subtitle: Better relations with the SPD; pleases the Right, angers the Left. Some radical voters are disappointed.
+new-page: true
+view-if: state_spd_gov = 1 and state_kpd_seats > 0
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.spd_relation += 3;
+window.RF.lean(Q, {right: 2, left: -2});
+window.RF.stateAction(Q, 'saxony', -0.5);
+!}
+
+= Saxony
+
+The Communist deputies vote with the Social Democrats against the bourgeois motions. The SPD press grudgingly notes it; the Left calls it parliamentary cretinism.
+
+- @saxony: Back to Saxony.
+- @rf_hand: Back to the party.
+
+@saxony_attack
+title: Attack the government in Saxony from the left.
+subtitle: More standing with radical voters; worse relations with the SPD. Pleases the Left.
+new-page: true
+view-if: state_kpd_seats > 0
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.spd_relation -= 2;
+window.RF.lean(Q, {left: 2, right: -1});
+window.RF.stateAction(Q, 'saxony', 1.0);
+!}
+
+= Saxony
+
+Communist deputies table motions for free school meals, price controls and the disarming of the right-wing leagues, knowing the government will vote them down.
+
+- @saxony: Back to Saxony.
+- @rf_hand: Back to the party.
+
+@saxony_control
+title: Push for control committees and workers' defence in Saxony.
+subtitle: Demands on the Social Democrats in return for Communist votes. Raises readiness and standing here; pleases the Left.
+new-page: true
+view-if: state_kpd_seats > 0
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.readiness += 2;
+window.RF.lean(Q, {left: 2});
+Q.spd_relation -= 1;
+window.RF.stateAction(Q, 'saxony', 1.0);
+!}
+
+= Saxony
+
+The Communist group names its price: price-control committees with powers, an amnesty, and defence units of the factory workers.
+
+- @saxony: Back to Saxony.
+- @rf_hand: Back to the party.
+
+@wurttemberg
+title: Württemberg
+new-page: true
+on-arrival: {! window.RF.stateView(Q, 'wurttemberg'); !}
+
+= Württemberg
+
+[+ st_view +]
+
+- @wurttemberg_campaign
+- @wurttemberg_councils
+- @wurttemberg_support
+- @wurttemberg_attack
+- @rf_provinces: Back to the states.
+- @rf_hand: Back to the party.
+
+@wurttemberg_campaign
+title: Campaign in Württemberg.
+subtitle: Meetings, leaflets and the party press. Raises the party's standing here. Costs 1 resource.
+new-page: true
+choose-if: prov_ready = 1 and funds >= 1
+unavailable-subtitle: One decision in the states a month; needs 1 resource.
+on-arrival: {!
+Q.funds -= 1;
+Q.members += 1;
+window.RF.stateAction(Q, 'wurttemberg', 2.0);
+!}
+
+= Württemberg
+
+Speakers tour the industrial towns, the local party paper doubles its run for a week, and the comrades go door to door in the workers' districts.
+
+- @wurttemberg: Back to Württemberg.
+- @rf_hand: Back to the party.
+
+@wurttemberg_councils
+title: Organise the factory councils and the unemployed in Württemberg.
+subtitle: More influence in the unions, a little more standing here. The police take note.
+new-page: true
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.union_influence += 2;
+Q.repression += 1;
+window.RF.stateAction(Q, 'wurttemberg', 1.0);
+!}
+
+= Württemberg
+
+Communist slates contest the council elections in the big works; unemployed committees march on the town halls to demand relief.
+
+- @wurttemberg: Back to Württemberg.
+- @rf_hand: Back to the party.
+
+@wurttemberg_support
+title: Back the Social Democratic government in Württemberg against the right.
+subtitle: Better relations with the SPD; pleases the Right, angers the Left. Some radical voters are disappointed.
+new-page: true
+view-if: state_spd_gov = 1 and state_kpd_seats > 0
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.spd_relation += 3;
+window.RF.lean(Q, {right: 2, left: -2});
+window.RF.stateAction(Q, 'wurttemberg', -0.5);
+!}
+
+= Württemberg
+
+The Communist deputies vote with the Social Democrats against the bourgeois motions. The SPD press grudgingly notes it; the Left calls it parliamentary cretinism.
+
+- @wurttemberg: Back to Württemberg.
+- @rf_hand: Back to the party.
+
+@wurttemberg_attack
+title: Attack the government in Württemberg from the left.
+subtitle: More standing with radical voters; worse relations with the SPD. Pleases the Left.
+new-page: true
+view-if: state_kpd_seats > 0
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.spd_relation -= 2;
+window.RF.lean(Q, {left: 2, right: -1});
+window.RF.stateAction(Q, 'wurttemberg', 1.0);
+!}
+
+= Württemberg
+
+Communist deputies table motions for free school meals, price controls and the disarming of the right-wing leagues, knowing the government will vote them down.
+
+- @wurttemberg: Back to Württemberg.
+- @rf_hand: Back to the party.
+
+@baden
+title: Baden
+new-page: true
+on-arrival: {! window.RF.stateView(Q, 'baden'); !}
+
+= Baden
+
+[+ st_view +]
+
+- @baden_campaign
+- @baden_councils
+- @baden_support
+- @baden_attack
+- @rf_provinces: Back to the states.
+- @rf_hand: Back to the party.
+
+@baden_campaign
+title: Campaign in Baden.
+subtitle: Meetings, leaflets and the party press. Raises the party's standing here. Costs 1 resource.
+new-page: true
+choose-if: prov_ready = 1 and funds >= 1
+unavailable-subtitle: One decision in the states a month; needs 1 resource.
+on-arrival: {!
+Q.funds -= 1;
+Q.members += 1;
+window.RF.stateAction(Q, 'baden', 2.0);
+!}
+
+= Baden
+
+Speakers tour the industrial towns, the local party paper doubles its run for a week, and the comrades go door to door in the workers' districts.
+
+- @baden: Back to Baden.
+- @rf_hand: Back to the party.
+
+@baden_councils
+title: Organise the factory councils and the unemployed in Baden.
+subtitle: More influence in the unions, a little more standing here. The police take note.
+new-page: true
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.union_influence += 2;
+Q.repression += 1;
+window.RF.stateAction(Q, 'baden', 1.0);
+!}
+
+= Baden
+
+Communist slates contest the council elections in the big works; unemployed committees march on the town halls to demand relief.
+
+- @baden: Back to Baden.
+- @rf_hand: Back to the party.
+
+@baden_support
+title: Back the Social Democratic government in Baden against the right.
+subtitle: Better relations with the SPD; pleases the Right, angers the Left. Some radical voters are disappointed.
+new-page: true
+view-if: state_spd_gov = 1 and state_kpd_seats > 0
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.spd_relation += 3;
+window.RF.lean(Q, {right: 2, left: -2});
+window.RF.stateAction(Q, 'baden', -0.5);
+!}
+
+= Baden
+
+The Communist deputies vote with the Social Democrats against the bourgeois motions. The SPD press grudgingly notes it; the Left calls it parliamentary cretinism.
+
+- @baden: Back to Baden.
+- @rf_hand: Back to the party.
+
+@baden_attack
+title: Attack the government in Baden from the left.
+subtitle: More standing with radical voters; worse relations with the SPD. Pleases the Left.
+new-page: true
+view-if: state_kpd_seats > 0
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.spd_relation -= 2;
+window.RF.lean(Q, {left: 2, right: -1});
+window.RF.stateAction(Q, 'baden', 1.0);
+!}
+
+= Baden
+
+Communist deputies table motions for free school meals, price controls and the disarming of the right-wing leagues, knowing the government will vote them down.
+
+- @baden: Back to Baden.
+- @rf_hand: Back to the party.
+
+@thuringia
+title: Thuringia
+new-page: true
+on-arrival: {! window.RF.stateView(Q, 'thuringia'); !}
+
+= Thuringia
+
+[+ st_view +]
+
+- @thuringia_campaign
+- @thuringia_councils
+- @thuringia_support
+- @thuringia_attack
+- @thuringia_tolerate
+- @rf_provinces: Back to the states.
+- @rf_hand: Back to the party.
+
+@thuringia_campaign
+title: Campaign in Thuringia.
+subtitle: Meetings, leaflets and the party press. Raises the party's standing here. Costs 1 resource.
+new-page: true
+choose-if: prov_ready = 1 and funds >= 1
+unavailable-subtitle: One decision in the states a month; needs 1 resource.
+on-arrival: {!
+Q.funds -= 1;
+Q.members += 1;
+window.RF.stateAction(Q, 'thuringia', 2.0);
+!}
+
+= Thuringia
+
+Speakers tour the industrial towns, the local party paper doubles its run for a week, and the comrades go door to door in the workers' districts.
+
+- @thuringia: Back to Thuringia.
+- @rf_hand: Back to the party.
+
+@thuringia_councils
+title: Organise the factory councils and the unemployed in Thuringia.
+subtitle: More influence in the unions, a little more standing here. The police take note.
+new-page: true
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.union_influence += 2;
+Q.repression += 1;
+window.RF.stateAction(Q, 'thuringia', 1.0);
+!}
+
+= Thuringia
+
+Communist slates contest the council elections in the big works; unemployed committees march on the town halls to demand relief.
+
+- @thuringia: Back to Thuringia.
+- @rf_hand: Back to the party.
+
+@thuringia_support
+title: Back the Social Democratic government in Thuringia against the right.
+subtitle: Better relations with the SPD; pleases the Right, angers the Left. Some radical voters are disappointed.
+new-page: true
+view-if: state_spd_gov = 1 and state_kpd_seats > 0
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.spd_relation += 3;
+window.RF.lean(Q, {right: 2, left: -2});
+window.RF.stateAction(Q, 'thuringia', -0.5);
+!}
+
+= Thuringia
+
+The Communist deputies vote with the Social Democrats against the bourgeois motions. The SPD press grudgingly notes it; the Left calls it parliamentary cretinism.
+
+- @thuringia: Back to Thuringia.
+- @rf_hand: Back to the party.
+
+@thuringia_attack
+title: Attack the government in Thuringia from the left.
+subtitle: More standing with radical voters; worse relations with the SPD. Pleases the Left.
+new-page: true
+view-if: state_kpd_seats > 0
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.spd_relation -= 2;
+window.RF.lean(Q, {left: 2, right: -1});
+window.RF.stateAction(Q, 'thuringia', 1.0);
+!}
+
+= Thuringia
+
+Communist deputies table motions for free school meals, price controls and the disarming of the right-wing leagues, knowing the government will vote them down.
+
+- @thuringia: Back to Thuringia.
+- @rf_hand: Back to the party.
+
+@thuringia_tolerate
+title: Keep the Frölich government in office.
+subtitle: Communist votes keep the socialist minority alive. Better relations with the SPD; pleases the Right.
+new-page: true
+view-if: state_kpd_seats > 0
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.spd_relation += 2;
+window.RF.lean(Q, {right: 2});
+window.RF.stateAction(Q, 'thuringia', 0.0);
+!}
+
+= Thuringia
+
+The Communist deputies abstain on the budget and the government survives another vote.
+
+- @thuringia: Back to Thuringia.
+- @rf_hand: Back to the party.
+
+@hesse
+title: Hesse
+new-page: true
+on-arrival: {! window.RF.stateView(Q, 'hesse'); !}
+
+= Hesse
+
+[+ st_view +]
+
+- @hesse_campaign
+- @hesse_councils
+- @hesse_support
+- @hesse_attack
+- @rf_provinces: Back to the states.
+- @rf_hand: Back to the party.
+
+@hesse_campaign
+title: Campaign in Hesse.
+subtitle: Meetings, leaflets and the party press. Raises the party's standing here. Costs 1 resource.
+new-page: true
+choose-if: prov_ready = 1 and funds >= 1
+unavailable-subtitle: One decision in the states a month; needs 1 resource.
+on-arrival: {!
+Q.funds -= 1;
+Q.members += 1;
+window.RF.stateAction(Q, 'hesse', 2.0);
+!}
+
+= Hesse
+
+Speakers tour the industrial towns, the local party paper doubles its run for a week, and the comrades go door to door in the workers' districts.
+
+- @hesse: Back to Hesse.
+- @rf_hand: Back to the party.
+
+@hesse_councils
+title: Organise the factory councils and the unemployed in Hesse.
+subtitle: More influence in the unions, a little more standing here. The police take note.
+new-page: true
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.union_influence += 2;
+Q.repression += 1;
+window.RF.stateAction(Q, 'hesse', 1.0);
+!}
+
+= Hesse
+
+Communist slates contest the council elections in the big works; unemployed committees march on the town halls to demand relief.
+
+- @hesse: Back to Hesse.
+- @rf_hand: Back to the party.
+
+@hesse_support
+title: Back the Social Democratic government in Hesse against the right.
+subtitle: Better relations with the SPD; pleases the Right, angers the Left. Some radical voters are disappointed.
+new-page: true
+view-if: state_spd_gov = 1 and state_kpd_seats > 0
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.spd_relation += 3;
+window.RF.lean(Q, {right: 2, left: -2});
+window.RF.stateAction(Q, 'hesse', -0.5);
+!}
+
+= Hesse
+
+The Communist deputies vote with the Social Democrats against the bourgeois motions. The SPD press grudgingly notes it; the Left calls it parliamentary cretinism.
+
+- @hesse: Back to Hesse.
+- @rf_hand: Back to the party.
+
+@hesse_attack
+title: Attack the government in Hesse from the left.
+subtitle: More standing with radical voters; worse relations with the SPD. Pleases the Left.
+new-page: true
+view-if: state_kpd_seats > 0
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.spd_relation -= 2;
+window.RF.lean(Q, {left: 2, right: -1});
+window.RF.stateAction(Q, 'hesse', 1.0);
+!}
+
+= Hesse
+
+Communist deputies table motions for free school meals, price controls and the disarming of the right-wing leagues, knowing the government will vote them down.
+
+- @hesse: Back to Hesse.
+- @rf_hand: Back to the party.
+
+@hamburg
+title: Hamburg
+new-page: true
+on-arrival: {! window.RF.stateView(Q, 'hamburg'); !}
+
+= Hamburg
+
+[+ st_view +]
+
+- @hamburg_campaign
+- @hamburg_councils
+- @hamburg_support
+- @hamburg_attack
+- @hamburg_docks
+- @rf_provinces: Back to the states.
+- @rf_hand: Back to the party.
+
+@hamburg_campaign
+title: Campaign in Hamburg.
+subtitle: Meetings, leaflets and the party press. Raises the party's standing here. Costs 1 resource.
+new-page: true
+choose-if: prov_ready = 1 and funds >= 1
+unavailable-subtitle: One decision in the states a month; needs 1 resource.
+on-arrival: {!
+Q.funds -= 1;
+Q.members += 1;
+window.RF.stateAction(Q, 'hamburg', 2.0);
+!}
+
+= Hamburg
+
+Speakers tour the industrial towns, the local party paper doubles its run for a week, and the comrades go door to door in the workers' districts.
+
+- @hamburg: Back to Hamburg.
+- @rf_hand: Back to the party.
+
+@hamburg_councils
+title: Organise the factory councils and the unemployed in Hamburg.
+subtitle: More influence in the unions, a little more standing here. The police take note.
+new-page: true
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.union_influence += 2;
+Q.repression += 1;
+window.RF.stateAction(Q, 'hamburg', 1.0);
+!}
+
+= Hamburg
+
+Communist slates contest the council elections in the big works; unemployed committees march on the town halls to demand relief.
+
+- @hamburg: Back to Hamburg.
+- @rf_hand: Back to the party.
+
+@hamburg_support
+title: Back the Social Democratic government in Hamburg against the right.
+subtitle: Better relations with the SPD; pleases the Right, angers the Left. Some radical voters are disappointed.
+new-page: true
+view-if: state_spd_gov = 1 and state_kpd_seats > 0
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.spd_relation += 3;
+window.RF.lean(Q, {right: 2, left: -2});
+window.RF.stateAction(Q, 'hamburg', -0.5);
+!}
+
+= Hamburg
+
+The Communist deputies vote with the Social Democrats against the bourgeois motions. The SPD press grudgingly notes it; the Left calls it parliamentary cretinism.
+
+- @hamburg: Back to Hamburg.
+- @rf_hand: Back to the party.
+
+@hamburg_attack
+title: Attack the government in Hamburg from the left.
+subtitle: More standing with radical voters; worse relations with the SPD. Pleases the Left.
+new-page: true
+view-if: state_kpd_seats > 0
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.spd_relation -= 2;
+window.RF.lean(Q, {left: 2, right: -1});
+window.RF.stateAction(Q, 'hamburg', 1.0);
+!}
+
+= Hamburg
+
+Communist deputies table motions for free school meals, price controls and the disarming of the right-wing leagues, knowing the government will vote them down.
+
+- @hamburg: Back to Hamburg.
+- @rf_hand: Back to the party.
+
+@hamburg_docks
+title: Rally the Hamburg docks and shipyards.
+subtitle: Raises standing in Hamburg and union influence; pleases the Left and its Hamburg leaders.
+new-page: true
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.union_influence += 1;
+window.RF.lean(Q, {left: 2});
+window.RF.stateAction(Q, 'hamburg', 1.5);
+!}
+
+= Hamburg
+
+The Hamburg party calls the dockers and the yard workers to the Heiligengeistfeld. Ernst Thälmann speaks.
+
+- @hamburg: Back to Hamburg.
+- @rf_hand: Back to the party.
+
+@mschwerin
+title: Mecklenburg-Schwerin
+new-page: true
+on-arrival: {! window.RF.stateView(Q, 'mschwerin'); !}
+
+= Mecklenburg-Schwerin
+
+[+ st_view +]
+
+- @mschwerin_campaign
+- @mschwerin_councils
+- @mschwerin_support
+- @mschwerin_attack
+- @rf_provinces: Back to the states.
+- @rf_hand: Back to the party.
+
+@mschwerin_campaign
+title: Campaign in Mecklenburg-Schwerin.
+subtitle: Meetings, leaflets and the party press. Raises the party's standing here. Costs 1 resource.
+new-page: true
+choose-if: prov_ready = 1 and funds >= 1
+unavailable-subtitle: One decision in the states a month; needs 1 resource.
+on-arrival: {!
+Q.funds -= 1;
+Q.members += 1;
+window.RF.stateAction(Q, 'mschwerin', 2.0);
+!}
+
+= Mecklenburg-Schwerin
+
+Speakers tour the industrial towns, the local party paper doubles its run for a week, and the comrades go door to door in the workers' districts.
+
+- @mschwerin: Back to Mecklenburg-Schwerin.
+- @rf_hand: Back to the party.
+
+@mschwerin_councils
+title: Organise the factory councils and the unemployed in Mecklenburg-Schwerin.
+subtitle: More influence in the unions, a little more standing here. The police take note.
+new-page: true
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.union_influence += 2;
+Q.repression += 1;
+window.RF.stateAction(Q, 'mschwerin', 1.0);
+!}
+
+= Mecklenburg-Schwerin
+
+Communist slates contest the council elections in the big works; unemployed committees march on the town halls to demand relief.
+
+- @mschwerin: Back to Mecklenburg-Schwerin.
+- @rf_hand: Back to the party.
+
+@mschwerin_support
+title: Back the Social Democratic government in Mecklenburg-Schwerin against the right.
+subtitle: Better relations with the SPD; pleases the Right, angers the Left. Some radical voters are disappointed.
+new-page: true
+view-if: state_spd_gov = 1 and state_kpd_seats > 0
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.spd_relation += 3;
+window.RF.lean(Q, {right: 2, left: -2});
+window.RF.stateAction(Q, 'mschwerin', -0.5);
+!}
+
+= Mecklenburg-Schwerin
+
+The Communist deputies vote with the Social Democrats against the bourgeois motions. The SPD press grudgingly notes it; the Left calls it parliamentary cretinism.
+
+- @mschwerin: Back to Mecklenburg-Schwerin.
+- @rf_hand: Back to the party.
+
+@mschwerin_attack
+title: Attack the government in Mecklenburg-Schwerin from the left.
+subtitle: More standing with radical voters; worse relations with the SPD. Pleases the Left.
+new-page: true
+view-if: state_kpd_seats > 0
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.spd_relation -= 2;
+window.RF.lean(Q, {left: 2, right: -1});
+window.RF.stateAction(Q, 'mschwerin', 1.0);
+!}
+
+= Mecklenburg-Schwerin
+
+Communist deputies table motions for free school meals, price controls and the disarming of the right-wing leagues, knowing the government will vote them down.
+
+- @mschwerin: Back to Mecklenburg-Schwerin.
+- @rf_hand: Back to the party.
+
+@oldenburg
+title: Oldenburg
+new-page: true
+on-arrival: {! window.RF.stateView(Q, 'oldenburg'); !}
+
+= Oldenburg
+
+[+ st_view +]
+
+- @oldenburg_campaign
+- @oldenburg_councils
+- @oldenburg_support
+- @oldenburg_attack
+- @rf_provinces: Back to the states.
+- @rf_hand: Back to the party.
+
+@oldenburg_campaign
+title: Campaign in Oldenburg.
+subtitle: Meetings, leaflets and the party press. Raises the party's standing here. Costs 1 resource.
+new-page: true
+choose-if: prov_ready = 1 and funds >= 1
+unavailable-subtitle: One decision in the states a month; needs 1 resource.
+on-arrival: {!
+Q.funds -= 1;
+Q.members += 1;
+window.RF.stateAction(Q, 'oldenburg', 2.0);
+!}
+
+= Oldenburg
+
+Speakers tour the industrial towns, the local party paper doubles its run for a week, and the comrades go door to door in the workers' districts.
+
+- @oldenburg: Back to Oldenburg.
+- @rf_hand: Back to the party.
+
+@oldenburg_councils
+title: Organise the factory councils and the unemployed in Oldenburg.
+subtitle: More influence in the unions, a little more standing here. The police take note.
+new-page: true
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.union_influence += 2;
+Q.repression += 1;
+window.RF.stateAction(Q, 'oldenburg', 1.0);
+!}
+
+= Oldenburg
+
+Communist slates contest the council elections in the big works; unemployed committees march on the town halls to demand relief.
+
+- @oldenburg: Back to Oldenburg.
+- @rf_hand: Back to the party.
+
+@oldenburg_support
+title: Back the Social Democratic government in Oldenburg against the right.
+subtitle: Better relations with the SPD; pleases the Right, angers the Left. Some radical voters are disappointed.
+new-page: true
+view-if: state_spd_gov = 1 and state_kpd_seats > 0
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.spd_relation += 3;
+window.RF.lean(Q, {right: 2, left: -2});
+window.RF.stateAction(Q, 'oldenburg', -0.5);
+!}
+
+= Oldenburg
+
+The Communist deputies vote with the Social Democrats against the bourgeois motions. The SPD press grudgingly notes it; the Left calls it parliamentary cretinism.
+
+- @oldenburg: Back to Oldenburg.
+- @rf_hand: Back to the party.
+
+@oldenburg_attack
+title: Attack the government in Oldenburg from the left.
+subtitle: More standing with radical voters; worse relations with the SPD. Pleases the Left.
+new-page: true
+view-if: state_kpd_seats > 0
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.spd_relation -= 2;
+window.RF.lean(Q, {left: 2, right: -1});
+window.RF.stateAction(Q, 'oldenburg', 1.0);
+!}
+
+= Oldenburg
+
+Communist deputies table motions for free school meals, price controls and the disarming of the right-wing leagues, knowing the government will vote them down.
+
+- @oldenburg: Back to Oldenburg.
+- @rf_hand: Back to the party.
+
+@brunswick
+title: Brunswick
+new-page: true
+on-arrival: {! window.RF.stateView(Q, 'brunswick'); !}
+
+= Brunswick
+
+[+ st_view +]
+
+- @brunswick_campaign
+- @brunswick_councils
+- @brunswick_support
+- @brunswick_attack
+- @rf_provinces: Back to the states.
+- @rf_hand: Back to the party.
+
+@brunswick_campaign
+title: Campaign in Brunswick.
+subtitle: Meetings, leaflets and the party press. Raises the party's standing here. Costs 1 resource.
+new-page: true
+choose-if: prov_ready = 1 and funds >= 1
+unavailable-subtitle: One decision in the states a month; needs 1 resource.
+on-arrival: {!
+Q.funds -= 1;
+Q.members += 1;
+window.RF.stateAction(Q, 'brunswick', 2.0);
+!}
+
+= Brunswick
+
+Speakers tour the industrial towns, the local party paper doubles its run for a week, and the comrades go door to door in the workers' districts.
+
+- @brunswick: Back to Brunswick.
+- @rf_hand: Back to the party.
+
+@brunswick_councils
+title: Organise the factory councils and the unemployed in Brunswick.
+subtitle: More influence in the unions, a little more standing here. The police take note.
+new-page: true
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.union_influence += 2;
+Q.repression += 1;
+window.RF.stateAction(Q, 'brunswick', 1.0);
+!}
+
+= Brunswick
+
+Communist slates contest the council elections in the big works; unemployed committees march on the town halls to demand relief.
+
+- @brunswick: Back to Brunswick.
+- @rf_hand: Back to the party.
+
+@brunswick_support
+title: Back the Social Democratic government in Brunswick against the right.
+subtitle: Better relations with the SPD; pleases the Right, angers the Left. Some radical voters are disappointed.
+new-page: true
+view-if: state_spd_gov = 1 and state_kpd_seats > 0
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.spd_relation += 3;
+window.RF.lean(Q, {right: 2, left: -2});
+window.RF.stateAction(Q, 'brunswick', -0.5);
+!}
+
+= Brunswick
+
+The Communist deputies vote with the Social Democrats against the bourgeois motions. The SPD press grudgingly notes it; the Left calls it parliamentary cretinism.
+
+- @brunswick: Back to Brunswick.
+- @rf_hand: Back to the party.
+
+@brunswick_attack
+title: Attack the government in Brunswick from the left.
+subtitle: More standing with radical voters; worse relations with the SPD. Pleases the Left.
+new-page: true
+view-if: state_kpd_seats > 0
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.spd_relation -= 2;
+window.RF.lean(Q, {left: 2, right: -1});
+window.RF.stateAction(Q, 'brunswick', 1.0);
+!}
+
+= Brunswick
+
+Communist deputies table motions for free school meals, price controls and the disarming of the right-wing leagues, knowing the government will vote them down.
+
+- @brunswick: Back to Brunswick.
+- @rf_hand: Back to the party.
+
+@anhalt
+title: Anhalt
+new-page: true
+on-arrival: {! window.RF.stateView(Q, 'anhalt'); !}
+
+= Anhalt
+
+[+ st_view +]
+
+- @anhalt_campaign
+- @anhalt_councils
+- @anhalt_support
+- @anhalt_attack
+- @rf_provinces: Back to the states.
+- @rf_hand: Back to the party.
+
+@anhalt_campaign
+title: Campaign in Anhalt.
+subtitle: Meetings, leaflets and the party press. Raises the party's standing here. Costs 1 resource.
+new-page: true
+choose-if: prov_ready = 1 and funds >= 1
+unavailable-subtitle: One decision in the states a month; needs 1 resource.
+on-arrival: {!
+Q.funds -= 1;
+Q.members += 1;
+window.RF.stateAction(Q, 'anhalt', 2.0);
+!}
+
+= Anhalt
+
+Speakers tour the industrial towns, the local party paper doubles its run for a week, and the comrades go door to door in the workers' districts.
+
+- @anhalt: Back to Anhalt.
+- @rf_hand: Back to the party.
+
+@anhalt_councils
+title: Organise the factory councils and the unemployed in Anhalt.
+subtitle: More influence in the unions, a little more standing here. The police take note.
+new-page: true
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.union_influence += 2;
+Q.repression += 1;
+window.RF.stateAction(Q, 'anhalt', 1.0);
+!}
+
+= Anhalt
+
+Communist slates contest the council elections in the big works; unemployed committees march on the town halls to demand relief.
+
+- @anhalt: Back to Anhalt.
+- @rf_hand: Back to the party.
+
+@anhalt_support
+title: Back the Social Democratic government in Anhalt against the right.
+subtitle: Better relations with the SPD; pleases the Right, angers the Left. Some radical voters are disappointed.
+new-page: true
+view-if: state_spd_gov = 1 and state_kpd_seats > 0
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.spd_relation += 3;
+window.RF.lean(Q, {right: 2, left: -2});
+window.RF.stateAction(Q, 'anhalt', -0.5);
+!}
+
+= Anhalt
+
+The Communist deputies vote with the Social Democrats against the bourgeois motions. The SPD press grudgingly notes it; the Left calls it parliamentary cretinism.
+
+- @anhalt: Back to Anhalt.
+- @rf_hand: Back to the party.
+
+@anhalt_attack
+title: Attack the government in Anhalt from the left.
+subtitle: More standing with radical voters; worse relations with the SPD. Pleases the Left.
+new-page: true
+view-if: state_kpd_seats > 0
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.spd_relation -= 2;
+window.RF.lean(Q, {left: 2, right: -1});
+window.RF.stateAction(Q, 'anhalt', 1.0);
+!}
+
+= Anhalt
+
+Communist deputies table motions for free school meals, price controls and the disarming of the right-wing leagues, knowing the government will vote them down.
+
+- @anhalt: Back to Anhalt.
+- @rf_hand: Back to the party.
+
+@bremen
+title: Bremen
+new-page: true
+on-arrival: {! window.RF.stateView(Q, 'bremen'); !}
+
+= Bremen
+
+[+ st_view +]
+
+- @bremen_campaign
+- @bremen_councils
+- @bremen_support
+- @bremen_attack
+- @rf_provinces: Back to the states.
+- @rf_hand: Back to the party.
+
+@bremen_campaign
+title: Campaign in Bremen.
+subtitle: Meetings, leaflets and the party press. Raises the party's standing here. Costs 1 resource.
+new-page: true
+choose-if: prov_ready = 1 and funds >= 1
+unavailable-subtitle: One decision in the states a month; needs 1 resource.
+on-arrival: {!
+Q.funds -= 1;
+Q.members += 1;
+window.RF.stateAction(Q, 'bremen', 2.0);
+!}
+
+= Bremen
+
+Speakers tour the industrial towns, the local party paper doubles its run for a week, and the comrades go door to door in the workers' districts.
+
+- @bremen: Back to Bremen.
+- @rf_hand: Back to the party.
+
+@bremen_councils
+title: Organise the factory councils and the unemployed in Bremen.
+subtitle: More influence in the unions, a little more standing here. The police take note.
+new-page: true
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.union_influence += 2;
+Q.repression += 1;
+window.RF.stateAction(Q, 'bremen', 1.0);
+!}
+
+= Bremen
+
+Communist slates contest the council elections in the big works; unemployed committees march on the town halls to demand relief.
+
+- @bremen: Back to Bremen.
+- @rf_hand: Back to the party.
+
+@bremen_support
+title: Back the Social Democratic government in Bremen against the right.
+subtitle: Better relations with the SPD; pleases the Right, angers the Left. Some radical voters are disappointed.
+new-page: true
+view-if: state_spd_gov = 1 and state_kpd_seats > 0
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.spd_relation += 3;
+window.RF.lean(Q, {right: 2, left: -2});
+window.RF.stateAction(Q, 'bremen', -0.5);
+!}
+
+= Bremen
+
+The Communist deputies vote with the Social Democrats against the bourgeois motions. The SPD press grudgingly notes it; the Left calls it parliamentary cretinism.
+
+- @bremen: Back to Bremen.
+- @rf_hand: Back to the party.
+
+@bremen_attack
+title: Attack the government in Bremen from the left.
+subtitle: More standing with radical voters; worse relations with the SPD. Pleases the Left.
+new-page: true
+view-if: state_kpd_seats > 0
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.spd_relation -= 2;
+window.RF.lean(Q, {left: 2, right: -1});
+window.RF.stateAction(Q, 'bremen', 1.0);
+!}
+
+= Bremen
+
+Communist deputies table motions for free school meals, price controls and the disarming of the right-wing leagues, knowing the government will vote them down.
+
+- @bremen: Back to Bremen.
+- @rf_hand: Back to the party.
+
+@lippe
+title: Lippe
+new-page: true
+on-arrival: {! window.RF.stateView(Q, 'lippe'); !}
+
+= Lippe
+
+[+ st_view +]
+
+- @lippe_campaign
+- @lippe_councils
+- @lippe_support
+- @lippe_attack
+- @rf_provinces: Back to the states.
+- @rf_hand: Back to the party.
+
+@lippe_campaign
+title: Campaign in Lippe.
+subtitle: Meetings, leaflets and the party press. Raises the party's standing here. Costs 1 resource.
+new-page: true
+choose-if: prov_ready = 1 and funds >= 1
+unavailable-subtitle: One decision in the states a month; needs 1 resource.
+on-arrival: {!
+Q.funds -= 1;
+Q.members += 1;
+window.RF.stateAction(Q, 'lippe', 2.0);
+!}
+
+= Lippe
+
+Speakers tour the industrial towns, the local party paper doubles its run for a week, and the comrades go door to door in the workers' districts.
+
+- @lippe: Back to Lippe.
+- @rf_hand: Back to the party.
+
+@lippe_councils
+title: Organise the factory councils and the unemployed in Lippe.
+subtitle: More influence in the unions, a little more standing here. The police take note.
+new-page: true
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.union_influence += 2;
+Q.repression += 1;
+window.RF.stateAction(Q, 'lippe', 1.0);
+!}
+
+= Lippe
+
+Communist slates contest the council elections in the big works; unemployed committees march on the town halls to demand relief.
+
+- @lippe: Back to Lippe.
+- @rf_hand: Back to the party.
+
+@lippe_support
+title: Back the Social Democratic government in Lippe against the right.
+subtitle: Better relations with the SPD; pleases the Right, angers the Left. Some radical voters are disappointed.
+new-page: true
+view-if: state_spd_gov = 1 and state_kpd_seats > 0
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.spd_relation += 3;
+window.RF.lean(Q, {right: 2, left: -2});
+window.RF.stateAction(Q, 'lippe', -0.5);
+!}
+
+= Lippe
+
+The Communist deputies vote with the Social Democrats against the bourgeois motions. The SPD press grudgingly notes it; the Left calls it parliamentary cretinism.
+
+- @lippe: Back to Lippe.
+- @rf_hand: Back to the party.
+
+@lippe_attack
+title: Attack the government in Lippe from the left.
+subtitle: More standing with radical voters; worse relations with the SPD. Pleases the Left.
+new-page: true
+view-if: state_kpd_seats > 0
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.spd_relation -= 2;
+window.RF.lean(Q, {left: 2, right: -1});
+window.RF.stateAction(Q, 'lippe', 1.0);
+!}
+
+= Lippe
+
+Communist deputies table motions for free school meals, price controls and the disarming of the right-wing leagues, knowing the government will vote them down.
+
+- @lippe: Back to Lippe.
+- @rf_hand: Back to the party.
+
+@lubeck
+title: Lübeck
+new-page: true
+on-arrival: {! window.RF.stateView(Q, 'lubeck'); !}
+
+= Lübeck
+
+[+ st_view +]
+
+- @lubeck_campaign
+- @lubeck_councils
+- @lubeck_support
+- @lubeck_attack
+- @rf_provinces: Back to the states.
+- @rf_hand: Back to the party.
+
+@lubeck_campaign
+title: Campaign in Lübeck.
+subtitle: Meetings, leaflets and the party press. Raises the party's standing here. Costs 1 resource.
+new-page: true
+choose-if: prov_ready = 1 and funds >= 1
+unavailable-subtitle: One decision in the states a month; needs 1 resource.
+on-arrival: {!
+Q.funds -= 1;
+Q.members += 1;
+window.RF.stateAction(Q, 'lubeck', 2.0);
+!}
+
+= Lübeck
+
+Speakers tour the industrial towns, the local party paper doubles its run for a week, and the comrades go door to door in the workers' districts.
+
+- @lubeck: Back to Lübeck.
+- @rf_hand: Back to the party.
+
+@lubeck_councils
+title: Organise the factory councils and the unemployed in Lübeck.
+subtitle: More influence in the unions, a little more standing here. The police take note.
+new-page: true
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.union_influence += 2;
+Q.repression += 1;
+window.RF.stateAction(Q, 'lubeck', 1.0);
+!}
+
+= Lübeck
+
+Communist slates contest the council elections in the big works; unemployed committees march on the town halls to demand relief.
+
+- @lubeck: Back to Lübeck.
+- @rf_hand: Back to the party.
+
+@lubeck_support
+title: Back the Social Democratic government in Lübeck against the right.
+subtitle: Better relations with the SPD; pleases the Right, angers the Left. Some radical voters are disappointed.
+new-page: true
+view-if: state_spd_gov = 1 and state_kpd_seats > 0
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.spd_relation += 3;
+window.RF.lean(Q, {right: 2, left: -2});
+window.RF.stateAction(Q, 'lubeck', -0.5);
+!}
+
+= Lübeck
+
+The Communist deputies vote with the Social Democrats against the bourgeois motions. The SPD press grudgingly notes it; the Left calls it parliamentary cretinism.
+
+- @lubeck: Back to Lübeck.
+- @rf_hand: Back to the party.
+
+@lubeck_attack
+title: Attack the government in Lübeck from the left.
+subtitle: More standing with radical voters; worse relations with the SPD. Pleases the Left.
+new-page: true
+view-if: state_kpd_seats > 0
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.spd_relation -= 2;
+window.RF.lean(Q, {left: 2, right: -1});
+window.RF.stateAction(Q, 'lubeck', 1.0);
+!}
+
+= Lübeck
+
+Communist deputies table motions for free school meals, price controls and the disarming of the right-wing leagues, knowing the government will vote them down.
+
+- @lubeck: Back to Lübeck.
+- @rf_hand: Back to the party.
+
+@mstrelitz
+title: Mecklenburg-Strelitz
+new-page: true
+on-arrival: {! window.RF.stateView(Q, 'mstrelitz'); !}
+
+= Mecklenburg-Strelitz
+
+[+ st_view +]
+
+- @mstrelitz_campaign
+- @mstrelitz_councils
+- @mstrelitz_support
+- @mstrelitz_attack
+- @rf_provinces: Back to the states.
+- @rf_hand: Back to the party.
+
+@mstrelitz_campaign
+title: Campaign in Mecklenburg-Strelitz.
+subtitle: Meetings, leaflets and the party press. Raises the party's standing here. Costs 1 resource.
+new-page: true
+choose-if: prov_ready = 1 and funds >= 1
+unavailable-subtitle: One decision in the states a month; needs 1 resource.
+on-arrival: {!
+Q.funds -= 1;
+Q.members += 1;
+window.RF.stateAction(Q, 'mstrelitz', 2.0);
+!}
+
+= Mecklenburg-Strelitz
+
+Speakers tour the industrial towns, the local party paper doubles its run for a week, and the comrades go door to door in the workers' districts.
+
+- @mstrelitz: Back to Mecklenburg-Strelitz.
+- @rf_hand: Back to the party.
+
+@mstrelitz_councils
+title: Organise the factory councils and the unemployed in Mecklenburg-Strelitz.
+subtitle: More influence in the unions, a little more standing here. The police take note.
+new-page: true
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.union_influence += 2;
+Q.repression += 1;
+window.RF.stateAction(Q, 'mstrelitz', 1.0);
+!}
+
+= Mecklenburg-Strelitz
+
+Communist slates contest the council elections in the big works; unemployed committees march on the town halls to demand relief.
+
+- @mstrelitz: Back to Mecklenburg-Strelitz.
+- @rf_hand: Back to the party.
+
+@mstrelitz_support
+title: Back the Social Democratic government in Mecklenburg-Strelitz against the right.
+subtitle: Better relations with the SPD; pleases the Right, angers the Left. Some radical voters are disappointed.
+new-page: true
+view-if: state_spd_gov = 1 and state_kpd_seats > 0
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.spd_relation += 3;
+window.RF.lean(Q, {right: 2, left: -2});
+window.RF.stateAction(Q, 'mstrelitz', -0.5);
+!}
+
+= Mecklenburg-Strelitz
+
+The Communist deputies vote with the Social Democrats against the bourgeois motions. The SPD press grudgingly notes it; the Left calls it parliamentary cretinism.
+
+- @mstrelitz: Back to Mecklenburg-Strelitz.
+- @rf_hand: Back to the party.
+
+@mstrelitz_attack
+title: Attack the government in Mecklenburg-Strelitz from the left.
+subtitle: More standing with radical voters; worse relations with the SPD. Pleases the Left.
+new-page: true
+view-if: state_kpd_seats > 0
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.spd_relation -= 2;
+window.RF.lean(Q, {left: 2, right: -1});
+window.RF.stateAction(Q, 'mstrelitz', 1.0);
+!}
+
+= Mecklenburg-Strelitz
+
+Communist deputies table motions for free school meals, price controls and the disarming of the right-wing leagues, knowing the government will vote them down.
+
+- @mstrelitz: Back to Mecklenburg-Strelitz.
+- @rf_hand: Back to the party.
+
+@waldeck
+title: Waldeck
+new-page: true
+on-arrival: {! window.RF.stateView(Q, 'waldeck'); !}
+
+= Waldeck
+
+[+ st_view +]
+
+- @waldeck_campaign
+- @waldeck_councils
+- @waldeck_support
+- @waldeck_attack
+- @rf_provinces: Back to the states.
+- @rf_hand: Back to the party.
+
+@waldeck_campaign
+title: Campaign in Waldeck.
+subtitle: Meetings, leaflets and the party press. Raises the party's standing here. Costs 1 resource.
+new-page: true
+choose-if: prov_ready = 1 and funds >= 1
+unavailable-subtitle: One decision in the states a month; needs 1 resource.
+on-arrival: {!
+Q.funds -= 1;
+Q.members += 1;
+window.RF.stateAction(Q, 'waldeck', 2.0);
+!}
+
+= Waldeck
+
+Speakers tour the industrial towns, the local party paper doubles its run for a week, and the comrades go door to door in the workers' districts.
+
+- @waldeck: Back to Waldeck.
+- @rf_hand: Back to the party.
+
+@waldeck_councils
+title: Organise the factory councils and the unemployed in Waldeck.
+subtitle: More influence in the unions, a little more standing here. The police take note.
+new-page: true
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.union_influence += 2;
+Q.repression += 1;
+window.RF.stateAction(Q, 'waldeck', 1.0);
+!}
+
+= Waldeck
+
+Communist slates contest the council elections in the big works; unemployed committees march on the town halls to demand relief.
+
+- @waldeck: Back to Waldeck.
+- @rf_hand: Back to the party.
+
+@waldeck_support
+title: Back the Social Democratic government in Waldeck against the right.
+subtitle: Better relations with the SPD; pleases the Right, angers the Left. Some radical voters are disappointed.
+new-page: true
+view-if: state_spd_gov = 1 and state_kpd_seats > 0
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.spd_relation += 3;
+window.RF.lean(Q, {right: 2, left: -2});
+window.RF.stateAction(Q, 'waldeck', -0.5);
+!}
+
+= Waldeck
+
+The Communist deputies vote with the Social Democrats against the bourgeois motions. The SPD press grudgingly notes it; the Left calls it parliamentary cretinism.
+
+- @waldeck: Back to Waldeck.
+- @rf_hand: Back to the party.
+
+@waldeck_attack
+title: Attack the government in Waldeck from the left.
+subtitle: More standing with radical voters; worse relations with the SPD. Pleases the Left.
+new-page: true
+view-if: state_kpd_seats > 0
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.spd_relation -= 2;
+window.RF.lean(Q, {left: 2, right: -1});
+window.RF.stateAction(Q, 'waldeck', 1.0);
+!}
+
+= Waldeck
+
+Communist deputies table motions for free school meals, price controls and the disarming of the right-wing leagues, knowing the government will vote them down.
+
+- @waldeck: Back to Waldeck.
+- @rf_hand: Back to the party.
+
+@slippe
+title: Schaumburg-Lippe
+new-page: true
+on-arrival: {! window.RF.stateView(Q, 'slippe'); !}
+
+= Schaumburg-Lippe
+
+[+ st_view +]
+
+- @slippe_campaign
+- @slippe_councils
+- @slippe_support
+- @slippe_attack
+- @rf_provinces: Back to the states.
+- @rf_hand: Back to the party.
+
+@slippe_campaign
+title: Campaign in Schaumburg-Lippe.
+subtitle: Meetings, leaflets and the party press. Raises the party's standing here. Costs 1 resource.
+new-page: true
+choose-if: prov_ready = 1 and funds >= 1
+unavailable-subtitle: One decision in the states a month; needs 1 resource.
+on-arrival: {!
+Q.funds -= 1;
+Q.members += 1;
+window.RF.stateAction(Q, 'slippe', 2.0);
+!}
+
+= Schaumburg-Lippe
+
+Speakers tour the industrial towns, the local party paper doubles its run for a week, and the comrades go door to door in the workers' districts.
+
+- @slippe: Back to Schaumburg-Lippe.
+- @rf_hand: Back to the party.
+
+@slippe_councils
+title: Organise the factory councils and the unemployed in Schaumburg-Lippe.
+subtitle: More influence in the unions, a little more standing here. The police take note.
+new-page: true
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.union_influence += 2;
+Q.repression += 1;
+window.RF.stateAction(Q, 'slippe', 1.0);
+!}
+
+= Schaumburg-Lippe
+
+Communist slates contest the council elections in the big works; unemployed committees march on the town halls to demand relief.
+
+- @slippe: Back to Schaumburg-Lippe.
+- @rf_hand: Back to the party.
+
+@slippe_support
+title: Back the Social Democratic government in Schaumburg-Lippe against the right.
+subtitle: Better relations with the SPD; pleases the Right, angers the Left. Some radical voters are disappointed.
+new-page: true
+view-if: state_spd_gov = 1 and state_kpd_seats > 0
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.spd_relation += 3;
+window.RF.lean(Q, {right: 2, left: -2});
+window.RF.stateAction(Q, 'slippe', -0.5);
+!}
+
+= Schaumburg-Lippe
+
+The Communist deputies vote with the Social Democrats against the bourgeois motions. The SPD press grudgingly notes it; the Left calls it parliamentary cretinism.
+
+- @slippe: Back to Schaumburg-Lippe.
+- @rf_hand: Back to the party.
+
+@slippe_attack
+title: Attack the government in Schaumburg-Lippe from the left.
+subtitle: More standing with radical voters; worse relations with the SPD. Pleases the Left.
+new-page: true
+view-if: state_kpd_seats > 0
+choose-if: prov_ready = 1
+unavailable-subtitle: One decision in the states a month.
+on-arrival: {!
+Q.spd_relation -= 2;
+window.RF.lean(Q, {left: 2, right: -1});
+window.RF.stateAction(Q, 'slippe', 1.0);
+!}
+
+= Schaumburg-Lippe
+
+Communist deputies table motions for free school meals, price controls and the disarming of the right-wing leagues, knowing the government will vote them down.
+
+- @slippe: Back to Schaumburg-Lippe.
+- @rf_hand: Back to the party.

@@ -3,11 +3,10 @@
 // Scenes call these through window.RF with the quality object Q.
 (function() {
   var FACTIONS = ['right', 'center', 'left', 'ultra', 'stalin'];
-  // who would chair the party for each faction. Brandler and Thälmann
-  // chaired it historically; the others are the faction's best-known leader.
+  // who would chair the party for each faction: its best-known leader
   var PERSONS = {
     right: 'Heinrich Brandler',
-    center: 'Ernst Meyer',
+    center: 'Hermann Remmele',
     left: 'Ruth Fischer',
     ultra: 'Werner Scholem',
     stalin: 'Ernst Thälmann'
@@ -19,6 +18,11 @@
     ultra: 'Ultra-Left',
     stalin: 'Thälmann circle'
   };
+  // In January 1923 the party has two camps: the Zentrale's majority around
+  // Brandler and Thalheimer, and the Left opposition of Berlin and Hamburg
+  // (Fischer, Maslow, Thälmann, Scholem). The other three factions only
+  // form through events (scenes tagged rf_event in rote_fahne/events).
+  var STARTING_FACTIONS = ['right', 'left'];
 
   // How much the current Comintern line favours each faction.
   var LINE_AFFINITY = {
@@ -36,12 +40,38 @@
     factions: FACTIONS,
     names: NAMES,
 
+    // A faction takes part in party life once it has formed and until it
+    // is expelled. Saves from before factions could form count as formed.
+    active: function(Q, f) {
+      return Q[f + '_formed'] !== 0 && !Q[f + '_expelled'];
+    },
+
+    startFactions: function(Q) {
+      for (var f of FACTIONS) {
+        Q[f + '_formed'] = STARTING_FACTIONS.indexOf(f) >= 0 ? 1 : 0;
+      }
+    },
+
+    // A new faction forms, taking a share of each faction's strength
+    // (shares: {faction: fraction}).
+    formFaction: function(Q, f, shares, dissent) {
+      Q[f + '_formed'] = 1;
+      Q[f + '_strength'] = 0;
+      for (var g in shares) {
+        var moved = Q[g + '_strength'] * shares[g];
+        Q[g + '_strength'] -= moved;
+        Q[f + '_strength'] += moved;
+      }
+      Q[f + '_dissent'] = dissent;
+      RF.normalize(Q);
+    },
+
     // A decision pleases some factions and angers others. A positive value
     // adds strength and calms the faction; a negative one costs it a little
     // strength and raises its dissent more.
     lean: function(Q, effects) {
       for (var f in effects) {
-        if (Q[f + '_expelled']) {
+        if (!RF.active(Q, f)) {
           continue;
         }
         var v = effects[f];
@@ -59,7 +89,7 @@
     normalize: function(Q) {
       var total = 0;
       for (var f of FACTIONS) {
-        if (Q[f + '_expelled']) {
+        if (!RF.active(Q, f)) {
           Q[f + '_strength'] = 0;
         }
         Q[f + '_strength'] = Math.max(0, Q[f + '_strength']);
@@ -81,7 +111,7 @@
       Q.funds = Math.max(0, Q.funds);
       var dissent = 0;
       for (var h of FACTIONS) {
-        dissent += Q[h + '_strength'] * Q[h + '_dissent'] / 100;
+        dissent += RF.active(Q, h) ? Q[h + '_strength'] * Q[h + '_dissent'] / 100 : 0;
       }
       Q.unity = Math.round(100 - dissent);
       Q.party_dissent = 100 - Q.unity;
@@ -107,7 +137,7 @@
     moscowFavourite: function(Q, exclude) {
       var best = null;
       for (var f of FACTIONS) {
-        if (Q[f + '_expelled'] || f == exclude) {
+        if (!RF.active(Q, f) || f == exclude) {
           continue;
         }
         if (best === null || RF.moscowScore(Q, f) > RF.moscowScore(Q, best)) {
@@ -117,12 +147,16 @@
       return best;
     },
 
-    // A party congress: delegates follow strength, the sitting leadership
-    // gets an apparatus bonus, and a split congress turns to the Middle Group.
-    congress: function(Q) {
+    // A party congress votes: delegates follow strength, the sitting
+    // leadership gets an apparatus bonus, and a split congress turns to the
+    // Middle Group. Moscow may then demand that its favourite takes over
+    // (Q.moscow_demand); the congress scene lets the party accept or refuse.
+    congressVote: function(Q) {
       var winner = null, best = -1;
+      var delegates = {};
+      var total = 0;
       for (var f of FACTIONS) {
-        if (Q[f + '_expelled']) {
+        if (!RF.active(Q, f)) {
           continue;
         }
         var weight = Q[f + '_strength'];
@@ -133,47 +167,100 @@
         if (f == Q.congress_challenger) {
           weight += 5;
         }
+        delegates[f] = weight;
+        total += weight;
         if (weight > best) {
           best = weight;
           winner = f;
         }
       }
+      for (var g in delegates) {
+        delegates[g] = Math.round(100 * delegates[g] / total);
+      }
+      // delegates' shares in percent, as JSON (qualities stay plain values)
+      Q.delegates = JSON.stringify(delegates);
       Q.congress_compromise = 0;
-      if (Q[winner + '_strength'] < 40 && winner != 'center' && Q.center_strength >= 20 && !Q.center_expelled) {
+      if (Q[winner + '_strength'] < 40 && winner != 'center' && Q.center_strength >= 20 && RF.active(Q, 'center')) {
         winner = 'center';
         Q.congress_compromise = 1;
       }
       Q.congress_challenger = '';
+      Q.congress_before = Q.leader;
       Q.congress_winner = winner;
       Q.congress_winner_name = NAMES[winner];
       Q.leader = winner;
-      RF.verdict(Q);
+      Q.moscow_overruled = 0;
+      Q.moscow_rejected = 0;
+      var preferred = RF.moscowFavourite(Q);
+      Q.moscow_demand = preferred != winner && (Q.open_letter || RF.overruleChance(Q) >= 1) ? 1 : 0;
+      if (Q.moscow_demand) {
+        Q.demand_for = preferred;
+        Q.demand_for_name = NAMES[preferred];
+        // the delegates can refuse if the winners are strong and the party
+        // still runs its own affairs; an Open Letter makes it harder
+        Q.reject_strength = Math.round(Q[winner + '_strength'] + Q.autonomy / 2 + Q.apparatus / 5);
+        Q.reject_needed = Q.open_letter ? 75 : 60;
+        Q.can_reject = Q.reject_strength >= Q.reject_needed ? 1 : 0;
+      } else if (preferred != winner) {
+        Q.autonomy -= 3;
+      } else {
+        Q.open_letter = 0;
+      }
       RF.updateNames(Q);
     },
 
-    // The Comintern overturns the result when the leadership was condemned
-    // by an Open Letter, or when Moscow's pressure reaches 100. No dice: the
-    // Party tab shows the pressure in advance.
-    verdict: function(Q) {
-      var preferred = RF.moscowFavourite(Q);
-      Q.moscow_overruled = 0;
-      if (preferred == Q.leader) {
-        Q.open_letter = 0;
-        return;
+    // The party bows to Moscow: its favourite takes the Zentrale.
+    acceptDemand: function(Q) {
+      Q.open_letter = 0;
+      Q.moscow_rebukes = 0;
+      Q[Q.leader + '_dissent'] += 20;
+      Q.overruled_name = NAMES[Q.leader];
+      Q.leader = Q.demand_for;
+      Q.autonomy -= 10;
+      Q.moscow_overruled = 1;
+      Q.moscow_demand = 0;
+      RF.normalize(Q);
+    },
+
+    // The congress stands by its vote. The party keeps its leadership and
+    // some independence, and Moscow does not forget.
+    rejectDemand: function(Q) {
+      Q.autonomy += 8;
+      Q[Q.leader + '_moscow'] -= 15;
+      Q[Q.demand_for + '_dissent'] += 15;
+      // the defiance counts as a rebuke; the next plenum decides whether
+      // Moscow escalates to an Open Letter
+      Q.moscow_rebukes = 1;
+      Q.open_letter = 0;
+      Q.moscow_rejected = 1;
+      Q.defied_moscow = (Q.defied_moscow || 0) + 1;
+      Q.moscow_demand = 0;
+      RF.normalize(Q);
+    },
+
+    // Wraps up a congress: the news line and the date of the next one.
+    congressDone: function(Q) {
+      var t = Q.year * 12 + Q.month;
+      Q.congress_news = RF.congressName(Q) + ', ' + RF.congressPlace(Q) + ': ' +
+          (Q.moscow_overruled ? 'Moscow overturned the vote and installed the ' + NAMES[Q.leader] + '.' :
+           Q.moscow_rejected ? 'the delegates defied Moscow and kept the ' + NAMES[Q.leader] + '.' :
+           Q.leader == Q.congress_before ? 'the ' + NAMES[Q.leader] + ' keeps the Zentrale.' :
+           'the ' + NAMES[Q.leader] + ' takes over the Zentrale.');
+      Q.congress_number += 1;
+      Q.congress_due = t + 14;
+      Q.congress_pending = 0;
+      Q.congress_postponed = 0;
+      RF.normalize(Q);
+    },
+
+    // The old one-step congress, used by code that does not offer the
+    // choice: the party always bows to Moscow.
+    congress: function(Q) {
+      RF.congressVote(Q);
+      if (Q.moscow_demand) {
+        RF.acceptDemand(Q);
       }
-      if (Q.open_letter || RF.overruleChance(Q) >= 1) {
-        Q.open_letter = 0;
-        Q.moscow_rebukes = 0;
-        Q[Q.leader + '_dissent'] += 20;
-        Q.overruled_name = NAMES[Q.leader];
-        Q.leader = preferred;
-        Q.autonomy -= 10;
-        Q.moscow_overruled = 1;
-      } else {
-        Q.autonomy -= 3;
-      }
-      Q.leader_name = NAMES[Q.leader];
-      Q.leader_person = PERSONS[Q.leader];
+      RF.updateNames(Q);
     },
 
     // Obeying Moscow pleases the Thälmann circle; defying it feeds the
@@ -263,32 +350,18 @@
     var P = function(id, label) {
       return '<span class="p-' + id + '">' + label + '</span>';
     };
-    Q.president = 'Friedrich Ebert';
-    Q.president_party = 'spd';
-    Q.president_class = 'p-spd';
-    if (t < at(1923, 8)) {
-      Q.chancellor = 'Wilhelm Cuno';
-      Q.chancellor_party = 'non-party';
-      Q.chancellor_class = 'p-other';
-      Q.government = 'Cuno cabinet: non-party experts backed by ' + P('z', 'Z') + ', ' + P('ddp', 'DDP') + ', ' +
-          P('dvp', 'DVP') + ' and ' + P('bvp', 'BVP');
-    } else if (t < at(1923, 11)) {
-      Q.chancellor = 'Gustav Stresemann';
-      Q.chancellor_party = 'DVP';
-      Q.chancellor_class = 'p-dvp';
-      Q.government = 'Grand coalition: ' + P('spd', 'SPD') + ', ' + P('z', 'Z') + ', ' + P('ddp', 'DDP') + ' and ' + P('dvp', 'DVP');
-    } else if (t < at(1923, 12)) {
-      Q.chancellor = 'Gustav Stresemann';
-      Q.chancellor_party = 'DVP';
-      Q.chancellor_class = 'p-dvp';
-      Q.government = 'Rump cabinet: ' + P('z', 'Z') + ', ' + P('ddp', 'DDP') + ' and ' + P('dvp', 'DVP') + ', after the ' +
-          P('spd', 'SPD') + ' walked out';
-    } else {
-      Q.chancellor = 'Wilhelm Marx';
-      Q.chancellor_party = 'Z';
-      Q.chancellor_class = 'p-z';
-      Q.government = 'Bourgeois minority: ' + P('z', 'Z') + ', ' + P('bvp', 'BVP') + ', ' + P('ddp', 'DDP') + ' and ' + P('dvp', 'DVP');
-    }
+    // the President and the cabinet of the day, from RF.cabinets; their
+    // names carry hover cards about the person and the cabinet
+    var cab = RF.cabinet(Q);
+    var pres = t < at(1925, 3) ? 'ebert' : t < at(1925, 5) ? 'simons' : 'hindenburg';
+    Q.president = RF.personSpan(pres);
+    Q.president_party = PARTY_INFO[PEOPLE_PARTY(pres)] ? PARTY_INFO[PEOPLE_PARTY(pres)].name : 'non-party';
+    Q.chancellor = RF.personSpan(cab.chancellor);
+    Q.chancellor_party = cab.party == 'other' ? 'non-party' : PARTY_INFO[cab.party].name;
+    var parts = cab.parties.map(function(id) { return P(id, PARTY_INFO[id].name); });
+    var list = parts.length > 1 ? parts.slice(0, -1).join(', ') + ' and ' + parts[parts.length - 1] : parts.join('');
+    Q.government = '<span class="cab-' + cab.id + ' rf-person col-' + cab.party + '">' + cab.name + '</span>: ' +
+        cab.line.replace('%', list);
     // Ebert's state of emergency ran from 26 September 1923; Seeckt held
     // executive power from November 1923 to the end of February 1924.
     Q.emergency = '';
@@ -342,9 +415,19 @@
   };
 
   // The rising score without the dice (the dice add up to 30).
+  // Support for a revolution among the people, 0 to 100: a rough guide to
+  // whether a rising would carry the working class with it. It counts for
+  // a little in the chance of a rising; plans, allies and arms count more.
+  RF.revSupport = function(Q) {
+    var kpd = RF.polls(Q).total.kpd;
+    var v = 10 + 0.35 * Q.rev_situation + 1.2 * kpd + 0.15 * Q.union_influence + 0.15 * Q.spd_relation +
+        0.1 * Q.readiness - 0.25 * Q.pro_republic - 0.1 * Q.repression;
+    return Math.round(clamp(v, 0, 100));
+  };
+
   RF.risingBase = function(Q) {
     var score = Q.readiness + 0.5 * Q.rev_situation + 0.3 * Q.union_influence
-        - 0.3 * Q.repression;
+        - 0.3 * Q.repression + 0.2 * RF.revSupport(Q);
     if (Q.spd_relation >= 60) {
       score += 20;
     }
@@ -363,7 +446,7 @@
                   'stalin_strength', 'right_dissent', 'center_dissent', 'left_dissent',
                   'ultra_dissent', 'stalin_dissent', 'party_dissent', 'repression',
                   'autonomy', 'overrule_risk', 'readiness', 'rev_situation',
-                  'union_influence', 'spd_relation', 'rising_chance', 'uspd_relation',
+                  'union_influence', 'spd_relation', 'rising_chance', 'rev_support', 'uspd_relation',
                   'z_relation', 'ddp_relation', 'dvp_relation', 'dnvp_relation',
                   'nsdap_relation'];
   var PERCENT = {right_strength: 1, center_strength: 1, left_strength: 1, ultra_strength: 1,
@@ -407,7 +490,9 @@
   RF.parties = PARTIES;
   RF.partyLabel = PARTY_LABEL;
 
-  RF.polls = function(Q) {
+  // How each party is doing against the start of 1923 (1 = as then). The
+  // polls and the state elections both scale their base shares by this.
+  RF.pollMult = function(Q) {
     var kpd = clamp(1 + (Q.rev_situation - 45) / 50 + (Q.union_influence - 35) / 120
                     + (Q.members - 220) / 500 - Q.repression / 200 - 0.08 * Q.splits
                     + (Q.spd_discredit || 0) / 40, 0.3, 3);
@@ -416,8 +501,14 @@
     var republic = clamp(1 + (Q.pro_republic - 50) / 100, 0.4, 2);
     var dnvp = clamp(1 + (Q.nationalism - 50) / 80, 0.4, 2.5);
     var nsdap = clamp(1 + (Q.nationalism - 50) / 40, 0.2, 4);
-    var mult = {kpd: kpd, spd: spd, z: 1, ddp: republic, dvp: republic,
-                dnvp: dnvp, nsdap: nsdap, other: 1};
+    return {kpd: kpd, spd: spd, z: 1, ddp: republic, dvp: republic,
+            dnvp: dnvp, nsdap: nsdap, other: 1,
+            // the parties that only stand in the states
+            bvp: 1, agr: 1, burg: (republic + dnvp) / 2, vlk: nsdap};
+  };
+
+  RF.polls = function(Q) {
+    var mult = RF.pollMult(Q);
     var result = {total: {}, groups: []};
     for (var p of PARTIES) {
       result.total[p] = 0;
@@ -558,26 +649,48 @@
 
 
   // ---- Leadership, congresses and colours -------------------------------
-  // The KPD's leadership changes only at party congresses. The congresses
-  // of the other parties are listed for later use but not played yet.
+  // The KPD's leadership changes only at party congresses. The statutes
+  // call for a congress about once a year; in practice they came every
+  // twelve to twenty months, and the Zentrale could bring one forward or
+  // put it off. The game opens with the Eighth Congress at Leipzig due at
+  // the end of January 1923; after that the next falls due 14 months after
+  // the last one (Q.congress_due), unless moved from the Executive card.
+  // Places follow the real congresses while they last, then other party
+  // strongholds.
+  var CONGRESS_PLACES = ['Leipzig', 'Frankfurt am Main', 'Berlin', 'Essen', 'Berlin-Wedding',
+                         'Chemnitz', 'Hamburg', 'Halle', 'Düsseldorf', 'Leipzig'];
+  var ORDINALS = ['Eighth', 'Ninth', 'Tenth', 'Eleventh', 'Twelfth', 'Thirteenth', 'Fourteenth',
+                  'Fifteenth', 'Sixteenth', 'Seventeenth'];
 
-  var KPD_CONGRESSES = [
-    {year: 1923, month: 1, name: '8th congress', place: 'Leipzig'},
-    {year: 1924, month: 4, name: '9th congress', place: 'Frankfurt am Main'},
-    {year: 1925, month: 7, name: '10th congress', place: 'Berlin'},
-    {year: 1927, month: 3, name: '11th congress', place: 'Essen'},
-    {year: 1929, month: 6, name: '12th congress', place: 'Berlin-Wedding'}
-  ];
-  RF.kpdCongresses = KPD_CONGRESSES;
+  RF.congressName = function(Q) {
+    return (ORDINALS[Q.congress_number - 8] || 'Next') + ' Party Congress';
+  };
 
-  RF.nextCongress = function(Q) {
-    var t = Q.year * 12 + Q.month;
-    for (var c of KPD_CONGRESSES) {
-      if (c.year * 12 + c.month >= t) {
-        return c;
-      }
+  RF.congressPlace = function(Q) {
+    return CONGRESS_PLACES[Q.congress_number - 8] || 'Berlin';
+  };
+
+  // Due date of the next congress, as text.
+  RF.nextCongressText = function(Q) {
+    var d = Q.congress_due;
+    var y = Math.floor((d - 1) / 12), m = d - 12 * y;
+    if (Q.congress_number == 8) {
+      return 'Leipzig, end of January 1923';
     }
-    return null;
+    return RF.congressPlace(Q) + ', due ' + MONTHS[m] + ' ' + y;
+  };
+
+  // Called once a month: a congress that has fallen due meets (the
+  // rf_congress event picks it up).
+  RF.monthlyCongress = function(Q) {
+    var t = Q.year * 12 + Q.month;
+    if (Q.congress_number > 8 && t >= Q.congress_due && !Q.congress_pending) {
+      Q.congress_pending = 1;
+    }
+    // an Open Letter brings a special congress within two months
+    if (Q.open_letter && Q.congress_due > t + 2) {
+      Q.congress_due = t + 2;
+    }
   };
 
   // The KPD's colour follows the faction in the Zentrale.
@@ -621,6 +734,15 @@
               {until: 'beer_hall_seen', name: 'Adolf Hitler', colours: ['#7A3C00', '#c8874a']},
               {until: null, name: 'banned; Hitler in prison', colours: ['#8c6a4f', '#b89a7f']}
             ]},
+    agr: {name: 'Agrarians', full: 'Agrarian leagues',
+          ideology: 'Farmers\' and rural leagues standing in the state elections: the Landbund, the peasants\' leagues and their allies. Mostly conservative, some close to the DNVP.',
+          leaders: [{until: null, name: '', colours: ['#3f7f3f', '#7fc07f']}]},
+    burg: {name: 'Bourgeois lists', full: 'Bourgeois unity lists',
+           ideology: 'Joint lists of the bourgeois parties and middle-class associations in the smaller states, formed to keep the Social Democrats out of power.',
+           leaders: [{until: null, name: '', colours: ['#7a6a9a', '#b0a0d0']}]},
+    vlk: {name: 'Völkisch', full: 'Völkisch lists',
+          ideology: 'Antisemitic nationalists of the German Völkisch Freedom Party and their allies.',
+          leaders: [{until: null, name: '', colours: ['#5a3a1a', '#a07a50']}]},
     other: {name: 'Others', full: 'Other parties',
             ideology: 'Regional, agrarian and splinter parties, and the rump USPD.',
             leaders: [{until: null, name: '', colours: ['#777777', '#b0b0b0']}]},
@@ -856,20 +978,30 @@
     geschke: {name: 'Ottomar Geschke', slot: 'org', faction: 'left',
               note: 'A Berlin metalworker and organiser of the Left.'},
     scholem: {name: 'Werner Scholem', slot: 'org', faction: 'ultra',
-              note: 'Ran the party\'s organisation under the Left in 1924.'},
+              note: 'A sharp-tongued Berlin organiser of the Left.'},
     walcher: {name: 'Jacob Walcher', slot: 'unions', faction: 'right',
               note: 'Head of the party\'s trade-union department, close to Brandler.'},
     heckert: {name: 'Fritz Heckert', slot: 'unions', faction: 'center',
               note: 'A bricklayer and union man who bends with the majority.'},
     merker: {name: 'Paul Merker', slot: 'unions', faction: 'stalin',
-             note: 'A hard-liner for red unions; prominent only later in the decade.'},
+             note: 'A young union militant who distrusts the reformist union leaders.'},
     skoblevsky: {name: 'Pyotr Skoblevsky', slot: 'military', faction: 'moscow', from: 1923 * 12 + 8,
-                 note: 'A Red Army officer sent by Moscow in 1923 to build the M-Apparat.'},
+                 note: 'A Red Army officer sent by Moscow to advise the party on military matters.'},
     schneller: {name: 'Ernst Schneller', slot: 'military', faction: 'left',
                 note: 'A former officer who trains the party\'s defence units.'},
     kippenberger: {name: 'Hans Kippenberger', slot: 'military', faction: 'stalin',
-                   note: 'Fought in the Hamburg rising; later ran the party\'s secret apparatus.'}
+                   note: 'A young Hamburg Communist with a talent for conspiracy.'}
   };
+
+  // An advisor whose faction has not formed yet sits with the camp it
+  // comes from: the Middle Group's men with the majority, the Ultra-Left
+  // and Thälmann's men with the Left.
+  var ADV_FALLBACK = {center: 'right', ultra: 'left', stalin: 'left'};
+  var advFaction = function(Q, a) {
+    var f = a.faction;
+    return f == 'moscow' || RF.active(Q, f) ? f : ADV_FALLBACK[f];
+  };
+  RF.advFaction = advFaction;
 
   RF.advisorSlots = ADVISOR_SLOTS;
   RF.advisors = ADVISORS;
@@ -906,10 +1038,10 @@
         '<div class="rf-adv-img">' + (img ? '<img src="' + esc(img) + '" alt="">' : (a ? esc(a.name.split(' ').pop()) : '?')) + '</div><div>';
     if (a) {
       html += '<div class="rf-adv-name">' + esc(a.name) + '</div>' +
-          '<div>' + ADVISOR_SLOTS[slot].role + ' · ' + factionLabel(a.faction) + '</div>' +
+          '<div>' + ADVISOR_SLOTS[slot].role + ' · ' + factionLabel(advFaction(Q, a)) + '</div>' +
           '<div class="rf-adv-note">' + esc(a.note) + '</div>' +
           '<div class="rf-adv-status">' + (wait ? 'Can act again in ' + wait + (wait == 1 ? ' month.' : ' months.') :
-                                          'Ready to act. Each action pleases ' + factionLabel(a.faction) + '.') + '</div>';
+                                          'Ready to act. Each action pleases ' + factionLabel(advFaction(Q, a)) + '.') + '</div>';
     } else {
       html += '<div class="rf-adv-name">Vacant</div><div>No one holds this post yet.</div>';
     }
@@ -920,12 +1052,12 @@
   RF.advisorUse = function(Q, slot) {
     var a = ADVISORS[Q['adv_' + slot]];
     Q['adv_' + slot + '_next'] = Q.time + 6;
-    if (a && a.faction == 'moscow') {
+    if (a && advFaction(Q, a) == 'moscow') {
       Q[Q.leader + '_moscow'] += 3;
       Q.autonomy -= 2;
     } else if (a) {
       var e = {};
-      e[a.faction] = 2;
+      e[advFaction(Q, a)] = 2;
       RF.lean(Q, e);
     }
     RF.normalize(Q);
@@ -939,17 +1071,17 @@
       var a = ADVISORS[id];
       Q['pick_' + id] = 0;
       if (a.slot != slot || Q['adv_' + slot] == id || (a.from && t < a.from) ||
-          (a.faction != 'moscow' && Q[a.faction + '_expelled'])) {
+          (a.faction != 'moscow' && Q[advFaction(Q, a) + '_expelled'])) {
         continue;
       }
       Q['pick_' + id] = 1;
-      Q['pick_' + id + '_desc'] = factionLabel(a.faction) + '. ' + a.note;
+      Q['pick_' + id + '_desc'] = factionLabel(advFaction(Q, a)) + '. ' + a.note;
       out.push(id);
     }
     Q.adv_slot = slot;
     Q.adv_slot_name = ADVISOR_SLOTS[slot].name;
     var cur = ADVISORS[Q['adv_' + slot]];
-    Q.adv_current = cur ? cur.name + ' (' + factionLabel(cur.faction) + ')' : 'no one';
+    Q.adv_current = cur ? cur.name + ' (' + factionLabel(advFaction(Q, cur)) + ')' : 'no one';
     return out;
   };
 
@@ -958,19 +1090,19 @@
   RF.appoint = function(Q, slot, id) {
     var old = ADVISORS[Q['adv_' + slot]];
     var a = ADVISORS[id];
-    if (old && old.faction != 'moscow') {
-      Q[old.faction + '_dissent'] += 4;
+    if (old && advFaction(Q, old) != 'moscow') {
+      Q[advFaction(Q, old) + '_dissent'] += 4;
     }
-    if (a.faction == 'moscow') {
+    if (advFaction(Q, a) == 'moscow') {
       Q[Q.leader + '_moscow'] += 4;
       Q.autonomy -= 3;
     } else {
-      Q[a.faction + '_dissent'] -= 3;
-      Q[a.faction + '_strength'] += 1;
+      Q[advFaction(Q, a) + '_dissent'] -= 3;
+      Q[advFaction(Q, a) + '_strength'] += 1;
     }
     Q['adv_' + slot] = id;
     Q.appointed_name = a.name;
-    Q.appointed_faction = factionLabel(a.faction);
+    Q.appointed_faction = factionLabel(advFaction(Q, a));
     RF.normalize(Q);
   };
 
@@ -979,7 +1111,9 @@
   RF.decorateAdvisors = function(Q) {
     var faces = {
       'rf_advisors.replace': '⇄',
-      'rf_main.rf_party': 'Draw'
+      'rf_main.rf_party': 'Draw',
+      'rf_provinces': 'States',
+      'rf_executive': 'Zentrale'
     };
     for (var cid in faces) {
       var c = document.querySelector('#content a.card[card-id="' + cid + '"]');
@@ -1010,8 +1144,9 @@
     });
   };
 
-  // The main page: the leader, the deck and "Replace an advisor" side by side,
-  // then the hand and the advisors in rows of four.
+  // The main page: the leader with the Provinces and Executive cards
+  // beside him, the Party Affairs deck above the hand, and the advisors
+  // with "Replace an advisor" below.
   RF.layoutMain = function() {
     var content = document.getElementById('content');
     var portrait = content.querySelector('.rf-portrait');
@@ -1021,17 +1156,30 @@
     var top = $('<div>').addClass('rf-top');
     $(portrait).before(top);
     top.append(portrait);
-    var decks = $('<ul>').addClass('decks rf-top-cards');
-    $(content).find('ul.decks li.deck').appendTo(decks);
-    top.append(decks);
-    var replace = $(content).find('ul.pinned-cards a.card[card-id="rf_advisors.replace"]').closest('li');
-    if (replace.length) {
-      top.append($('<ul>').addClass('pinned-cards rf-top-cards').append(replace));
+    var topCards = $('<ul>').addClass('pinned-cards rf-top-cards');
+    for (var id of ['rf_provinces', 'rf_executive']) {
+      $(content).find('ul.pinned-cards a.card[card-id="' + id + '"]').closest('li').appendTo(topCards);
     }
-    // the old deck row and its divider are empty now
-    $(content).children('ul.decks:not(.rf-top-cards)').remove();
+    top.append(topCards);
+    // the deck sits right above the hand
+    var deck = $(content).find('ul.decks li.deck');
+    var deckRow = $('<ul>').addClass('decks rf-deck-row').append(deck);
+    var handDesc = $(content).children('p.hand-description');
+    if (handDesc.length) {
+      handDesc.before(deckRow);
+    } else {
+      top.after(deckRow);
+    }
+    $(content).children('ul.decks:not(.rf-deck-row)').remove();
     $(content).children('p.deck-description').prev('hr').remove();
     $(content).children('p.deck-description').remove();
+    // the advisors: the replace card goes last in their row
+    var pinned = $(content).children('ul.pinned-cards');
+    var replace = $(content).find('a.card[card-id="rf_advisors.replace"]').closest('li');
+    if (pinned.length && replace.length) {
+      pinned.append(replace);
+    }
+    $(content).children('p.pinned-text-description').text('Advisors');
   };
 
   // ---- Moscow: the Kremlin patrons and the Comintern plenums -----------
@@ -1142,6 +1290,8 @@
   RF.monthlyMoscow = function(Q) {
     var t = Q.year * 12 + Q.month;
     Q.moscow_news = '';
+    Q.stalin_power = Math.round(RF.patronPower(Q, 'stalin'));
+    Q.trotsky_power = Math.round(RF.patronPower(Q, 'trotsky'));
     // a faction's standing in Moscow drifts towards its patron's power
     for (var f of FACTIONS) {
       var pa = RF.patronOf(Q, f);
@@ -1174,16 +1324,7 @@
       Q.line = p.line;
       Q.directive_index = i;
     }
-    for (var c of KPD_CONGRESSES) {
-      if (c.year * 12 + c.month == t) {
-        var before = Q.leader;
-        RF.congress(Q);
-        Q.congress_news = c.place + ' (' + c.name + '): ' +
-            (Q.moscow_overruled ? 'Moscow overturned the vote and installed the ' + NAMES[Q.leader] + '.' :
-             Q.leader == before ? 'the ' + NAMES[Q.leader] + ' keeps the Zentrale.' :
-             'the ' + NAMES[Q.leader] + ' takes over the Zentrale.');
-      }
-    }
+    RF.monthlyCongress(Q);
     RF.normalize(Q);
   };
 
@@ -1201,7 +1342,7 @@
     var backs = {};
     for (var f of FACTIONS) {
       var pa = RF.patronOf(Q, f);
-      if (pa && !Q[f + '_expelled']) {
+      if (pa && RF.active(Q, f)) {
         (backs[pa] = backs[pa] || []).push('<span class="f-' + f + '">' + NAMES[f] + '</span>');
       }
     }
@@ -1215,24 +1356,157 @@
     el.innerHTML = html + '</table>';
   };
 
+  // ---- Reich cabinets ------------------------------------------------------
+  // Each cabinet from its first full month. `line` is the text after the
+  // name, with % for the list of parties; `text` is its hover card.
+  var CABINETS = [
+    {id: 'cuno', name: 'Cuno cabinet', from: [1922, 11], chancellor: 'cuno', party: 'other',
+     parties: ['z', 'ddp', 'dvp', 'bvp'], line: 'non-party experts backed by %',
+     text: 'A "cabinet of business" around the shipping director Wilhelm Cuno. Experts sit beside ministers from the bourgeois parties; the SPD stays outside but does not bring it down. Its answer to the occupation of the Ruhr is passive resistance, paid for with the printing press.'},
+    {id: 'stresemann1', name: 'Stresemann cabinet', from: [1923, 8], chancellor: 'stresemann', party: 'dvp',
+     parties: ['spd', 'z', 'ddp', 'dvp'], line: 'grand coalition of %',
+     text: 'A grand coalition from the SPD to the DVP, formed as the strike wave brought Cuno down. It must end passive resistance, save the currency and hold the Reich together against Bavaria, the Rhineland separatists and the workers\' governments in central Germany.'},
+    {id: 'stresemann2', name: 'Stresemann rump cabinet', from: [1923, 11], chancellor: 'stresemann', party: 'dvp',
+     parties: ['z', 'ddp', 'dvp'], line: '% after the SPD walked out',
+     text: 'The SPD left the coalition in protest at the army\'s action against Saxony while Bavaria went unpunished. Stresemann governs on without a majority.'},
+    {id: 'marx1', name: 'Marx cabinet', from: [1923, 12], chancellor: 'marx', party: 'z',
+     parties: ['z', 'bvp', 'ddp', 'dvp'], line: 'bourgeois minority of %',
+     text: 'A minority cabinet of the bourgeois centre under the Centre Party\'s chairman. It governs by enabling act and decree while the new currency is defended with deep cuts.'},
+    {id: 'marx2', name: 'Second Marx cabinet', from: [1924, 6], chancellor: 'marx', party: 'z',
+     parties: ['z', 'ddp', 'dvp'], line: 'bourgeois minority of %',
+     text: 'The bourgeois minority carries on after the May election, its main task the new reparations settlement.'},
+    {id: 'luther1', name: 'Luther cabinet', from: [1925, 1], chancellor: 'luther', party: 'other',
+     parties: ['z', 'dvp', 'dnvp', 'bvp'], line: 'centre-right coalition of %',
+     text: 'A non-party chancellor at the head of the first cabinet with the German Nationals.'},
+    {id: 'luther2', name: 'Second Luther cabinet', from: [1926, 2], chancellor: 'luther', party: 'other',
+     parties: ['z', 'ddp', 'dvp', 'bvp'], line: 'bourgeois minority of %',
+     text: 'Luther again, now without the German Nationals.'},
+    {id: 'marx3', name: 'Third Marx cabinet', from: [1926, 5], chancellor: 'marx', party: 'z',
+     parties: ['z', 'ddp', 'dvp', 'bvp'], line: 'bourgeois minority of %',
+     text: 'The Centre\'s chairman returns at the head of the same minority.'},
+    {id: 'marx4', name: 'Fourth Marx cabinet', from: [1927, 2], chancellor: 'marx', party: 'z',
+     parties: ['z', 'dnvp', 'dvp', 'bvp'], line: 'centre-right coalition of %',
+     text: 'A "bourgeois bloc" with the German Nationals.'},
+    {id: 'muller2', name: 'Müller cabinet', from: [1928, 7], chancellor: 'muller', party: 'spd',
+     parties: ['spd', 'z', 'ddp', 'dvp', 'bvp'], line: 'grand coalition of %',
+     text: 'A grand coalition under a Social Democratic chancellor.'},
+    {id: 'bruning1', name: 'Brüning cabinet', from: [1930, 4], chancellor: 'bruning', party: 'z',
+     parties: ['z', 'ddp', 'dvp', 'bvp'], line: 'presidential cabinet backed by %',
+     text: 'A cabinet that rules by the President\'s emergency decrees rather than a Reichstag majority.'},
+    {id: 'papen', name: 'Papen cabinet', from: [1932, 6], chancellor: 'papen', party: 'other',
+     parties: ['dnvp'], line: 'presidential cabinet of barons, backed only by the %',
+     text: 'A cabinet of aristocrats and officers with almost no support in the Reichstag.'},
+    {id: 'schleicher', name: 'Schleicher cabinet', from: [1932, 12], chancellor: 'schleicher', party: 'other',
+     parties: ['dnvp'], line: 'presidential cabinet of the general, tolerated by the %',
+     text: 'The general who made and unmade chancellors now holds the office himself.'}
+  ];
+  RF.cabinets = CABINETS;
+
+  RF.cabinet = function(Q) {
+    var t = Q.year * 12 + Q.month;
+    var cur = CABINETS[0];
+    for (var c of CABINETS) {
+      if (c.from[0] * 12 + c.from[1] <= t) {
+        cur = c;
+      }
+    }
+    return cur;
+  };
+
+  var PEOPLE_PARTY = function(id) {
+    return RF.people[id] ? RF.people[id].party : 'other';
+  };
+
+  // A person's name with their hover card, in their party's colour.
+  RF.personSpan = function(id) {
+    var p = RF.people[id];
+    return '<span class="m-' + id + ' rf-person col-' + p.party + '">' + esc(p.short || p.name) + '</span>';
+  };
+
+  // A value that changes with the date: a string, or a list of
+  // [year, month, value] where each value applies from its date on. Hover
+  // cards use it so they never know more than the player could.
+  var timed = function(Q, v) {
+    if (typeof v == 'string') {
+      return v;
+    }
+    var t = Q.year * 12 + Q.month;
+    var out = v[0][2];
+    for (var e of v) {
+      if (e[0] * 12 + e[1] <= t) {
+        out = e[2];
+      }
+    }
+    return out;
+  };
+  RF.timed = timed;
+
+  RF.personText = function(Q, id) {
+    return timed(Q, RF.people[id].text);
+  };
+
+  RF.personRole = function(Q, id) {
+    return timed(Q, RF.people[id].role);
+  };
+
   // People outside the KPD who get a hover card (class m-<id>).
   RF.people = {
     zinoviev: {name: 'Grigory Zinoviev', party: 'comintern',
-               role: 'Chairman of the Comintern\'s Executive Committee, 1919–1926',
-               text: 'Head of the International and the patron of the KPD\'s Left. He pushed for the German October in 1923 and looked for others to blame when it failed.'},
+               role: [[1919, 1, 'Chairman of the Communist International'], [1926, 11, 'Former chairman of the International']],
+               text: [[1923, 1, 'Chairman of the International\'s Executive Committee and master of the Petrograd party, one of the three men who rule while Lenin lies ill. He distrusts Brandler\'s caution and listens to the Berlin Left.'],
+                      [1924, 1, 'With Lenin dead he shares power with Kamenev and Stalin and leads the attack on Trotsky. He blames the German defeat on Brandler and Radek.'],
+                      [1925, 12, 'Beaten by Stalin and Bukharin at the Russian party congress, he has lost Leningrad and is looking to Trotsky for an alliance.'],
+                      [1926, 11, 'Removed from the head of the International. He fights on in the United Opposition with Trotsky.'],
+                      [1927, 12, 'Expelled from the Russian party with the Opposition. He recants and asks to be readmitted.']]},
     radek: {name: 'Karl Radek', party: 'comintern',
-            role: 'The Comintern\'s expert on Germany',
-            text: 'Backed Brandler and the united front, and in June 1923 courted German nationalists with his Schlageter speech. After the failed October he fell with Brandler.'},
+            role: [[1919, 1, 'The International\'s expert on Germany'], [1924, 1, 'Member of the Left Opposition'], [1927, 12, 'Exiled oppositionist']],
+            text: [[1923, 1, 'Brandler\'s closest ally in Moscow. A brilliant journalist who believes in the united front and is not above flirting with German nationalists.'],
+                   [1924, 1, 'Blamed with Brandler for the German defeat. He has sided with Trotsky.'],
+                   [1927, 12, 'Expelled with the Opposition and sent into exile in Siberia.']]},
     trotsky: {name: 'Leon Trotsky', party: 'comintern',
-              role: 'People\'s Commissar for War until January 1925',
-              text: 'Leader of the Left Opposition from late 1923, with Radek at his side. Removed from his posts, expelled from the party in November 1927 and deported in 1929.'},
+              role: [[1918, 1, 'People\'s Commissar for War'], [1925, 1, 'Member of the Politburo'], [1927, 11, 'Expelled from the party'], [1929, 2, 'In exile']],
+              text: [[1923, 1, 'Creator of the Red Army and Lenin\'s best-known comrade. The rest of the Politburo fears his ambition; he has begun to attack the party bureaucracy.'],
+                     [1923, 11, 'Leader of the Left Opposition, attacked by Zinoviev, Kamenev and Stalin. He blames the German defeat on the International\'s leaders.'],
+                     [1925, 1, 'Removed as Commissar for War. He keeps a seat in the Politburo but little power.'],
+                     [1927, 11, 'Expelled from the party and banished to Alma-Ata.'],
+                     [1929, 2, 'Deported from the Soviet Union. He writes from exile in Turkey.']]},
     bukharin: {name: 'Nikolai Bukharin', party: 'comintern',
-               role: 'Led the Comintern in practice, 1926–1929',
-               text: 'Stalin\'s ally against Zinoviev and Trotsky, then branded the leader of the \'right deviation\' and removed in 1929. Brandler\'s KPO looked to him.'},
+               role: [[1918, 1, 'Editor of Pravda'], [1926, 11, 'Head of the Communist International'], [1929, 7, 'Removed from the International']],
+               text: [[1923, 1, 'The party\'s best-known theorist. Once a Left Communist, he now defends the New Economic Policy and the alliance with the peasants.'],
+                      [1925, 1, 'Stalin\'s partner against Zinoviev and Trotsky, and the voice of the peasant alliance.'],
+                      [1926, 11, 'He runs the International in Zinoviev\'s place, still allied with Stalin.'],
+                      [1928, 7, 'Stalin\'s men are attacking "the right danger", and everyone knows whom they mean.'],
+                      [1929, 7, 'Removed from the International and the Politburo as leader of the "right deviation".']]},
     stalin: {name: 'Joseph Stalin', party: 'comintern',
-             role: 'General Secretary of the Russian party from 1922',
-             text: 'Allied with Zinoviev against Trotsky, then with Bukharin against Zinoviev, and stood alone by 1929. Thälmann\'s patron from 1925.'}
+             role: 'General Secretary of the Russian party',
+             text: [[1923, 1, 'The General Secretary decides who is appointed to what in the Russian party. Few abroad know much about him. He works with Zinoviev and Kamenev against Trotsky.'],
+                    [1925, 12, 'Allied with Bukharin, he has beaten Zinoviev and Kamenev at the Russian party congress.'],
+                    [1927, 12, 'With the Opposition expelled, he is the strongest man in the Politburo.'],
+                    [1929, 12, 'Master of the Russian party. His fiftieth birthday is celebrated like a cult.']]},
+    ebert: {name: 'Friedrich Ebert', party: 'spd', role: 'President of the Reich',
+            text: 'A saddler\'s son who rose to lead the SPD. In November 1918 he struck a pact with the army to stop the revolution; to Communists he is the man who let the Freikorps loose on Berlin.'},
+    simons: {name: 'Walter Simons', party: 'other', role: 'Acting President of the Reich',
+             text: 'President of the Reich Court, standing in until a new President is elected.'},
+    hindenburg: {name: 'Paul von Hindenburg', party: 'other', role: 'President of the Reich',
+                 text: 'The field marshal of the war, elected as the candidate of the right. A monarchist who has sworn to uphold the Republic\'s constitution.'},
+    cuno: {name: 'Wilhelm Cuno', party: 'other', role: 'Chancellor',
+           text: 'Director-general of the Hamburg-America Line, with no party behind him. Industry trusts him; to the workers his is a cabinet of businessmen.'},
+    stresemann: {name: 'Gustav Stresemann', party: 'dvp', role: 'Chancellor',
+                 text: 'Leader of the DVP. An annexationist during the war, he now calls himself a republican of reason and wants Germany back among the powers.'},
+    marx: {name: 'Wilhelm Marx', party: 'z', role: 'Chancellor',
+           text: 'Chairman of the Centre Party, a Catholic judge from the Rhineland. Careful, colourless and hard to bring down.'},
+    luther: {name: 'Hans Luther', party: 'other', role: 'Chancellor',
+             text: 'The former mayor of Essen and finance minister of the new currency, a man without a party.'},
+    muller: {name: 'Hermann Müller', party: 'spd', role: 'Chancellor',
+             text: 'Co-chairman of the SPD, who signed the Treaty of Versailles as foreign minister.'},
+    bruning: {name: 'Heinrich Brüning', party: 'z', role: 'Chancellor',
+              text: 'A Centre Party finance expert and war veteran who governs by decree and balances the budget at any cost.'},
+    papen: {name: 'Franz von Papen', party: 'other', role: 'Chancellor',
+            text: 'A Catholic aristocrat from the Centre\'s right edge, chosen by the President\'s circle.'},
+    schleicher: {name: 'Kurt von Schleicher', party: 'reichswehr', role: 'Chancellor',
+                 text: 'The army\'s political general, who has made and unmade chancellors.'}
   };
+
 
   RF.factionPersons = PERSONS;
   RF.reichstag1920 = REICHSTAG_1920;

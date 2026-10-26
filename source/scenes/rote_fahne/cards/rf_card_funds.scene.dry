@@ -1,0 +1,49 @@
+title: Fund-raising
+subtitle: The party's treasury is empty again.
+new-page: true
+is-card: true
+tags: rf_party
+view-if: rf_funds_timer <= 0
+on-arrival: month_actions += 1; rf_funds_timer = 2
+
+= Fund-raising
+
+Dues buy less every week. The treasurer asks how the party should pay for its offices, its papers and its organisers.
+
+- @collection
+- @dues
+- @moscow
+
+@collection
+title: A collection in the factories and the streets.
+subtitle: +2 resources. A little more standing everywhere the collectors go.
+on-arrival: {!
+Q.funds += 2;
+Q.members += 1;
+window.RF.normalize(Q);
+!}
+
+Comrades rattle tins outside the factory gates and the labour exchanges.
+
+@dues
+title: Raise the dues and index them to the dollar.
+subtitle: +3 resources. Some members drop out.
+on-arrival: {!
+Q.funds += 3;
+Q.members -= 4;
+window.RF.normalize(Q);
+!}
+
+The dues are pegged to a gold value. The treasurer is pleased; the poorest members are not.
+
+@moscow
+title: Ask the International for help.
+subtitle: +3 resources. Moscow's standing for the leadership rises; the party loses some autonomy.
+on-arrival: {!
+Q.funds += 3;
+Q[Q.leader + '_moscow'] += 2;
+Q.autonomy -= 2;
+window.RF.normalize(Q);
+!}
+
+The money arrives in dollars. With it come reports, instructions and representatives.

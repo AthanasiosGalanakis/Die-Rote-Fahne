@@ -1,0 +1,67 @@
+title: The Party Congress
+subtitle: The delegates meet to elect a new Zentrale.
+new-page: true
+tags: rf_event
+view-if: congress_pending = 1
+priority: 3
+on-arrival: {!
+var RF = window.RF;
+RF.normalize(Q);
+Q.congress_title = RF.congressName(Q) + ', ' + RF.congressPlace(Q);
+RF.congressVote(Q);
+var d = JSON.parse(Q.delegates);
+Q.congress_delegates = RF.delegateHemicycle(d, 150);
+Q.congress_legend = Object.keys(d).map(function(f) {
+    return '<span class="f-' + f + '">' + RF.names[f] + '</span> ' + d[f] + '%';
+}).join(' · ');
+!}
+
+= [+ congress_title +]
+
+The districts have elected their delegates, and the factions count their votes.
+
+{!<div class="rf-delegates">!}[+ congress_delegates +]{!<div class="rf-legend">!}[+ congress_legend +]{!</div></div>!}
+
+[? if congress_compromise = 1 : No faction can command a majority. The delegates settle on the <span class="f-center">Middle Group</span> as a compromise. ?][? if congress_compromise = 0 : The delegates give the <span class="f-[+ congress_winner +]">[+ congress_winner_name +]</span> the majority. ?]
+
+[? if moscow_demand = 1 : Then the International's representatives take the floor. Moscow will not accept the result: it demands that the <span class="f-[+ demand_for +]">[+ demand_for_name +]</span> lead the party. ?]
+
+- @accept
+- @reject
+- @done
+
+@accept
+title: Bow to the International.
+subtitle: Moscow's favourite takes the Zentrale. The party loses autonomy, and the faction the delegates chose is angry.
+view-if: moscow_demand = 1
+on-arrival: {!
+window.RF.acceptDemand(Q);
+window.RF.congressDone(Q);
+!}
+go-to: outcome
+
+@reject
+title: Stand by the delegates' vote.
+subtitle: The party keeps its leadership and gains autonomy. Moscow counts it as a rebuke, and its favourite is angry.
+view-if: moscow_demand = 1
+choose-if: can_reject = 1
+unavailable-subtitle: The winners are too weak, or the party too dependent, to defy Moscow.
+on-arrival: {!
+window.RF.rejectDemand(Q);
+window.RF.congressDone(Q);
+!}
+go-to: outcome
+
+@done
+title: The new Zentrale takes office.
+view-if: moscow_demand = 0
+on-arrival: {! window.RF.congressDone(Q); !}
+go-to: outcome
+
+@outcome
+
+= The New Zentrale
+
+[+ congress_news +]
+
+The <span class="p-kpd">KPD</span> is now led by the <span class="f-[+ leader +]">[+ leader_name +]</span>. The next congress is due in about a year.

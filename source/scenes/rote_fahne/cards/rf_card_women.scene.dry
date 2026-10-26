@@ -1,0 +1,38 @@
+title: Women's Work
+subtitle: Clara Zetkin asks for more attention to working women.
+new-page: true
+is-card: true
+tags: rf_party
+view-if: rf_women_timer <= 0
+on-arrival: month_actions += 1; rf_women_timer = 5
+
+= Women's Work
+
+Clara Zetkin points out that women are half the working class and a fraction of the party. Prices are their battlefield: they queue for bread while the mark falls.
+
+- @committees
+- @later
+
+@committees
+title: Lead the housewives' price committees.
+subtitle: More members and standing in the cities. Costs 1 resource.
+choose-if: funds >= 1
+unavailable-subtitle: Needs 1 resource.
+on-arrival: {!
+Q.funds -= 1;
+Q.members += 3;
+Q.rev_situation += 1;
+window.RF.normalize(Q);
+!}
+
+Women's delegations march on markets and town halls against profiteers.
+
+@later
+title: Not now; there are more urgent tasks.
+subtitle: No cost.
+on-arrival: {!
+
+window.RF.normalize(Q);
+!}
+
+Zetkin is not pleased.
