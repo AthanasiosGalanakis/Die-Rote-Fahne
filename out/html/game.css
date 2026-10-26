@@ -1335,8 +1335,8 @@ header #header-links,
   }
 }
 
-/* people outside the KPD (Zinoviev, Radek) */
-.m-zinoviev, .m-radek {
+/* people outside the KPD (the Kremlin patrons, Radek) */
+.m-zinoviev, .m-radek, .m-trotsky, .m-bukharin, .m-stalin {
   color: var(--c-comintern, #b8000f);
   font-weight: bold;
   text-decoration: underline dotted;
@@ -1344,6 +1344,15 @@ header #header-links,
   text-underline-offset: 0.18em;
   cursor: help;
 }
-body.dark-mode .m-zinoviev, body.dark-mode .m-radek {
+body.dark-mode .m-zinoviev, body.dark-mode .m-radek, body.dark-mode .m-trotsky,
+body.dark-mode .m-bukharin, body.dark-mode .m-stalin {
   color: var(--c-comintern-dark, #ff6060);
+}
+.rf-kremlin-backs {
+  font-size: 0.85em;
+  opacity: 0.85;
+  margin-top: 1px;
+}
+.rf-kremlin td {
+  vertical-align: top;
 }

@@ -12,7 +12,9 @@ You play the party as a whole, not one faction. Every card and event you choose 
 - Ultra-Left: Korsch, Scholem, Rosenberg; suspicious of the unions, parliament and Moscow. Defying Moscow feeds it.
 - Thälmann circle: follows whoever rules in Moscow. Obeying Moscow feeds it; defying Moscow angers it.
 
-Strong factions take the leadership at congresses. Angry factions can break away. A leadership pushed too far can resign. Moscow can overturn any result, more easily the less autonomy the party has kept.
+Strong factions take the leadership at congresses. Angry factions can break away. A leadership pushed too far can resign.
+
+Moscow works through the Comintern's plenums, which meet on their historical dates (June 1923 to July 1929). Each sets the line and gives the KPD a directive with a target; the next plenum praises the leadership or rebukes it, and a second rebuke before the first is made good brings an Open Letter that replaces the leadership at the next congress. Four Kremlin patrons (Zinoviev, Trotsky and Radek, Bukharin, Stalin) follow the Russian succession struggle on approximate keyframe curves, and each faction's standing in Moscow drifts towards its patron's power. Moscow's pressure on the leadership is shown on the Party tab; when it reaches its peak, the next congress is overturned. There are no dice.
 
 The sidebar has four tabs: Main (the party's status, the Reich government, the Reichstag, the next election, the currency), Party (factions, Moscow, armed formations, support for the revolution), Politics (relations with and leaders of the other parties) and Polls (projected results, support for the Republic and for nationalism, results by group). You hold four cards each month. Words replace numbers in the sidebar; Options can turn exact numbers on, which disables achievements for that game. The advisor slots, the leader's portrait and the achievements page are placeholders for now.
 

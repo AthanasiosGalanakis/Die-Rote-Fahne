@@ -38,12 +38,16 @@ Q.splits = 0;
 
 // which faction holds the Zentrale
 Q.leader = 'right';
-// the Comintern line: united_front -> insurrection (Sep 1923) -> bolshevization (1924)
+// the Comintern line and directive, set at each plenum (see RF.plenums);
+// the game opens under the Fourth World Congress of November 1922
 Q.line = 'united_front';
+Q.directive_index = 0;
+Q.moscow_rebukes = 0;
+Q.open_letter = 0;
+Q.moscow_news = '';
+Q.congress_news = '';
 // party autonomy falls with every intervention from Moscow
 Q.autonomy = 70;
-// how far Moscow trusts the German party
-Q.moscow_trust = 55;
 // paid functionaries loyal to the leadership
 Q.apparatus = 10;
 
