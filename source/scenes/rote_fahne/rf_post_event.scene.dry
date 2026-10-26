@@ -46,14 +46,11 @@ if (Q.month_actions >= 1) {
         Q.spd_discredit += 5;
     }
 
-    // the leadership consolidates; factions out of step with the line grow restless
+    // the leadership consolidates; the other factions grow restless unless
+    // they are fairly represented in the Zentrale
     Q[Q.leader + '_strength'] += 1;
     Q[Q.leader + '_dissent'] -= 1;
-    for (var f of RF.factions) {
-        if (f != Q.leader && RF.active(Q, f) && RF.canLead(f)) {
-            Q[f + '_dissent'] += 1;
-        }
-    }
+    RF.monthlyParty(Q);
     if (Q.party_banned) {
         Q.repression -= 2;
     }
