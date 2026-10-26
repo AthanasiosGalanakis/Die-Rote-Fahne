@@ -28,7 +28,7 @@ The sidebar has two rows of tabs: Main (the party, the Reich government, the Rei
 - `tools/gen_leipzig.py`: generates the Leipzig congress scene.
 - `out/html/rote_fahne.js`: shared rules (faction leanings, congresses, Moscow verdicts, the rising, the Reich calendar, polls) and the sidebar tables (relations, forces, missions; `MISSIONS`, `PARAMILITARIES`).
 - `out/html/game.css`: party colours (`p-kpd`, `p-spd`, ...) and faction colours (`f-right`, `f-left`, ...), after the Dynamic Social Democracy mod.
-- The original game's scenes are still in `source/scenes/` for reuse in later acts, but the title screen no longer offers them.
+- The original game's scenes (the SPD campaign of 1928 to 1933) are no longer in this repository. They are in [the base game](https://github.com/aucchen/social_democracy_alternate_history/tree/main/source/scenes) and in this repository's git history before version 0.12.
 
 ## Achievements and images
 
@@ -41,15 +41,11 @@ Achievements and images are plain data files, edited by hand and published throu
 
 [jquery v1.11.1](https://releases.jquery.com/)
 
-[d3.js v7](https://d3js.org)
-
-[d3-parliament](https://github.com/geoffreybr/d3-parliament)
-
 ## Building the game
 
 1. Run `npm install` (installs [dendrynexus](https://github.com/aucchen/dendrynexus)).
 
-2. Run `npx dendrynexus make-html` in this folder, then copy `out/game.json` to `out/html/`.
+2. Run `npx dendrynexus make-html` in this folder. The game is compiled into `out/html/core.js`.
 
 3. Serve `out/html` with any static web server, for example `python3 -m http.server` inside that folder, and open it in a browser.
 

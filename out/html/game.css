@@ -544,12 +544,6 @@ img {
 /* New stuff just for this game */
 
 /* colored box div */
-.box {
-  display: inline-block;
-  height: 1em;
-  width: 1em;
-}
-
 table {
     border-spacing: 0.5em;
 }
@@ -584,13 +578,6 @@ table {
 .seat.nsdap {
     fill: #954B00;
 }
-.seat.sapd {
-    fill: #C40000;
-}
-/* Giving them NDP colors, idk */
-.seat.srpd {
-    fill: #F4A460;
-}
 
 .tooltip-text {
     text-decoration: underline;
@@ -615,9 +602,6 @@ body.dark-mode .f-stalin { color: #d0607f; }
 body.dark-mode .f-minor { color: #b8b8b8; }
 
 /* faction strength bars in the sidebar */
-.rf-bar { height: 0.45em; margin: 0.15em 0 0.6em 0; background: rgba(0, 0, 0, 0.08); }
-.rf-bar span { display: block; height: 100%; }
-body.dark-mode .rf-bar { background: rgba(255, 255, 255, 0.12); }
 .b-right { background: #c4622d; }
 .b-center { background: #8a6d3b; }
 .b-left { background: #b00020; }
@@ -856,23 +840,10 @@ body.dark-mode .bg-z { background: #8a8a8a; }
 .rf-tip-body {
   padding: 0.5em 0.7em 0.6em 0.7em;
 }
-.rf-tip-extra {
-  margin-top: 0.4em;
-  font-style: italic;
-}
 
 /* ---- Inside the KPD: one block per faction ---- */
 .rf-faction {
   margin-bottom: 0.2em;
-}
-.rf-lead {
-  display: inline-block;
-  margin-left: 0.4em;
-  padding: 0 0.35em;
-  font-size: 0.75em;
-  border: 1px solid currentColor;
-  border-radius: 3px;
-  vertical-align: 0.1em;
 }
 .rf-stat {
   padding-left: 0.8em;

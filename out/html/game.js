@@ -2,65 +2,11 @@
   var game;
   var ui;
 
-  var DateOptions = {hour: 'numeric',
-                 minute: 'numeric',
-                 second: 'numeric',
-                 year: 'numeric',
-                 month: 'short',
-                 day: 'numeric' };
-
   var main = function(dendryUI) {
     ui = dendryUI;
     game = ui.game;
 
     // Add your custom code here.
-  };
-
-  var TITLE = "Die Rote Fahne" + '_' + "Maarten";
-
-  // the url is a link to game.json
-  // test url: https://aucchen.github.io/social_democracy_mods/v0.1.json
-  // TODO; 
-  window.loadMod = function(url) {
-      ui.loadGame(url);
-  };
-
-  // save/load buttons
-  window.updateSaveButtons = function() {
-      if (window.dendryUI.language && window.dendryUI.language == "de") {
-          for (var element of document.getElementsByClassName("save_button")) {
-              if (element.textContent == "Save") {
-                  element.textContent = "Speichern";
-              } else if (element.textContent == "Load") {
-                  element.textContent = "Laden";
-              }
-          } 
-      }
-      else {
-          for (var element of document.getElementsByClassName("save_button")) {
-              if (element.textContent == "Speichern") {
-                  element.textContent = "Save";
-              } else if (element.textContent == "Laden") {
-                  element.textContent = "Load";
-              }
-          }
-      }
-  };
-
-  window.onSave = function() {
-      window.updateSaveButtons();
-  };
-
-  window.onPopulateSaveSlots = function() {
-      window.updateSaveButtons();
-  };
-
-  window.showStats = function() {
-    if (window.dendryUI.dendryEngine.state.sceneId.startsWith('library')) {
-        window.dendryUI.dendryEngine.goToScene('backSpecialScene');
-    } else {
-        window.dendryUI.dendryEngine.goToScene('library');
-    }
   };
 
   window.showAchievements = function() {
@@ -94,15 +40,6 @@
       window.rfShowNumbers = false;
       try { localStorage['rf_show_numbers'] = '0'; } catch (e) {}
       window.updateSidebar();
-  };
-
-  window.showMods = function() {
-    window.hideOptions();
-    if (window.dendryUI.dendryEngine.state.sceneId.startsWith('mod_loader')) {
-        window.dendryUI.dendryEngine.goToScene('backSpecialScene');
-    } else {
-        window.dendryUI.dendryEngine.goToScene('mod_loader');
-    }
   };
 
   // TODO: update audio displays
@@ -273,16 +210,6 @@
   };
 
   
-  // This function allows you to modify the text before it's displayed.
-  // E.g. wrapping chat-like messages in spans.
-  window.displayText = function(text) {
-      return text;
-  };
-
-  // This function allows you to do something in response to signals.
-  window.handleSignal = function(signal, event, scene_id) {
-  };
-  
   // This function runs on a new page. Right now, this auto-saves.
   window.onNewPage = function() {
     var scene = window.dendryUI.dendryEngine.state.sceneId;
@@ -317,10 +244,6 @@
   };
 
   window.changeTab = function(newTab, tabId) {
-      if (tabId == 'poll_tab' && dendryUI.dendryEngine.state.qualities.historical_mode) {
-          window.alert('Polls are not available in historical mode.');
-          return;
-      }
       var tabButton = document.getElementById(tabId);
       var tabButtons = document.getElementsByClassName('tab_button');
       for (i = 0; i < tabButtons.length; i++) {
@@ -344,38 +267,6 @@
       window.updateSidebar();
       decorateSoon();
   };
-
-  /*
-   * This function copied from the code for Infinite Space Battle Simulator
-   *
-   * quality - a number between max and min
-   * qualityName - the name of the quality
-   * max and min - numbers
-   * colors - if true/1, will use some color scheme - green to yellow to red for high to low
-   * */
-  window.generateBar = function(quality, qualityName, max, min, colors) {
-      var bar = document.createElement('div');
-      bar.className = 'bar';
-      var value = document.createElement('div');
-      value.className = 'barValue';
-      var width = (quality - min)/(max - min);
-      if (width > 1) {
-          width = 1;
-      } else if (width < 0) {
-          width = 0;
-      }
-      value.style.width = Math.round(width*100) + '%';
-      if (colors) {
-          value.style.backgroundColor = window.probToColor(width*100);
-      }
-      bar.textContent = qualityName + ': ' + quality;
-      if (colors) {
-          bar.textContent += '/' + max;
-      }
-      bar.appendChild(value);
-      return bar;
-  };
-
 
   // Hover text boxes. The browser's own title tooltips and the cards'
   // built-in tooltips can run off the screen, so one floating box is placed

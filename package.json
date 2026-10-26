@@ -1,24 +1,20 @@
 {
-  "name": " social_democracy_alternate_history",
-  "version": "0.11.1",
-  "description": "Building the game:",
+  "name": "die-rote-fahne",
+  "version": "0.12.0",
+  "description": "Die Rote Fahne, a game about the KPD built on Social Democracy: An Alternate History",
   "main": "out/html/index.html",
   "scripts": {
     "dendrynexus": "dendrynexus"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://aucchen@github.com/aucchen/social_democracy_alternate_history.git"
+    "url": "git+https://github.com/AthanasiosGalanakis/Die-Rote-Fahne.git"
   },
   "keywords": [],
-  "author": "Autumn Chen",
+  "author": "Maarten, based on work by Autumn Chen",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/aucchen/social_democracy_alternate_history/issues"
-  },
-  "homepage": "https://github.com/aucchen/social_democracy_alternate_history",
+  "homepage": "https://github.com/AthanasiosGalanakis/Die-Rote-Fahne",
   "dependencies": {
-    "dendrynexus": "github:aucchen/dendrynexus",
-    "parliament-svg": "^3.0.0"
+    "dendrynexus": "github:aucchen/dendrynexus"
   }
 }
