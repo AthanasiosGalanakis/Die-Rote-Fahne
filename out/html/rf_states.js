@@ -380,16 +380,13 @@
         shareList(res) + '</div>';
   };
 
-  // The list of states on the Provinces card (Q.states_view, HTML).
+  // The Provinces card no longer lists every state's figures up front: it
+  // shows only the choice of states, and each state's page has the details.
+  // Q.states_view stays empty so [+ states_view +] in the scene prints
+  // nothing.
   RF.provincesView = function(Q) {
     Q.prov_ready = Q.prov_month == Q.time ? 0 : 1;
-    var html = '<table class="rf-table rf-states"><tr><th>State</th><th>KPD</th><th>Next vote</th></tr>';
-    for (var s of STATES) {
-      var res = RF.stateResults(Q, s.id);
-      html += '<tr><td>' + esc(s.name) + '</td><td class="rf-num">' + (res.votes.kpd || 0).toFixed(1) + '%</td><td class="rf-num">' +
-          dateText(RF.stateNext(Q, s.id)) + '</td></tr>';
-    }
-    Q.states_view = html + '</table>';
+    Q.states_view = '';
   };
 
   // A decision in a state: local standing and national effects, at most
