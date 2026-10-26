@@ -1,0 +1,209 @@
+title: The Leninbund
+subtitle: The expelled Left founds a party of its own.
+new-page: true
+tags: rf_event
+view-if: rf_hidden_events = 1 and left_formed = 1 and left_expelled = 0 and leader != "left" and left_dissent >= 85 and year >= 1926
+max-visits: 1
+
+#Hidden split-offs and outsider takeovers. All of them are switched off
+#(rf_hidden_events = 0 in rf_start) until they are approved; see the
+#design notes. Each is modelled on a real split, or on a road the party
+#could have taken.
+
+= The Leninbund
+
+Ruth Fischer, Arkadi Maslow and Hugo Urbahns have been pushed out of every post. Now their supporters are founding a party of their own, the Leninbund, for those who want Lenin's party without Moscow's orders.
+
+- @lb_fight
+- @lb_let_go
+
+@lb_fight
+title: Expel them all and fight them in every district.
+subtitle: The <span class="f-left">Left</span> leaves the party. Moscow is pleased.
+on-arrival: {!
+window.RF.expel(Q, 'left');
+Q[Q.leader + '_moscow'] += 5;
+!}
+
+The party press calls them renegades. In Berlin and the Palatinate, whole locals go over.
+
+@lb_let_go
+title: Let them go quietly.
+subtitle: The <span class="f-left">Left</span> leaves the party, taking fewer members with it.
+on-arrival: {!
+window.RF.expel(Q, 'left');
+Q.members += 5;
+!}
+
+The split is bitter but small.
+
+@rf_hidden_kpo
+title: The Right Opposition
+subtitle: Brandler and Thalheimer's supporters organise against the line.
+new-page: true
+tags: rf_event
+view-if: rf_hidden_events = 1 and right_formed = 1 and right_expelled = 0 and leader != "right" and right_dissent >= 85 and line = "class_against_class"
+max-visits: 1
+
+= The Right Opposition
+
+The International calls the Social Democrats "social fascists" and orders red unions. Brandler and Thalheimer call it madness and are organising the party's union men against it: a Communist Party–Opposition, inside the party or outside it.
+
+- @kpo_expel
+- @kpo_bend
+
+@kpo_expel
+title: Expel the Right Opposition.
+subtitle: The <span class="f-right">Right</span> leaves. The party loses trade unionists; Moscow is pleased.
+on-arrival: {!
+window.RF.expel(Q, 'right');
+Q.union_influence -= 6;
+Q[Q.leader + '_moscow'] += 5;
+!}
+
+The expelled take their union posts and their local papers with them.
+
+@kpo_bend
+title: Soften the line to keep them.
+subtitle: The <span class="f-right">Right</span> stays, calmer. Moscow is angry.
+on-arrival: {!
+Q.right_dissent -= 25;
+Q[Q.leader + '_moscow'] -= 12;
+Q.autonomy += 4;
+window.RF.normalize(Q);
+!}
+
+The leadership finds words that mean less than Moscow wanted.
+
+@rf_hidden_natbol
+title: The National Bolshevik Temptation
+subtitle: Nationalist officers and students knock at the party's door.
+new-page: true
+tags: rf_event
+view-if: rf_hidden_events = 1 and nationalism >= 70 and year = 1923 and month >= 6
+max-visits: 1
+
+#Modelled on Radek's Schlageter speech (June 1923), the Hamburg National
+#Bolsheviks of 1919-20, and, later, the "national and social liberation"
+#programme of 1930.
+
+= The National Bolshevik Temptation
+
+The occupation has thrown nationalist students, former officers and Freikorps men into despair. Some of them say the only enemy of the French and of the German capitalists alike is Soviet Russia's ally, the KPD. A group of them offers to join, if the party will speak for the nation.
+
+- @nb_embrace
+- @nb_debate
+- @nb_refuse
+
+@nb_embrace
+title: Take them in and speak for the nation.
+subtitle: An outsider current enters the leadership. Nationalist voters listen; the <span class="f-left">Left</span> and the <span class="f-ultra">Ultra-Left</span> are appalled.
+on-arrival: {!
+Q.outsider = 'natbol';
+Q.nationalism -= 5;
+Q.st_prussia_mod = (Q.st_prussia_mod || 0) + 1;
+window.RF.lean(Q, {left: -6, ultra: -6, right: -2});
+Q.spd_relation -= 6;
+window.RF.normalize(Q);
+!}
+
+The party papers print debates with nationalist writers. Some of the new members are sincere; some are spies.
+
+@nb_debate
+title: Debate them in public, keep them out of the party.
+subtitle: Some of their followers drift to the KPD. Little risk.
+on-arrival: {!
+Q.nationalism -= 2;
+Q.members += 2;
+window.RF.normalize(Q);
+!}
+
+Communist speakers go to nationalist meetings and argue about Schlageter and the Ruhr.
+
+@nb_refuse
+title: Nothing in common with nationalists.
+subtitle: Pleases the <span class="f-left">Left</span>.
+on-arrival: {!
+window.RF.lean(Q, {left: 2});
+window.RF.normalize(Q);
+!}
+
+The door stays shut.
+
+@rf_hidden_trotskyist
+title: The German Left Opposition
+subtitle: Supporters of Trotsky organise inside the party.
+new-page: true
+tags: rf_event
+view-if: rf_hidden_events = 1 and year >= 1926 and trotsky_power >= 30 and left_formed = 1 and leader != "left"
+max-visits: 1
+
+= The German Left Opposition
+
+Trotsky still has supporters in the German party: intellectuals, old Spartacists, some of the Left. They want the party to fight bureaucracy in Moscow as well as capitalism at home, and they are organising.
+
+- @lo_expel
+- @lo_tolerate
+
+@lo_expel
+title: Expel the Trotskyists.
+subtitle: A small group leaves. Moscow is pleased.
+on-arrival: {!
+Q.members -= 3;
+Q.left_strength -= 3;
+Q[Q.leader + '_moscow'] += 4;
+window.RF.normalize(Q);
+!}
+
+The expelled found a small paper and a smaller organisation.
+
+@lo_tolerate
+title: Let them argue.
+subtitle: The party keeps them. Moscow is furious; the party gains autonomy.
+on-arrival: {!
+Q.autonomy += 5;
+Q[Q.leader + '_moscow'] -= 10;
+window.RF.lean(Q, {left: 2});
+window.RF.normalize(Q);
+!}
+
+The opposition's articles appear in the party press, with a reply beside each one.
+
+@rf_hidden_reformist
+title: The Road Back to the SPD
+subtitle: The Right wonders whether it belongs in the Communist Party.
+new-page: true
+tags: rf_event
+view-if: rf_hidden_events = 1 and right_formed = 1 and right_expelled = 0 and right_dissent >= 75 and spd_relation >= 65
+max-visits: 1
+
+#Modelled on Paul Levi's Communist Working Group (KAG), which left the
+#KPD in 1921 and went back to the Social Democrats through the USPD.
+
+= The Road Back to the SPD
+
+The party's moderates have worked with Social Democrats for years: in the unions, the factory councils, the state parliaments. Some of them now say aloud what they have long thought: that the split of the working class was a mistake, and that their place is in a united workers' party.
+
+- @ref_expel
+- @ref_persuade
+
+@ref_expel
+title: Expel them before they leave.
+subtitle: The <span class="f-right">Right</span> goes over to the SPD. Relations with the SPD collapse.
+on-arrival: {!
+window.RF.expel(Q, 'right');
+Q.spd_relation -= 20;
+!}
+
+A third of the Reichstag group crosses the floor.
+
+@ref_persuade
+title: Keep them with concessions.
+subtitle: The <span class="f-right">Right</span> stays, for now. The <span class="f-left">Left</span> is angry.
+on-arrival: {!
+Q.right_dissent -= 20;
+window.RF.lean(Q, {left: -4});
+window.RF.normalize(Q);
+!}
+
+The Zentrale promises more joint work with the SPD. The Left calls it a slide into reformism.

@@ -1,0 +1,40 @@
+title: The Moscow Compromise
+subtitle: The International proposes places for the Left in the Zentrale.
+new-page: true
+tags: rf_event
+view-if: year = 1923 and month = 5 and left_formed = 1 and left_expelled = 0 and leader = "right"
+max-visits: 1
+
+= The Moscow Compromise
+
+Since Leipzig the Left has run Berlin and Hamburg almost as a second party. In April the International called both camps to Moscow. Its proposal: the Zentralausschuss co-opts four leaders of the Left into the Zentrale, Ruth Fischer, Ernst Thälmann, Ottomar Geschke and Arthur König, and the Left accepts the Zentrale's discipline.
+
+- @accept
+- @refuse
+
+@accept
+title: Co-opt the four into the Zentrale.
+subtitle: Calms the <span class="f-left">Left</span> and pleases Moscow. Some of the <span class="f-right">Right</span> resent it.
+on-arrival: {!
+Q.left_in_zentrale = 1;
+Q.left_dissent -= 15;
+Q.right_dissent += 4;
+Q.left_moscow += 4;
+Q.right_moscow += 3;
+window.RF.normalize(Q);
+!}
+
+On 17 May the Zentralausschuss elects the four. For the first time in months the Zentrale speaks for the whole party, at least on paper.
+
+@refuse
+title: Keep the Zentrale in the majority's hands.
+subtitle: Pleases the <span class="f-right">Right</span>. The <span class="f-left">Left</span> is furious, and Moscow is displeased.
+on-arrival: {!
+Q.left_in_zentrale = 0;
+window.RF.lean(Q, {right: 3});
+Q.left_dissent += 15;
+Q.right_moscow -= 8;
+window.RF.normalize(Q);
+!}
+
+The majority says the congress has spoken. In Berlin the district leadership prints its own leaflets.

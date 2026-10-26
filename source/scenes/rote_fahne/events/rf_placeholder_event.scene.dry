@@ -1,9 +1,0 @@
-title: Placeholder event
-subtitle: Never shown. The engine needs one event; remove this file once real events are back.
-new-page: true
-tags: rf_event
-view-if: rf_mode = 99
-
-= Placeholder
-
-- @rf_main: Continue.

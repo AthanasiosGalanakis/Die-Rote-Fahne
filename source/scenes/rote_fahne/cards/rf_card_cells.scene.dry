@@ -1,0 +1,36 @@
+title: Factory Cells
+subtitle: Organise the party where the workers work, not where they live.
+new-page: true
+is-card: true
+tags: rf_party
+view-if: rf_cells_timer <= 0
+on-arrival: month_actions += 1; rf_cells_timer = 4
+
+= Factory Cells
+
+The International urges the German party to build cells in the factories instead of local branches in the neighbourhoods. The old branches resist.
+
+- @build
+- @later
+
+@build
+title: Build factory cells in the big works.
+subtitle: More union influence and a stronger apparatus; the old branches grumble.
+on-arrival: {!
+Q.union_influence += 3;
+Q.apparatus += 2;
+Q[Q.leader + '_moscow'] += 1;
+window.RF.normalize(Q);
+!}
+
+Cells form at Siemens, Leuna and the Ruhr pits.
+
+@later
+title: Wait for a better time.
+subtitle: No cost.
+on-arrival: {!
+
+window.RF.normalize(Q);
+!}
+
+The reorganisation is put off.

@@ -1,0 +1,48 @@
+title: The Rote Fahne's Line
+subtitle: The party paper's front page tells the members what the party thinks.
+new-page: true
+is-card: true
+tags: rf_party
+view-if: rf_editorial_timer <= 0
+on-arrival: month_actions += 1; rf_editorial_timer = 3
+
+= The Rote Fahne's Line
+
+The editors want a clear line for the coming weeks. Every faction will read the paper looking for itself.
+
+- @front
+- @fire
+- @theory
+
+@front
+title: An open hand to <span class="p-spd">SPD</span> workers.
+subtitle: Better relations with the SPD; pleases the <span class="f-right">Right</span>, angers the <span class="f-left">Left</span>.
+on-arrival: {!
+window.RF.lean(Q, {right: 3, left: -3});
+Q.spd_relation += 4;
+window.RF.normalize(Q);
+!}
+
+The paper calls on Social Democratic workers to join Communists in the factory councils and the price committees.
+
+@fire
+title: Fire at the Republic and its defenders.
+subtitle: Raises the revolutionary mood; pleases the <span class="f-left">Left</span>, angers the <span class="f-right">Right</span>.
+on-arrival: {!
+window.RF.lean(Q, {left: 3, right: -3});
+Q.rev_situation += 2;
+Q.spd_relation -= 3;
+window.RF.normalize(Q);
+!}
+
+The paper says the Republic is finished and asks who will inherit it.
+
+@theory
+title: Theory and education.
+subtitle: Calms the factions a little.
+on-arrival: {!
+for (var f of window.RF.factions) { Q[f + '_dissent'] -= 2; }
+window.RF.normalize(Q);
+!}
+
+Long articles on Marx and Lenin fill the inside pages. Nobody is offended; few are excited.

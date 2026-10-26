@@ -1,0 +1,57 @@
+title: Crisis in Saxony
+subtitle: The Buck government has fallen. The SPD needs Communist votes.
+new-page: true
+tags: rf_event
+view-if: year = 1923 and month = 2
+max-visits: 1
+priority: 2
+
+= Crisis in Saxony
+
+On 30 January the Saxon Landtag carried a vote of no confidence against the Social Democratic interior minister, and Wilhelm Buck's government resigned. The SPD has forty seats, the bourgeois parties forty-six, the KPD ten. Either the SPD governs with Communist votes, or its right wing makes a coalition with the Democrats.
+
+The left of the Saxon SPD, around the Leipzig lawyer Erich Zeigner, wants a government the KPD will vote for. What is the party's price?
+
+- @conditions
+- @join
+- @refuse
+
+@conditions
+title: Vote for an SPD government in return for workers' demands.
+subtitle: Control committees on prices, an amnesty, defence units of the factory workers. Better relations with the SPD; pleases the <span class="f-right">Right</span>.
+on-arrival: {!
+Q.saxony_deal = 1;
+Q.spd_relation += 4;
+Q.st_saxony_mod = (Q.st_saxony_mod || 0) + 1;
+window.RF.lean(Q, {right: 3, left: -2});
+window.RF.normalize(Q);
+!}
+
+The Communist group puts its demands in writing. The left Social Democrats accept most of them; their party's right wing does not hide its disgust.
+
+@join
+title: Demand Communist ministers in a workers' government.
+subtitle: The SPD is not ready for that. Pleases the <span class="f-left">Left</span>; Moscow is interested.
+on-arrival: {!
+Q.saxony_deal = 0;
+Q.saxony_demand = 1;
+Q.spd_relation -= 2;
+Q.left_moscow += 2;
+window.RF.lean(Q, {left: 3, right: -1});
+window.RF.normalize(Q);
+!}
+
+The Social Democrats refuse to take Communists into the cabinet, for now. The talks go on.
+
+@refuse
+title: No votes for a Social Democratic government.
+subtitle: The Saxon SPD turns to the Democrats. Pleases the <span class="f-left">Left</span>; angers the <span class="f-right">Right</span>.
+on-arrival: {!
+Q.saxony_deal = 0;
+Q.spd_relation -= 6;
+Q.st_saxony_mod = (Q.st_saxony_mod || 0) + 0.5;
+window.RF.lean(Q, {left: 4, right: -4});
+window.RF.normalize(Q);
+!}
+
+The Communist group announces that it will not prop up any government of reformists. The Social Democratic right opens talks with the Democrats.

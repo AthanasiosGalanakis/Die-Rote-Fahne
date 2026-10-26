@@ -1,0 +1,46 @@
+title: A New Government in Saxony
+subtitle: The Landtag elects a minister-president.
+new-page: true
+tags: rf_event
+view-if: year = 1923 and month = 3
+max-visits: 1
+on-arrival: {!
+if (Q.saxony_deal || Q.saxony_demand) {
+    Q.st_saxony_gov = 'SPD minority government under Erich Zeigner, elected with Communist votes';
+    Q.saxony_toleration = 1;
+} else {
+    Q.st_saxony_gov = 'Coalition of the SPD and DDP';
+    Q.saxony_toleration = 0;
+}
+!}
+
+= A New Government in Saxony
+
+[? if saxony_toleration = 1 : On 21 March the Landtag elects Erich Zeigner minister-president with the votes of the SPD and the KPD. He promises a purge of reactionary officials and workers' defence against the right. In Berlin, the Reich government watches Dresden with alarm. ?][? if saxony_toleration = 0 : Without Communist votes the Saxon SPD forms a coalition with the Democrats. The left Social Democrats are bitter, at their own leaders and at the KPD. ?]
+
+- @hold
+- @turn
+
+@hold
+title: Hold Zeigner to his promises.
+subtitle: More readiness and standing in Saxony.
+view-if: saxony_toleration = 1
+on-arrival: {!
+Q.readiness += 2;
+Q.st_saxony_mod = (Q.st_saxony_mod || 0) + 1;
+window.RF.normalize(Q);
+!}
+
+The Communist group meets the new minister-president every week with a list.
+
+@turn
+title: Turn the anger of the SPD's left against its leaders.
+subtitle: Social Democratic workers blame their own party.
+view-if: saxony_toleration = 0
+on-arrival: {!
+Q.spd_discredit += 2;
+Q.st_saxony_mod = (Q.st_saxony_mod || 0) + 1;
+window.RF.normalize(Q);
+!}
+
+Party speakers go to the SPD's own meetings and read out the coalition agreement.

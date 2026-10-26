@@ -22,19 +22,17 @@ Members: about [+ members +] thousand
 
 Government: [+ government +]
 
-President: <span class="[+ president_class +]">[+ president +]</span> (<span class="p-spd">SPD</span>)
+President: [+ president +]
 
-Chancellor: <span class="[+ chancellor_class +]">[+ chancellor +]</span> ([+ chancellor_party +])
+Chancellor: [+ chancellor +]
 
 [? if emergency != "" : **[+ emergency +]** ?]
-
-{!<span class="tooltip-text" title="Police and courts acting against the party: bans, raids, arrests.">State repression</span>!}: [+ repression : rf_level +][+ n_repression +]
 
 Reichstag, share of seats (elected June 1920):
 
 {!<div id="rf-reichstag"></div>!}
 
-{!<span class="tooltip-text" title="The Reichstag elected in 1920 sits until 1924. Historically it was dissolved in March 1924 and Germany voted on 4 May.">Next election</span>!}: [+ next_election +]
+{!<span class="tooltip-text" title="The Reichstag elected in June 1920 sits for four years, unless it is dissolved sooner.">Next election</span>!}: [+ next_election +]
 
 = Economics
 
@@ -52,24 +50,7 @@ on-arrival: {!
 var RF = window.RF;
 Q.overrule_risk = Math.round(100 * RF.overruleChance(Q));
 RF.moscowStatus(Q);
-var base = RF.risingBase(Q);
-Q.rising_chance = Math.round(100 * Math.max(0, Math.min(1, (base + 30 - 140) / 30)));
-var t = Q.year * 12 + Q.month;
-// which armed formations the party has: the Proletarian Hundreds of 1923,
-// then (from July 1924) the Red Front Fighters' League
-if (t < 1923 * 12 + 3) {
-    Q.para_stage = 0;
-} else if (t < 1923 * 12 + 12 && !Q.party_banned) {
-    Q.para_stage = 1;
-} else if (t < 1924 * 12 + 7) {
-    Q.para_stage = 2;
-} else {
-    Q.para_stage = 3;
-}
-Q.hundreds_strength = Math.round(15 + 0.8 * Q.readiness);
-Q.rfb_strength = Math.round(40 + Q.readiness);
-var next = RF.nextCongress(Q);
-Q.next_congress = next ? next.place + ', ' + RF.monthName(next.month) + ' ' + next.year : 'none planned';
+Q.next_congress = RF.nextCongressText(Q);
 RF.numbers(Q);
 !}
 
@@ -77,67 +58,17 @@ RF.numbers(Q);
 
 Leadership: <span class="f-[+ leader +]">[+ leader_name +]</span>
 
-{!<span class="tooltip-text" title="The leadership only changes at a party congress, where the delegates elect a new Zentrale and Moscow may overturn their choice.">Next party congress</span>!}: [+ next_congress +]
+{!<span class="tooltip-text" title="The leadership only changes at a party congress, where the delegates elect a new Zentrale. The statutes call for a congress about once a year; the Zentrale can bring it forward or put it off, and Moscow may try to overturn the delegates' choice.">Next party congress</span>!}: [+ next_congress +]
 
-[? if right_expelled = 0 : {!<div class="rf-faction">!}<span class="f-right">Brandler Right</span>{!<div class="rf-stat">!}Strength: [+ right_strength : strength +][+ n_right_strength +]{!</div><div class="rf-stat">!}Dissent: [+ right_dissent : rf_dissent +][+ n_right_dissent +]{!</div>!}{!<div class="rf-bar"><span class="b-right" style="width: !}[+ right_strength +]{!%"></span></div></div>!} ?][? if right_expelled : <span class="f-right">Brandler Right</span>: left the party ?]
+[? if right_formed = 1 and right_expelled = 0 : {!<div class="rf-faction">!}<span class="f-right">Brandler Right</span>{!<div class="rf-stat">!}Strength: [+ right_strength : strength +][+ n_right_strength +]{!</div><div class="rf-stat">!}Dissent: [+ right_dissent : rf_dissent +][+ n_right_dissent +]{!</div>!}{!<div class="rf-bar"><span class="b-right" style="width: !}[+ right_strength +]{!%"></span></div></div>!} ?][? if right_formed = 1 and right_expelled = 1 : <span class="f-right">Brandler Right</span>: left the party ?]
 
-[? if center_expelled = 0 : {!<div class="rf-faction">!}<span class="f-center">Middle Group</span>{!<div class="rf-stat">!}Strength: [+ center_strength : strength +][+ n_center_strength +]{!</div><div class="rf-stat">!}Dissent: [+ center_dissent : rf_dissent +][+ n_center_dissent +]{!</div>!}{!<div class="rf-bar"><span class="b-center" style="width: !}[+ center_strength +]{!%"></span></div></div>!} ?][? if center_expelled : <span class="f-center">Middle Group</span>: left the party ?]
+[? if center_formed = 1 and center_expelled = 0 : {!<div class="rf-faction">!}<span class="f-center">Middle Group</span>{!<div class="rf-stat">!}Strength: [+ center_strength : strength +][+ n_center_strength +]{!</div><div class="rf-stat">!}Dissent: [+ center_dissent : rf_dissent +][+ n_center_dissent +]{!</div>!}{!<div class="rf-bar"><span class="b-center" style="width: !}[+ center_strength +]{!%"></span></div></div>!} ?][? if center_formed = 1 and center_expelled = 1 : <span class="f-center">Middle Group</span>: left the party ?]
 
-[? if left_expelled = 0 : {!<div class="rf-faction">!}<span class="f-left">Fischer–Maslow Left</span>{!<div class="rf-stat">!}Strength: [+ left_strength : strength +][+ n_left_strength +]{!</div><div class="rf-stat">!}Dissent: [+ left_dissent : rf_dissent +][+ n_left_dissent +]{!</div>!}{!<div class="rf-bar"><span class="b-left" style="width: !}[+ left_strength +]{!%"></span></div></div>!} ?][? if left_expelled : <span class="f-left">Fischer–Maslow Left</span>: left the party ?]
+[? if left_formed = 1 and left_expelled = 0 : {!<div class="rf-faction">!}<span class="f-left">Fischer–Maslow Left</span>{!<div class="rf-stat">!}Strength: [+ left_strength : strength +][+ n_left_strength +]{!</div><div class="rf-stat">!}Dissent: [+ left_dissent : rf_dissent +][+ n_left_dissent +]{!</div>!}{!<div class="rf-bar"><span class="b-left" style="width: !}[+ left_strength +]{!%"></span></div></div>!} ?][? if left_formed = 1 and left_expelled = 1 : <span class="f-left">Fischer–Maslow Left</span>: left the party ?]
 
-[? if ultra_expelled = 0 : {!<div class="rf-faction">!}<span class="f-ultra">Ultra-Left</span>{!<div class="rf-stat">!}Strength: [+ ultra_strength : strength +][+ n_ultra_strength +]{!</div><div class="rf-stat">!}Dissent: [+ ultra_dissent : rf_dissent +][+ n_ultra_dissent +]{!</div>!}{!<div class="rf-bar"><span class="b-ultra" style="width: !}[+ ultra_strength +]{!%"></span></div></div>!} ?][? if ultra_expelled : <span class="f-ultra">Ultra-Left</span>: left the party ?]
+[? if ultra_formed = 1 and ultra_expelled = 0 : {!<div class="rf-faction">!}<span class="f-ultra">Ultra-Left</span>{!<div class="rf-stat">!}Strength: [+ ultra_strength : strength +][+ n_ultra_strength +]{!</div><div class="rf-stat">!}Dissent: [+ ultra_dissent : rf_dissent +][+ n_ultra_dissent +]{!</div>!}{!<div class="rf-bar"><span class="b-ultra" style="width: !}[+ ultra_strength +]{!%"></span></div></div>!} ?][? if ultra_formed = 1 and ultra_expelled = 1 : <span class="f-ultra">Ultra-Left</span>: left the party ?]
 
-[? if stalin_expelled = 0 : {!<div class="rf-faction">!}<span class="f-stalin">Thälmann circle</span>{!<div class="rf-stat">!}Strength: [+ stalin_strength : strength +][+ n_stalin_strength +]{!</div><div class="rf-stat">!}Dissent: [+ stalin_dissent : rf_dissent +][+ n_stalin_dissent +]{!</div>!}{!<div class="rf-bar"><span class="b-stalin" style="width: !}[+ stalin_strength +]{!%"></span></div></div>!} ?][? if stalin_expelled : <span class="f-stalin">Thälmann circle</span>: left the party ?]
-
-= Moscow
-
-{!<span class="tooltip-text" title="The Comintern's strategy for Germany, set at each plenum in Moscow. Factions that fit the line gain standing there.">Comintern line</span>!}: [? if line == "united_front" : united front with the SPD's workers ?][? if line == "insurrection" : prepare the insurrection ?][? if line == "bolshevization" : Bolshevization of the party ?][? if line == "class_against_class" : class against class ?]
-
-{!<span class="tooltip-text" title="What the last plenum asked of the KPD. The next plenum judges the leadership on it: success wins Moscow's favour, failure brings a rebuke.">Directive</span>!}: [+ directive +] [? if directive_on_track = 1 : (on track) ?][? if directive_on_track = 0 : (behind) ?]
-
-{!<span class="tooltip-text" title="The plenums of the Comintern's Executive Committee and the World Congresses, on their historical dates.">Next plenum</span>!}: [+ next_plenum +]
-
-[? if moscow_news != "" : *[+ moscow_news +]* ?]
-
-[? if open_letter = 1 : **Moscow has condemned the leadership in an Open Letter. It will be replaced at the next party congress.** ?][? if open_letter = 0 and moscow_rebukes = 1 : **Moscow has rebuked the leadership once. A second rebuke brings an Open Letter.** ?]
-
-{!<span class="tooltip-text" title="The Russian leaders who decide the Comintern's course. Each KPD faction leans on one of them and rises or falls with its patron.">The Kremlin</span>!}:
-
-{!<div id="rf-kremlin"></div>!}
-
-Moscow favours: <span class="f-[+ favourite +]">[+ favourite_name +]</span>
-
-{!<span class="tooltip-text" title="How far the KPD still decides for itself. Each intervention from Moscow wears it down, and the lower it is, the easier Moscow overturns a congress.">Party autonomy</span>!}: [+ autonomy : rf_autonomy +][+ n_autonomy +]
-
-{!<span class="tooltip-text" title="How hard Moscow is pushing to replace the leadership with its favourite. It grows with the gap between them and as autonomy falls. At its peak, Moscow overturns the next congress.">Moscow's pressure</span>!}: [+ overrule_risk : rf_overrule +][+ n_overrule_risk +]
-
-[? if congress_news != "" : *Last congress: [+ congress_news +]* ?]
-
-= Armed formations
-
-[? if para_stage = 0 : {!<span class="tooltip-text" title="Party stewards who guard meetings and demonstrations.">Ordnerdienst</span>!}: the party's stewards. The Leipzig congress is debating proletarian defence units. ?]
-
-[? if para_stage = 1 : {!<span class="tooltip-text" title="Factory-based workers' defence units, formed from 1923 with SPD and non-party workers. Figures are the party's own claims and uncertain.">Proletarian Hundreds</span>!}: about [+ hundreds_strength +] thousand ?]
-
-[? if para_stage = 1 and month >= 5 : Status: banned in Prussia, legal in Saxony and Thuringia ?][? if para_stage = 1 and month < 5 : Status: legal ?]
-
-[? if para_stage = 2 : {!<span class="tooltip-text" title="Factory-based workers' defence units of 1923.">Proletarian Hundreds</span>!}: dissolved and banned; remnants underground ?]
-
-[? if para_stage = 3 : {!<span class="tooltip-text" title="The Red Front Fighters' League, the KPD's uniformed paramilitary, founded in July 1924.">RFB</span>!}: about [+ rfb_strength +] thousand ?]
-
-[? if october_plan : {!<span class="tooltip-text" title="The secret military apparatus built for the German October, with Soviet advisers.">M-Apparat</span>!}: weapons and plans for the rising ?]
-
-{!<span class="tooltip-text" title="Weapons, training and plans for an armed rising.">Armed readiness</span>!}: [+ readiness : rf_level +][+ n_readiness +]
-
-= Support for the revolution
-
-{!<span class="tooltip-text" title="Hunger, strikes and anger at the Republic. It rises with inflation and falls once the currency is stable.">Revolutionary situation</span>!}: [+ rev_situation : rf_rev +][+ n_rev_situation +]
-
-{!<span class="tooltip-text" title="Communist strength in the trade unions and factory councils.">Influence in the unions</span>!}: [+ union_influence : rf_level +][+ n_union_influence +]
-
-{!<span class="tooltip-text" title="Whether SPD workers would follow a call to arms. Good relations with the SPD count for a lot.">SPD workers</span>!}: [? if spd_relation >= 60 : might follow ?][? if spd_relation < 60 and spd_relation >= 35 : wary ?][? if spd_relation < 35 : would not follow ?][+ n_spd_relation +]
-
-{!<span class="tooltip-text" title="Readiness, the revolutionary situation, the unions, the SPD's workers and state repression, against a Reichswehr and police far stronger than the party.">Chance of a rising</span>!}: [+ rising_chance : rf_odds +][+ n_rising_chance +]
+[? if stalin_formed = 1 and stalin_expelled = 0 : {!<div class="rf-faction">!}<span class="f-stalin">Thälmann circle</span>{!<div class="rf-stat">!}Strength: [+ stalin_strength : strength +][+ n_stalin_strength +]{!</div><div class="rf-stat">!}Dissent: [+ stalin_dissent : rf_dissent +][+ n_stalin_dissent +]{!</div>!}{!<div class="rf-bar"><span class="b-stalin" style="width: !}[+ stalin_strength +]{!%"></span></div></div>!} ?][? if stalin_formed = 1 and stalin_expelled = 1 : <span class="f-stalin">Thälmann circle</span>: left the party ?]
 
 @politics
 title: Politics
@@ -172,10 +103,6 @@ window.RF.numbers(Q);
 title: Polls
 new-page: true
 is-special: true
-on-arrival: {!
-Q.pro_republic_disp = Math.round(Q.pro_republic);
-Q.nationalism_disp = Math.round(Q.nationalism);
-!}
 
 = Projected election results
 
@@ -183,12 +110,125 @@ Q.nationalism_disp = Math.round(Q.nationalism);
 
 {!<div id="rf-polls"></div>!}
 
-{!<span class="tooltip-text" title="The share of Germans who back the democratic Republic. Hyperinflation drains it; stability restores it.">Support for the Republic</span>!}: [+ pro_republic_disp +]%
-
-{!<span class="tooltip-text" title="Nationalist feeling. The Ruhr occupation feeds it, and it feeds the DNVP and the völkisch right.">Support for nationalism</span>!}: [+ nationalism_disp +]%
-
 = Results by group
 
 Each group's parties are listed from strongest to weakest.
 
 {!<div id="rf-demographics"></div>!}
+
+@moscow
+title: Moscow
+new-page: true
+is-special: true
+on-arrival: {!
+var RF = window.RF;
+Q.overrule_risk = Math.round(100 * RF.overruleChance(Q));
+RF.moscowStatus(Q);
+RF.numbers(Q);
+!}
+
+= Moscow
+
+{!<span class="tooltip-text" title="The Comintern's strategy for Germany, set at each plenum in Moscow. Factions that fit the line gain standing there.">Comintern line</span>!}: [? if line == "united_front" : united front with the SPD's workers ?][? if line == "insurrection" : prepare the insurrection ?][? if line == "bolshevization" : Bolshevization of the party ?][? if line == "class_against_class" : class against class ?]
+
+{!<span class="tooltip-text" title="What the last plenum asked of the KPD. The next plenum judges the leadership on it: success wins Moscow's favour, failure brings a rebuke.">Directive</span>!}: [+ directive +] [? if directive_on_track = 1 : (on track) ?][? if directive_on_track = 0 : (behind) ?]
+
+{!<span class="tooltip-text" title="The plenums of the Comintern's Executive Committee and the World Congresses, where the line is set.">Next plenum</span>!}: [+ next_plenum +]
+
+[? if moscow_news != "" : *[+ moscow_news +]* ?]
+
+[? if open_letter = 1 : **Moscow has condemned the leadership in an Open Letter and demands a special congress to replace it.** ?][? if open_letter = 0 and moscow_rebukes = 1 : **Moscow has rebuked the leadership once. A second rebuke brings an Open Letter.** ?]
+
+{!<span class="tooltip-text" title="The Russian leaders who decide the Comintern's course. Each KPD faction leans on one of them and rises or falls with its patron.">The Kremlin</span>!}:
+
+{!<div id="rf-kremlin"></div>!}
+
+Moscow favours: <span class="f-[+ favourite +]">[+ favourite_name +]</span>
+
+{!<span class="tooltip-text" title="How far the KPD still decides for itself. Each intervention from Moscow wears it down, and the lower it is, the easier Moscow overturns a congress.">Party autonomy</span>!}: [+ autonomy : rf_autonomy +][+ n_autonomy +]
+
+{!<span class="tooltip-text" title="How hard Moscow is pushing to replace the leadership with its favourite. It grows with the gap between them and as autonomy falls. At its peak, Moscow will demand that the next congress installs its favourite. The delegates can refuse if the leadership is strong and the party still runs its own affairs, but Moscow does not forget.">Moscow's pressure</span>!}: [+ overrule_risk : rf_overrule +][+ n_overrule_risk +]
+
+[? if congress_news != "" : *Last congress: [+ congress_news +]* ?]
+
+@forces
+title: Balance of Forces
+new-page: true
+is-special: true
+on-arrival: {!
+var RF = window.RF;
+var base = RF.risingBase(Q);
+Q.rising_chance = Math.round(100 * Math.max(0, Math.min(1, (base + 30 - 140) / 30)));
+var t = Q.year * 12 + Q.month;
+// which armed formations the party has: the Proletarian Hundreds of 1923,
+// then (from July 1924) the Red Front Fighters' League
+if (t < 1923 * 12 + 3) {
+    Q.para_stage = 0;
+} else if (t < 1923 * 12 + 12 && !Q.party_banned) {
+    Q.para_stage = 1;
+} else if (t < 1924 * 12 + 7) {
+    Q.para_stage = 2;
+} else {
+    Q.para_stage = 3;
+}
+Q.hundreds_strength = Math.round(15 + 0.8 * Q.readiness);
+Q.rfb_strength = Math.round(40 + Q.readiness);
+Q.rev_support = RF.revSupport(Q);
+Q.pro_republic_disp = Math.round(Q.pro_republic);
+Q.nationalism_disp = Math.round(Q.nationalism);
+RF.numbers(Q);
+!}
+
+= The armed power of the state
+
+{!<span class="p-reichswehr">Reichswehr</span>!}: 100,000 men, the limit set at Versailles. Disciplined, well armed and loyal to its generals.
+
+{!<span class="tooltip-text" title="The states' police forces, many of them in barracks with rifles, machine guns and armoured cars. Prussia's Schutzpolizei is the largest. The figure is an estimate.">Police</span>!}: roughly 150,000, armed for street fighting
+
+[? if year = 1923 and month <= 9 : {!<span class="tooltip-text" title="Secret labour units the army keeps outside the Versailles limits, with former Freikorps men. Their numbers are guesses.">Black Reichswehr</span>!}: some thousands, secret ?]
+
+{!<span class="tooltip-text" title="Police and courts acting against the party: bans, raids, arrests.">State repression</span>!}: [+ repression : rf_level +][+ n_repression +]
+
+[? if emergency != "" : **[+ emergency +]** ?]
+
+= The leagues of the right
+
+{!<span class="tooltip-text" title="Freikorps veterans, the Bavarian patriotic leagues and the Stahlhelm ex-servicemen's league. Strongest in Bavaria and on the eastern estates. Their numbers are uncertain.">Patriotic leagues</span>!}: tens of thousands, many armed
+
+[? if year = 1923 and month <= 11 : {!<span class="tooltip-text" title="The National Socialists' storm troops, a few thousand men in and around Munich.">SA</span>!}: a few thousand, in Bavaria ?]
+
+[? if year > 1924 or (year = 1924 and month >= 3) : = The Republic's defenders ?]
+
+[? if year > 1924 or (year = 1924 and month >= 3) : {!<span class="tooltip-text" title="Black-Red-Gold, the league of the SPD, Centre and DDP to defend the Republic, founded in February 1924. Its leaders claim a million members.">Reichsbanner</span>!}: a mass league of republican veterans ?]
+
+= The party's formations
+
+[? if para_stage = 0 : {!<span class="tooltip-text" title="The party's stewards, who guard meetings and demonstrations. The Leipzig congress is debating proletarian defence units.">Ordnerdienst</span>!}: the party's stewards ?]
+
+[? if para_stage = 1 : {!<span class="tooltip-text" title="Factory-based workers' defence units, formed with SPD and non-party workers. The figures are the party's own claims.">Proletarian Hundreds</span>!}: about [+ hundreds_strength +] thousand ?]
+
+[? if para_stage = 1 and month >= 5 : Status: banned in Prussia, legal in Saxony and Thuringia ?][? if para_stage = 1 and month < 5 : Status: legal ?]
+
+[? if para_stage = 2 : {!<span class="tooltip-text" title="Factory-based workers' defence units.">Proletarian Hundreds</span>!}: dissolved and banned; remnants underground ?]
+
+[? if para_stage = 3 : {!<span class="tooltip-text" title="The Red Front Fighters' League, the party's uniformed league.">RFB</span>!}: about [+ rfb_strength +] thousand ?]
+
+[? if october_plan : {!<span class="tooltip-text" title="The secret military apparatus, with Soviet advisers.">M-Apparat</span>!}: weapons and plans for the rising ?]
+
+{!<span class="tooltip-text" title="Weapons, training and plans for an armed rising.">Armed readiness</span>!}: [+ readiness : rf_level +][+ n_readiness +]
+
+= The mood of the people
+
+{!<span class="tooltip-text" title="The share of Germans who back the democratic Republic. Hyperinflation drains it; stability restores it.">Support for the Republic</span>!}: [+ pro_republic_disp +]%
+
+{!<span class="tooltip-text" title="Nationalist feeling. The Ruhr occupation feeds it, and it feeds the DNVP and the völkisch right.">Support for nationalism</span>!}: [+ nationalism_disp +]%
+
+{!<span class="tooltip-text" title="How far the people, above all the workers, would back a revolution: the revolutionary situation, the party's vote, the unions and the SPD's workers, against support for the Republic and repression. A rough guide, not a verdict: it counts for a little in the chance of a rising, while plans, allies and arms count for more.">Support for revolution</span>!}: [+ rev_support : rf_revsupport +][+ n_rev_support +]
+
+{!<span class="tooltip-text" title="Hunger, strikes and anger at the Republic. It rises with inflation and falls once the currency is stable.">Revolutionary situation</span>!}: [+ rev_situation : rf_rev +][+ n_rev_situation +]
+
+{!<span class="tooltip-text" title="Communist strength in the trade unions and factory councils.">Influence in the unions</span>!}: [+ union_influence : rf_level +][+ n_union_influence +]
+
+{!<span class="tooltip-text" title="Whether SPD workers would follow a call to arms. Good relations with the SPD count for a lot.">SPD workers</span>!}: [? if spd_relation >= 60 : might follow ?][? if spd_relation < 60 and spd_relation >= 35 : wary ?][? if spd_relation < 35 : would not follow ?][+ n_spd_relation +]
+
+{!<span class="tooltip-text" title="Readiness, the revolutionary situation, support for revolution, the unions, the SPD's workers and state repression, against a Reichswehr and police far stronger than the party.">Chance of a rising</span>!}: [+ rising_chance : rf_odds +][+ n_rising_chance +]

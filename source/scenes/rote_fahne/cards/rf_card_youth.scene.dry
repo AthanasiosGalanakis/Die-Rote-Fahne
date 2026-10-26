@@ -1,0 +1,39 @@
+title: The Youth League
+subtitle: The Communist Youth wants a bigger role.
+new-page: true
+is-card: true
+tags: rf_party
+view-if: rf_youth_timer <= 0
+on-arrival: month_actions += 1; rf_youth_timer = 4
+
+= The Youth League
+
+The Communist Youth League is impatient: it wants its own papers, its own hikes and a say in the party's line.
+
+- @support
+- @control
+
+@support
+title: Give them money and freedom.
+subtitle: More members; the young are drawn to the <span class="f-left">Left</span>. Costs 1 resource.
+choose-if: funds >= 1
+unavailable-subtitle: Needs 1 resource.
+on-arrival: {!
+Q.funds -= 1;
+Q.members += 4;
+window.RF.lean(Q, {left: 2});
+window.RF.normalize(Q);
+!}
+
+Youth groups march with red flags and guitars.
+
+@control
+title: Keep them under the Zentrale's control.
+subtitle: Pleases the leadership; the youth sulk.
+on-arrival: {!
+Q[Q.leader + '_dissent'] -= 2;
+Q.members -= 1;
+window.RF.normalize(Q);
+!}
+
+The youth league gets a new secretary from the Zentrale.

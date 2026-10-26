@@ -530,12 +530,13 @@
       });
   };
   var FACTION_TEXT = {
-      right: 'United front with the SPD, workers\' governments in the states.',
-      center: 'Party unity above any line.',
-      left: 'No coalitions with reformists; prepare the offensive. Zinoviev\'s favourites.',
-      ultra: 'Suspicious of the unions, of parliament, and increasingly of Moscow.',
-      stalin: 'Follows whoever rules in Moscow.'
+      right: 'The Zentrale\'s majority around Brandler and Thalheimer: the united front with SPD workers and workers\' governments in the states.',
+      center: 'Leaders of the old majority who broke with Brandler: party unity and loyalty to the International above any line.',
+      left: 'The Berlin and Hamburg opposition: no coalitions with reformists, prepare the offensive. Close to Zinoviev.',
+      ultra: 'The Left\'s radical wing: suspicious of the unions, of parliament and of Moscow.',
+      stalin: 'Thälmann\'s Hamburg workers and young functionaries, loyal to the leaders of the International.'
   };
+
   var FACTION_ACCENT = {right: '#c4622d', center: '#8a6d3b', left: '#b00020', ultra: '#2b2b2b', stalin: '#5a0f2e'};
   var factionTip = function(f) {
       var RF = window.RF;
@@ -545,7 +546,9 @@
       var Q = qualities();
       var rows = [['Leading figure', escHtml(RF.factionPersons[f])]];
       if (Q.rf_mode) {
-          if (Q[f + '_expelled']) {
+          if (Q[f + '_formed'] === 0) {
+              rows.push(['Status', 'not yet formed']);
+          } else if (Q[f + '_expelled']) {
               rows.push(['Status', 'expelled']);
           } else {
               rows.push(['Strength', word(Q[f + '_strength'], 'strength')]);
@@ -570,15 +573,38 @@
           return null;
       }
       var info = RF.partyInfo[person.party];
+      var Q = qualities();
       return tipCard({
           logo: RF.image('person:' + id) || '', badge: person.name.split(' ').pop().slice(0, 1),
           logoClass: 'bg-' + person.party + ' rf-tip-portrait',
           title: escHtml(person.name), titleClass: 'p-' + person.party,
-          subtitle: escHtml(person.role),
-          rows: (info ? [['Belongs to', escHtml(info.full)]] : []).concat(
+          subtitle: escHtml(RF.personRole(Q, id)),
+          rows: (info && person.party != 'other' ? [['Belongs to', escHtml(info.full)]] : [['Belongs to', 'no party']]).concat(
               RF.patrons && RF.patrons[id] && qualities().rf_mode ? [['In the Kremlin', RF.patronWord(qualities(), id)]] : []),
-          body: escHtml(person.text),
+          body: escHtml(RF.personText(Q, id)),
           accent: cssVar('--c-' + person.party, '')
+      });
+  };
+  var cabinetTip = function(id) {
+      var RF = window.RF;
+      var c = null;
+      for (var x of (RF && RF.cabinets) || []) {
+          if (x.id == id) {
+              c = x;
+          }
+      }
+      if (!c) {
+          return null;
+      }
+      var p = RF.people[c.chancellor];
+      var names = c.parties.map(function(q) { return escHtml(RF.partyInfo[q].name); }).join(', ');
+      return tipCard({
+          badge: 'R', logoClass: 'bg-' + c.party,
+          title: escHtml(c.name), titleClass: 'p-' + c.party,
+          subtitle: 'Reich government since ' + RF.monthName(c.from[1]) + ' ' + c.from[0],
+          rows: [['Chancellor', escHtml(p.name)], ['Backed by', names]],
+          body: escHtml(c.text),
+          accent: cssVar('--c-' + c.party, '')
       });
   };
   // The value shown after a sidebar label ("Resources: 3" gives "3").
@@ -617,6 +643,13 @@
               subtitle: sub ? escHtml(sub.textContent) : '',
               body: inner.textContent
           })};
+      }
+      var cabEl = el.closest('[class*="cab-"]');
+      if (cabEl && cabEl.closest('#qualities, #content')) {
+          var cab = cabinetTip(matchClass(cabEl, 'cab-'));
+          if (cab) {
+              return {target: cabEl, tip: cab};
+          }
       }
       var named = el.closest('[class*="p-"], [class*="f-"], [class*="m-"]');
       if (named && named.closest('#content, #qualities, #rf-tip') && !named.closest('#rf-tip')) {

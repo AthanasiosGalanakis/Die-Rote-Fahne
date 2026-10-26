@@ -1356,3 +1356,119 @@ body.dark-mode .m-bukharin, body.dark-mode .m-stalin {
 .rf-kremlin td {
   vertical-align: top;
 }
+
+/* v0.10: names coloured by party without the party's own hover card
+   (people, cabinets): col-<party>; rf-person marks them as hoverable */
+.rf-person {
+  font-weight: bold;
+  text-decoration: underline dotted;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  cursor: help;
+}
+.col-kpd { color: var(--c-kpd, #b5452a); }
+.col-spd { color: var(--c-spd, #c00000); }
+.col-uspd { color: var(--c-uspd, #9B0000); }
+.col-nsdap { color: var(--c-nsdap, #7A3C00); }
+.col-dnvp { color: var(--c-dnvp, #3E88B3); }
+.col-dvp { color: var(--c-dvp, #C0A054); }
+.col-ddp { color: var(--c-ddp, #B8A000); }
+.col-z { color: var(--c-z, #1A1A1A); }
+.col-bvp { color: var(--c-bvp, #4a6fa5); }
+.col-other { color: var(--c-other, #777777); }
+.col-comintern { color: var(--c-comintern, #b8000f); }
+.col-reichswehr { color: var(--c-reichswehr, #555555); }
+.col-agr { color: var(--c-agr, #3f7f3f); }
+.col-burg { color: var(--c-burg, #7a6a9a); }
+.col-vlk { color: var(--c-vlk, #5a3a1a); }
+body.dark-mode .col-kpd { color: var(--c-kpd-dark, #f07a5a); }
+body.dark-mode .col-spd { color: var(--c-spd-dark, #ff5c5c); }
+body.dark-mode .col-uspd { color: var(--c-uspd-dark, #ff7070); }
+body.dark-mode .col-nsdap { color: var(--c-nsdap-dark, #c8874a); }
+body.dark-mode .col-dnvp { color: var(--c-dnvp-dark, #6fb3dc); }
+body.dark-mode .col-dvp { color: var(--c-dvp-dark, #e0c070); }
+body.dark-mode .col-ddp { color: var(--c-ddp-dark, #f0d64a); }
+body.dark-mode .col-z { color: var(--c-z-dark, #d0d0d0); }
+body.dark-mode .col-bvp { color: var(--c-bvp-dark, #8fb0e0); }
+body.dark-mode .col-other { color: var(--c-other-dark, #b0b0b0); }
+body.dark-mode .col-comintern { color: var(--c-comintern-dark, #ff6060); }
+body.dark-mode .col-reichswehr { color: var(--c-reichswehr-dark, #aaaaaa); }
+body.dark-mode .col-agr { color: var(--c-agr-dark, #7fc07f); }
+body.dark-mode .col-burg { color: var(--c-burg-dark, #b0a0d0); }
+body.dark-mode .col-vlk { color: var(--c-vlk-dark, #a07a50); }
+.p-agr { color: var(--c-agr, #3f7f3f); font-weight: bold; }
+body.dark-mode .p-agr { color: var(--c-agr-dark, #7fc07f); }
+.bg-agr { background: var(--c-agr, #3f7f3f); }
+.p-burg { color: var(--c-burg, #7a6a9a); font-weight: bold; }
+body.dark-mode .p-burg { color: var(--c-burg-dark, #b0a0d0); }
+.bg-burg { background: var(--c-burg, #7a6a9a); }
+.p-vlk { color: var(--c-vlk, #5a3a1a); font-weight: bold; }
+body.dark-mode .p-vlk { color: var(--c-vlk-dark, #a07a50); }
+.bg-vlk { background: var(--c-vlk, #5a3a1a); }
+
+/* v0.10: second row of sidebar tabs */
+.tab_container.rf-tab-row2 {
+  margin-top: 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* the deck above the hand */
+ul.decks.rf-deck-row {
+  display: flex;
+  justify-content: center;
+  margin: 0.6em 0 0.2em;
+  padding: 0;
+}
+
+/* parliaments: one dot per seat (bgf-<party>) or delegate (bff-<faction>) */
+svg.rf-hemicycle {
+  display: block;
+  width: 100%;
+  max-width: 26em;
+  margin: 0.6em auto;
+}
+.bgf-kpd { fill: var(--c-kpd, #b5452a); }
+.bgf-spd { fill: var(--c-spd, #c00000); }
+.bgf-uspd { fill: var(--c-uspd, #9B0000); }
+.bgf-ddp { fill: var(--c-ddp, #B8A000); }
+.bgf-z { fill: var(--c-z, #1A1A1A); }
+.bgf-bvp { fill: var(--c-bvp, #4a6fa5); }
+.bgf-agr { fill: var(--c-agr, #3f7f3f); }
+.bgf-burg { fill: var(--c-burg, #7a6a9a); }
+.bgf-dvp { fill: var(--c-dvp, #C0A054); }
+.bgf-dnvp { fill: var(--c-dnvp, #3E88B3); }
+.bgf-vlk { fill: var(--c-vlk, #5a3a1a); }
+.bgf-nsdap { fill: var(--c-nsdap, #7A3C00); }
+.bgf-other { fill: var(--c-other, #777777); }
+body.dark-mode .bgf-z { fill: var(--c-z-dark, #d0d0d0); }
+.bff-right { fill: #c4622d; }
+.bff-center { fill: #8a6d3b; }
+.bff-left { fill: #b00020; }
+.bff-ultra { fill: #2b2b2b; }
+.bff-stalin { fill: #5a0f2e; }
+body.dark-mode .bff-ultra { fill: #9a9a9a; }
+.rf-delegates .rf-legend {
+  text-align: center;
+  font-size: 0.9em;
+}
+
+/* the states */
+.rf-state-note {
+  font-style: italic;
+}
+table.rf-state-table, table.rf-states {
+  margin: 0.4em auto;
+  min-width: 60%;
+}
+table.rf-state-table th, table.rf-states th {
+  font-weight: normal;
+  font-size: 0.85em;
+  opacity: 0.75;
+  text-align: right;
+}
+table.rf-state-table th:first-child, table.rf-states th:first-child {
+  text-align: left;
+}
+.rf-state-result {
+  margin-bottom: 1.2em;
+}

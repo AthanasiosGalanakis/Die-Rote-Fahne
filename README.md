@@ -4,27 +4,24 @@ A standalone game built on [Social Democracy: An Alternate History](https://gith
 
 ## How it plays
 
-You play the party as a whole, not one faction. Every card and event you choose strengthens some factions inside the KPD and angers others, and each choice says which:
+You play the party as a whole, not one faction. Every card and event you choose strengthens some factions inside the KPD and angers others, and each choice says which.
 
-- Brandler Right: united front with the SPD, workers' governments.
-- Middle Group: party unity above any line.
-- Fischer–Maslow Left: no coalitions, prepare the offensive; Zinoviev's favourites.
-- Ultra-Left: Korsch, Scholem, Rosenberg; suspicious of the unions, parliament and Moscow. Defying Moscow feeds it.
-- Thälmann circle: follows whoever rules in Moscow. Obeying Moscow feeds it; defying Moscow angers it.
+In January 1923 the party has two camps: the Brandler Right (the Zentrale's majority: united front with the SPD, workers' governments) and the Fischer–Maslow Left (Berlin and Hamburg; no coalitions, prepare the offensive). Three more factions form through events: the Middle Group (from the majority, after a crisis in late 1923), the Ultra-Left (the Left's radical wing, once the Left leads) and the Thälmann circle (once Stalin's star rises and the Left or Middle Group leads). Hidden split-offs and outsider takeovers (the Leninbund, the Right Opposition, National Bolsheviks, Trotskyists, a return to the SPD) are written but switched off (`rf_hidden_events`).
 
-Strong factions take the leadership at congresses. Angry factions can break away. A leadership pushed too far can resign.
+The leadership changes only at party congresses. The Eighth meets at Leipzig at the end of January 1923; after that a congress falls due about every fourteen months, and the Executive card can put it off or bring it forward. Delegates follow faction strength. Moscow works through the Comintern's plenums (June 1923 to July 1929): each sets the line and a directive, and the next plenum praises or rebukes the leadership; two rebukes bring an Open Letter and a special congress. Four Kremlin patrons (Zinoviev, Trotsky and Radek, Bukharin, Stalin) rise and fall on approximate curves, and each faction's standing in Moscow drifts towards its patron's power. When Moscow's pressure peaks, it demands that the congress install its favourite; the delegates can refuse if the winners are strong and the party still runs its own affairs.
 
-Moscow works through the Comintern's plenums, which meet on their historical dates (June 1923 to July 1929). Each sets the line and gives the KPD a directive with a target; the next plenum praises the leadership or rebukes it, and a second rebuke before the first is made good brings an Open Letter that replaces the leadership at the next congress. Four Kremlin patrons (Zinoviev, Trotsky and Radek, Bukharin, Stalin) follow the Russian succession struggle on approximate keyframe curves, and each faction's standing in Moscow drifts towards its patron's power. Moscow's pressure on the leadership is shown on the Party tab; when it reaches its peak, the next congress is overturned. There are no dice.
+The main page shows the leader with the Provinces and Executive cards, the Party Affairs deck above a hand of four, and three advisor posts with a Replace card. Provinces lists all eighteen states with their Landtag (vote and seat shares, a parliament view), government and the party's local standing; one decision a month in the states. State elections come on their due dates; those of 1923 use the real results as a baseline.
 
-The sidebar has four tabs: Main (the party's status, the Reich government, the Reichstag, the next election, the currency), Party (factions, Moscow, armed formations, support for the revolution), Politics (relations with and leaders of the other parties) and Polls (projected results, support for the Republic and for nationalism, results by group). You hold four cards each month. Words replace numbers in the sidebar; Options can turn exact numbers on, which disables achievements for that game. The advisor slots, the leader's portrait and the achievements page are placeholders for now.
+The sidebar has two rows of tabs: Main (the party, the Reich government, the Reichstag, the currency), Party (the factions and the next congress), Politics, Polls, Moscow (line, directive, plenums, the Kremlin, pressure) and Balance of Forces (the army, police and leagues, the party's formations, support for the Republic, nationalism and revolution). Words replace numbers; Options can turn exact numbers on, which disables achievements for that game. Hover cards never know more than the player could at that date.
 
-The current version covers Act I, the revolutionary year: January 1923 to the Frankfurt party congress of April 1924. It ends with a successful German October (rare, by design), a graded verdict on the party at Frankfurt, or the party's collapse. Acts II to V (1924 to 1934) are not built yet.
+The current content covers the first months of 1923, with eight Party Affairs cards to pass the time.
 
 ## Where the code is
 
 - `source/scenes/rote_fahne/`: the game's scenes, prefixed `rf_` (start, hand, monthly update, sidebar, endings).
 - `source/scenes/rote_fahne/cards/`: playable cards for the Party Affairs deck, tagged `rf_party`. The 1923 cards are parked in `archive/cards/` while they are rewritten.
-- `source/scenes/rote_fahne/events/`: events, tagged `rf_event`. Only a hidden placeholder for now.
+- `source/scenes/rote_fahne/events/`: events, tagged `rf_event`.
+- `source/scenes/rote_fahne/rf_provinces.scene.dry`: generated by `tools/gen_states.py`; the state data and drawing are in `out/html/rf_states.js`.
 - `archive/`: cards, events, advisors and endings taken out while the game is rebuilt (see `archive/README.md`).
 - `source/scenes/rote_fahne/rf_status.scene.dry`: the sidebar tabs. Charts (Reichstag, polls) are drawn by `RF.renderSidebar` into placeholder divs.
 - `source/scenes/rote_fahne/rf_changelog.scene.dry` and `rf_achievements.scene.dry`: the title-screen pages. The title screen itself is `source/scenes/root.scene.dry`.
