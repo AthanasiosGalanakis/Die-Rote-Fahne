@@ -1,0 +1,118 @@
+title: The Verdict on October
+subtitle: Moscow asks who is to blame for the German defeat.
+new-page: true
+tags: rf_event
+view-if: year >= 1924 and blame_done = 0 and chemnitz_done = 1 and rf_over = 0
+max-visits: 1
+priority: 2
+on-arrival: {!
+var RF = window.RF;
+Q.blame_done = 1;
+// the winter's verdict in the districts: a retreat without a fight
+// discredits whoever led it; a crushed rising discredits its advocates
+Q.blame_swing = 0;
+if (Q.failed_rising) {
+    RF.shift(Q, 'left', 'right', 8);
+    Q.blame_swing = 2;
+} else if (Q.leader != 'left') {
+    RF.shift(Q, Q.leader, 'left', Q.strike_held ? 6 : 12);
+    Q.blame_swing = 1;
+}
+RF.normalize(Q);
+!}
+
+#January 1924: the ECCI Presidium discussed the German defeat. Zinoviev
+#blamed Brandler and Radek; Radek and Trotsky blamed the hesitation of
+#the whole leadership, the Comintern's included; the Middle Group
+#briefly took over the Zentrale. The resolution's date varies between
+#sources. Spine: the first of the two Kremlin choices. The leadership
+#itself changes only at a congress.
+
+= The Verdict on October
+
+In Moscow the Presidium of the International sits in judgement on the German October. [? if failed_rising = 0 : <span class="m-zinoviev rf-person">Zinoviev</span>, who drafted the plan, blames <span class="m-brandler rf-person">Brandler</span> and <span class="m-radek rf-person">Radek</span>: an opportunist leadership turned a revolutionary situation into a Saxon parliamentary comedy. Radek answers that the retreat was decided by everyone in the room, the International's emissaries included, and that the working class was not ready to follow. ?][? if failed_rising = 1 : The rising has failed, and somebody must answer for it. <span class="m-zinoviev rf-person">Zinoviev</span>, who drafted the plan, now says it was carried out by adventurers who mistook their own impatience for the masses' mood. <span class="m-radek rf-person">Radek</span> says the party rose too soon and too alone. ?] Behind the German question stands the Russian one: <span class="m-trotsky rf-person">Trotsky</span> has just published his criticism of the Russian party's regime, and every speech in the hall is also a speech about him.
+
+[? if blame_swing = 1 : At home the districts have already given their own verdict. Over the winter, local conferences from Berlin to the Ruhr have turned against the leaders of October, and the Left is gaining delegates everywhere. ?][? if blame_swing = 2 : At home the members are turning away from those who called them to the barricades. In district after district the Left loses its majorities. ?]
+
+The German delegation must say where the party stands.
+
+- @blame_right
+- @defend
+- @blame_left
+- @stand_by
+
+@blame_right
+title: Accept the verdict on Brandler and Radek.
+subtitle: The party draws a line under its leadership of last year and gives Moscow's chairman his culprits. A new centre forms out of the old majority.
+view-if: failed_rising = 0
+on-arrival: {!
+var RF = window.RF;
+RF.nudgePatron(Q, 'zinoviev', 8);
+Q.right_dissent += 12;
+Q.right_moscow -= 15;
+Q.left_moscow += 5;
+Q.autonomy -= 4;
+if (!Q.center_formed) {
+    RF.formFaction(Q, 'center', {right: 0.35, left: 0.08}, 10);
+    Q.center_moscow = Math.max(Q.center_moscow, Q.right_moscow + 10);
+}
+RF.lean(Q, {left: 3});
+RF.normalize(Q);
+!}
+
+The resolution condemns the Brandler group's opportunism. Hermann Remmele, Wilhelm Pieck and Hugo Eberlein break with Brandler and present themselves as a Middle Group that can hold the party together until the congress. Brandler and Thalheimer are asked to stay in Moscow.
+
+@defend
+title: Defend the retreat as the decision of the whole leadership.
+subtitle: Refuse to make scapegoats of two men for a defeat everyone shared. It puts the party beside people already under attack in Moscow.
+view-if: failed_rising = 0
+on-arrival: {!
+var RF = window.RF;
+RF.nudgePatron(Q, 'trotsky', 8);
+RF.nudgePatron(Q, 'zinoviev', -4);
+Q.moscow_rebukes += 1;
+Q.autonomy += 4;
+Q.right_dissent -= 5;
+Q.left_dissent += 8;
+Q[Q.leader + '_moscow'] -= 8;
+RF.lean(Q, {right: 3, left: -3});
+RF.normalize(Q);
+!}
+
+The German delegation will not sign a verdict that spares its authors. Radek thanks them in the corridor. Zinoviev notes their names, and the Presidium records the German party's attitude as a rebuke.
+
+@blame_left
+title: Let the rising's loudest advocates carry the blame.
+subtitle: Those who pressed hardest for the rising answer for its defeat. A new centre forms around the comrades who kept their heads.
+view-if: failed_rising = 1
+on-arrival: {!
+var RF = window.RF;
+RF.nudgePatron(Q, 'zinoviev', -6);
+Q.left_dissent += 12;
+Q.left_moscow -= 10;
+Q.autonomy -= 3;
+if (!Q.center_formed) {
+    RF.formFaction(Q, 'center', {right: 0.25, left: 0.15}, 10);
+    Q.center_moscow = Math.max(Q.center_moscow, Q.left_moscow + 10);
+}
+RF.lean(Q, {right: 3});
+RF.normalize(Q);
+!}
+
+The resolution speaks of putschism and of a leadership that mistook its own will for the masses' readiness. A Middle Group forms out of both camps to hold the party until the congress. In Berlin the Left speaks of betrayal.
+
+@stand_by
+title: Stand by the rising as the act of the whole party.
+subtitle: Nobody is thrown overboard. The party says it fought and lost, and asks the International to share the defeat with it.
+view-if: failed_rising = 1
+on-arrival: {!
+var RF = window.RF;
+RF.nudgePatron(Q, 'zinoviev', 4);
+RF.nudgePatron(Q, 'trotsky', 4);
+Q.autonomy += 3;
+Q.left_dissent -= 5;
+RF.lean(Q, {left: 2});
+RF.normalize(Q);
+!}
+
+The German delegation refuses to divide the dead between factions. The Presidium passes a resolution that blames the objective situation, the Social Democrats and, in a single sentence, the party's errors of execution.

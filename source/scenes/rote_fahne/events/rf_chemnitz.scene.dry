@@ -1,0 +1,140 @@
+title: The Chemnitz Conference
+subtitle: A workers' conference is to give the signal.
+new-page: true
+tags: rf_event
+view-if: saxony_done = 1 and chemnitz_done = 0 and rf_over = 0
+max-visits: 1
+priority: 3
+on-arrival: {!
+Q.chemnitz_done = 1;
+Q.chemnitz_leader = Q.leader;
+!}
+
+#21 October 1923: a conference of factory councils, unions and
+#co-operatives in Chemnitz. When the left SPD's Georg Graupe threatened
+#to walk out, Brandler withdrew the call for a general strike and the
+#rising was called off. Spine: the Chemnitz switch, an ending gate.
+#Whether the rising could have won is disputed; the bar is set high.
+
+= The Chemnitz Conference
+
+On 13 October General Müller banned the Proletarian Hundreds in Saxony. Now the Reichswehr is marching into the state, and on 21 October a conference of factory councils, trade unions and co-operatives meets in Chemnitz to decide how the workers answer. [? if october_plan = 1 : The plan is for the party to propose a general strike there, as the signal for the rising. ?][? if october_plan = 0 : There is no plan ready to be set off, but the question of a general strike is on the floor all the same. ?]
+
+[? if window_open = 1 : The country is in a ferment. The mark is worthless, there are hunger riots in a dozen cities, and in the factories the party's people are heard as they have not been since the war. ?][? if window_open = 0 : The ferment of the summer has ebbed. Workers are tired and hungry, and the factories are quieter than the party's reports to Moscow say. ?]
+
+[? if spd_relation >= 50 : The left Social Democrats in the hall are listening. Some of them might follow a call. ?][? if spd_relation < 50 : Georg Graupe, Saxony's Social Democratic labour minister, makes it plain that his people will walk out if the Communists call a general strike. ?]
+
+- @call_off
+- @rise
+- @defence_strike
+
+@call_off
+title: Withdraw the proposal and call off the rising.
+subtitle: The party keeps its cadres and its legality, for now. The movement waits for a better day, and nobody can promise that it will come.
+on-arrival: {!
+var RF = window.RF;
+Q.chemnitz_choice = 'off';
+Q.spd_relation += 2;
+RF.lean(Q, {right: 3, center: 2, minor: 1, left: -4, ultra: -3});
+RF.normalize(Q);
+!}
+
+The proposal is withdrawn. The conference refers the question of a general strike to a commission, which is a polite way of burying it. That night the Zentrale sends couriers across the country to stand the districts down.
+
+@rise
+title: Call the general strike as the signal for the rising.
+subtitle: Everything on one throw: the Hundreds, the arsenals, and the hope that the Social Democratic workers follow when the shooting starts.
+choose-if: october_plan = 1
+unavailable-subtitle: There is no plan to set off, and no weapons where they would be needed.
+on-arrival: {!
+var RF = window.RF;
+Q.chemnitz_choice = 'rise';
+RF.lean(Q, {left: 4, ultra: 3, right: -4});
+Q.rising_won = RF.rising(Q) ? 1 : 0;
+!}
+go-to: won if rising_won = 1; crushed if rising_won = 0
+
+@defence_strike
+title: Propose a general strike against the army's march, without the call to arms.
+subtitle: Defend Saxony with the weapon the Kapp putschists could not withstand, together with the Social Democrats. The army may still win, but it will have to march against the whole working class.
+choose-if: spd_relation >= 35
+unavailable-subtitle: The Social Democrats in the hall would not strike beside the party.
+on-arrival: {!
+var RF = window.RF;
+Q.chemnitz_choice = 'strike';
+Q.window_used = 1;
+Q.strike_held = Q.spd_relation >= 45 && Q.union_influence >= 40 ? 1 : 0;
+Q.repression += 8;
+if (Q.strike_held) {
+    Q.spd_relation += 10;
+    Q.spd_left += 8;
+    Q.kpd_appeal += 3;
+    RF.lean(Q, {right: 3, minor: 3, left: 1});
+} else {
+    Q.spd_relation -= 3;
+    RF.lean(Q, {right: 1, left: -2});
+}
+RF.normalize(Q);
+!}
+go-to: strike_held if strike_held = 1; strike_failed if strike_held = 0
+
+@strike_held
+new-page: true
+
+= The defence strike
+
+The conference votes for a general strike in defence of the Saxon government. The Erzgebirge stops, then Leipzig, then the railway yards of Dresden. Social Democratic and Communist workers picket side by side. The Reichswehr reaches the cities all the same, but it moves through streets of shuttered factories, and every officer can see that it is occupying a working class, not putting down a party.
+
+@strike_failed
+new-page: true
+
+= The strike falls short
+
+The left Social Democrats will not vote for a strike the Communists have proposed. The conference splits. Some factories stop for a day; most do not. The army marches into Saxony without meeting a strike worth the name.
+
+@won
+new-page: true
+on-arrival: {!
+Q.rf_over = 1;
+Q.rf_ending = 'revolution';
+Q.chemnitz_verdict = window.RF.verdict(Q, 2);
+!}
+
+= The German October
+
+The conference votes for the general strike. Saxony and Thuringia stop. The Proletarian Hundreds take the police stations and arsenals the plan named. In Berlin, the Ruhr and Hamburg the factories empty, and so many Social Democratic workers come out that their leaders cannot call them back. When the Reichswehr marches, it finds railwaymen who will not move its trains and soldiers who will not shoot.
+
+Within a week there is a council government in Dresden and another in Berlin's working-class districts. The Reich government has gone south. Bavaria and the occupied Rhineland are in other hands, and the civil war is only beginning.
+
+The revolution is led by the <span class="f-[+ chemnitz_leader +]">[+ leader_name +]</span>.
+
+[+ chemnitz_verdict +]
+
+The odds were long. The army was strong and loyal, and the party's weapons existed largely in its reports. A rising that needed the opening, the arms and the Social Democratic workers all at once has had all three.
+
+- @finish: End the game.
+
+@crushed
+new-page: true
+on-arrival: {!
+var RF = window.RF;
+Q.failed_rising = 1;
+Q.readiness = 0;
+Q.repression += 25;
+Q.spd_relation -= 15;
+Q.union_influence -= 10;
+Q.rev_situation -= 20;
+Q.apparatus -= 5;
+Q.party_banned = 1;
+Q[Q.leader + '_moscow'] -= 10;
+Q[Q.leader + '_dissent'] += 15;
+RF.mark(Q, 'failed_rising');
+RF.normalize(Q);
+!}
+
+= The rising fails
+
+The strike is called, but the Social Democratic workers stay at their benches. Where the Hundreds rise they are isolated in a handful of towns, with too few rifles and no one coming. The Reichswehr takes Saxony and Thuringia street by street. Within days the leaders are arrested or in hiding, the party's offices are sealed and its papers banned.
+
+@finish
+game-over: true

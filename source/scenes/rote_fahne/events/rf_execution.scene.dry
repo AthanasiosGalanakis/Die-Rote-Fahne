@@ -1,0 +1,34 @@
+title: The Reich Execution
+subtitle: The army deposes the Saxon government. Bavaria is left alone.
+new-page: true
+tags: rf_event
+view-if: chemnitz_done = 1 and execution_done = 0 and rf_over = 0 and (workers_govt = 1 or saxony_choice = "out")
+max-visits: 1
+priority: 2
+on-arrival: {!
+var RF = window.RF;
+Q.execution_done = 1;
+Q.exec_deposed = Q.workers_govt ? 1 : 0;
+if (Q.workers_govt) {
+    Q.workers_govt = 0;
+    Q.repression += Q.failed_rising ? 10 : 6;
+    Q.spd_left += 6;
+    Q.spd_discredit -= 3;
+} else {
+    Q.spd_left += 2;
+}
+RF.normalize(Q);
+!}
+
+#29 October 1923: Ebert, under Article 48, authorised the deposition of
+#the Zeigner government; the Reichswehr occupied Dresden. In Freiberg
+#troops fired on a crowd. No action was taken against Kahr's Bavaria.
+#The SPD left Stresemann's coalition on 2-3 November; the Thuringian
+#Communist ministers left in November. Spine: reaction. Milder if the
+#party stayed out: the Reich had no pretext.
+
+= The Reich Execution
+
+[? if exec_deposed = 0 : Without Communist ministers in Dresden the Reich has no pretext. Zeigner governs on, the troops stay in their barracks at the Saxon border, and the press of the right finds other targets. In Munich, meanwhile, Gustav von Kahr defies Berlin openly, and Berlin does nothing. ?][? if exec_deposed = 1 : On 29 October, under Article 48, President Ebert empowers the army to remove the Saxon government. Soldiers occupy the ministries in Dresden and carry Zeigner's ministers out of their offices. In Freiberg they fire into a crowd of demonstrators. Within weeks the Communist ministers in Thuringia are gone too. ?]
+
+[? if exec_deposed = 1 : In Munich, Gustav von Kahr has defied Berlin for a month, refused its orders and kept its general in his post. Against Bavaria the Reich sends no troops. The Social Democrats see the two measures as plainly as anyone: on 2 November their ministers leave Stresemann's cabinet. ?][? if chemnitz_choice = "strike" and exec_deposed = 1 : The defence strike has made the army's work slower and uglier. Left Social Democrats who a month ago kept their distance from the party now speak of it as an ally. ?]

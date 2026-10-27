@@ -1,0 +1,78 @@
+title: Ministers in Dresden
+subtitle: Zeigner offers the party seats in the Saxon government.
+new-page: true
+tags: rf_event
+view-if: year = 1923 and month >= 10 and saxony_done = 0 and rf_over = 0
+max-visits: 1
+priority: 3
+
+#On 10 October 1923 Brandler, Heckert and Böttcher joined Erich
+#Zeigner's left-SPD cabinet in Saxony; on 16 October Communists joined
+#August Frölich's cabinet in Thuringia. The entry was meant as a
+#springboard for the rising. Spine: workers' governments switch.
+
+= Ministers in Dresden
+
+<span class="m-zeigner rf-person">Erich Zeigner</span> has governed Saxony since March with Communist votes. He is a lawyer and a Social Democrat of the left, and he has used his office to expose the Black Reichswehr and the army's ties to the nationalist leagues. Now, with the Reich under a state of emergency and General Müller's troops at the Saxon border, he offers the party seats in his cabinet. In Thuringia, August Frölich is ready to do the same.
+
+[? if spd_relation >= 35 : The left Social Democrats of Saxony want the party in, and many of their members in the factories ask for it. ?][? if spd_relation < 35 : Zeigner's offer is cool. Many in his party remember the summer's polemics and want the Communists in the cabinet only where they can be watched. ?]
+
+- @springboard
+- @programme
+- @stay_out
+
+@springboard
+title: Take the ministries as a springboard for the rising.
+subtitle: The State Chancellery, finance and the economy: keys to the arsenals and the police files. The Reich will call it a Communist conspiracy, and it will be right.
+choose-if: spd_relation >= 25
+unavailable-subtitle: The Saxon Social Democrats will not have the party in their cabinet on these terms.
+on-arrival: {!
+var RF = window.RF;
+Q.saxony_done = 1;
+Q.saxony_choice = 'springboard';
+Q.workers_govt = 1;
+Q.readiness += Q.october_plan ? 8 : 4;
+Q.repression += 4;
+Q.spd_relation += 2;
+RF.lean(Q, {right: 2, left: 1});
+RF.normalize(Q);
+!}
+
+<span class="m-brandler rf-person">Brandler</span> takes the State Chancellery, Paul Böttcher finance and Fritz Heckert the economy. Within days the party's men are looking for the keys to the arsenals and finding fewer rifles than Moscow was told. In Weimar, two Communists join Frölich's cabinet.
+
+@programme
+title: Enter on a programme of the workers' own.
+subtitle: Price control by the workers' committees, factory councils with powers, and the Proletarian Hundreds under joint command with Social Democrats. Slower to arm, and much harder to isolate.
+choose-if: spd_relation >= 35 or spd_left >= 35
+unavailable-subtitle: The left Social Democrats do not trust the party enough to share the Hundreds with it.
+on-arrival: {!
+var RF = window.RF;
+Q.saxony_done = 1;
+Q.saxony_choice = 'programme';
+Q.workers_govt = 1;
+Q.readiness += 3;
+Q.spd_relation += 8;
+Q.spd_left += 5;
+Q.union_influence += 4;
+Q.kpd_appeal += 2;
+RF.lean(Q, {right: 4, minor: 2, left: -3});
+RF.normalize(Q);
+!}
+
+The new ministers publish a programme before they publish anything else: control committees in every market town, councils with a say over hiring and firing, and the Hundreds placed under a joint command of both workers' parties. Social Democratic workers join the Hundreds in numbers the party could not have brought in alone. In Weimar, Frölich takes two Communists on the same terms.
+
+@stay_out
+title: Stay out of the Saxon cabinet.
+subtitle: No Communist ministers means no pretext for the army, and no arsenals and no foothold either. Moscow will not like it.
+on-arrival: {!
+var RF = window.RF;
+Q.saxony_done = 1;
+Q.saxony_choice = 'out';
+Q.workers_govt = 0;
+Q.readiness -= 3;
+Q[Q.leader + '_moscow'] -= 5;
+RF.lean(Q, {left: 2, ultra: 2, right: -2});
+RF.normalize(Q);
+!}
+
+The Zentrale thanks Zeigner and declines. The party will go on supporting his government from outside. Moscow's emissaries cable home that the German leadership has lost its nerve, and in Berlin the Left says the same.

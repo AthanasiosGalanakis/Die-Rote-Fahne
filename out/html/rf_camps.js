@@ -157,6 +157,21 @@
       record: 'The congress stood by its vote against Moscow\'s demand.',
       verdict: 'The party kept its leadership and some independence, and lost Moscow\'s confidence. Whether a German party could stand alone in an International run from Moscow was the question that defiance left open.'
     },
+    schlageter: {
+      weight: 2,
+      record: 'The party courted the nationalists in the Schlageter summer and kept its antifascist day indoors.',
+      verdict: 'In the summer of 1923 the party argued with the völkisch right for the ruined middle classes instead of fighting it. Its critics on the left, then and later, held that a workers\' party cannot outbid nationalists on their own ground, and that each such attempt lent the right a respectability it had not earned.'
+    },
+    hamburg_alone: {
+      weight: 2,
+      record: 'Hamburg rose alone after the rising was called off elsewhere.',
+      verdict: 'A party put on a war footing could not stand its districts down in a night, and Hamburg fought alone for three days. Whether the order failed to arrive or was ignored, the defeat showed a leadership that had prepared a rising it was not sure it wanted.'
+    },
+    failed_rising: {
+      weight: 3,
+      record: 'The party rose, and the rising was crushed.',
+      verdict: 'The party staked everything on a rising the working class did not join. The Social Democratic workers stayed at their benches, the army held, and the defeat handed the Reich its reason for repression and the Social Democratic right its proof that the Communists were adventurers.'
+    },
     missed_window: {
       weight: 3,
       record: 'A revolutionary opening passed without the party using it.',

@@ -1,0 +1,43 @@
+title: After Frankfurt
+subtitle: The revolutionary year is over.
+new-page: true
+tags: rf_event
+view-if: congress_number = 10 and first_year_done = 0 and rf_over = 0
+max-visits: 1
+priority: 2
+on-arrival: {!
+var RF = window.RF;
+Q.first_year_done = 1;
+Q.first_year_verdict = RF.verdict(Q, 3);
+Q.first_year_mark = Q.first_year_verdict ? 1 : 0;
+Q.first_year_grade = Q.unity >= 70 && Q.autonomy >= 50 && Q.splits == 0 ? 2 :
+    (Q.unity >= 50 ? 1 : 0);
+!}
+
+#The interim verdict from the lean design: a player who stops after the
+#first year still gets a closing page. It reads the record (RF.verdict)
+#and the party's unity, autonomy and splits.
+
+= After Frankfurt
+
+[? if first_year_grade = 2 : The party has come through defeat with its unity and its own mind. ?][? if first_year_grade = 1 : The party has survived the year, weaker and angrier than it entered it. ?][? if first_year_grade = 0 : The party has come out of the year divided, and less its own master than before. ?] It is led by the <span class="f-[+ leader +]">[+ leader_name +]</span>.
+
+[? if first_year_mark = 1 : What the year will be remembered for: ?]
+
+[+ first_year_verdict +]
+
+The inflation is over. American money is coming, and with it a stabilisation that will test a party built for a revolutionary crisis. You can end the game here, or lead the party on.
+
+- @go_on: Lead the party on.
+- @end_here: End the game here.
+
+@go_on
+title: Lead the party on.
+
+The party goes into the election campaign.
+
+@end_here
+title: End the game here.
+game-over: true
+
+The game ends here, with the party at the threshold of the stabilisation years.
