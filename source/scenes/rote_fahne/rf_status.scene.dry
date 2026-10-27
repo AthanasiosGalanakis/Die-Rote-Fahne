@@ -42,6 +42,7 @@ Q.overrule_risk = Math.round(100 * RF.overruleChance(Q));
 RF.moscowStatus(Q);
 Q.next_congress = RF.nextCongressText(Q);
 Q.zentrale_text = RF.zentraleText(Q);
+RF.spdStatus(Q);
 RF.numbers(Q);
 !}
 
@@ -72,6 +73,16 @@ Leadership: <span class="f-[+ leader +]">[+ leader_name +]</span>
 = Politics
 
 {!<div id="rf-relations"></div>!}
+
+{!<div class="rf-block"><div class="rf-block-head"><span class="p-spd">Social Democrats</span></div>!}
+
+{!<p><span class="tooltip-text" title="The line the SPD chose at its last congress. It only changes at the next one, and it limits how close the SPD can come to the KPD.">Course</span>: !}[+ spd_course_name +]{!</p>!}
+
+{!<p><span class="tooltip-text" title="How much weight the SPD's left wing carries. A KPD that seeks the united front gives the left arguments inside its own party; risings and abuse give them to the right. The SPD's coalitions with the bourgeois parties also push its members left. The next congress reads it.">Left wing</span>: !}[+ spd_left_word +][+ n_spd_left +]{!</p>!}
+
+{!<p><span class="tooltip-text" title="Where the SPD will next choose its course.">Next SPD congress</span>: !}[+ spd_next_congress +]{!</p>!}
+
+[? if spd_news != "" : {!<p><i>!}[+ spd_news +]{!</i></p>!} ?]{!</div>!}
 
 = The other camps
 
