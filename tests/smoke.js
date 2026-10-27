@@ -44,6 +44,14 @@ const server = http.createServer((req, res) => {
   await page.goto(base);
   await wait(1500);
 
+  // every RF function the scenes call must exist (catches removed helpers)
+  const missing = await page.evaluate(() => {
+    const names = new Set();
+    for (const m of window.game.compiled.matchAll(/window\.RF\.([A-Za-z_]+)/g)) names.add(m[1]);
+    return [...names].filter(n => window.RF[n] === undefined);
+  });
+  if (missing.length) failures.push('scenes call missing RF functions: ' + missing.join(', '));
+
   // title-screen pages
   for (const t of ['Credits', 'Changelog', 'Achievements']) {
     await clickLink(t);

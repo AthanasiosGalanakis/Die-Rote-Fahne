@@ -229,7 +229,6 @@
     Q['st_' + id + '_next'] = t + 12 * s.term;
     // local standing fades after an election: the campaign is spent
     Q['st_' + id + '_mod'] = (Q['st_' + id + '_mod'] || 0) / 2;
-    Q.state_kpd_seats = (Q.state_kpd_seats || 0);
     return {id: id, name: s.name, kpd: votes.kpd, seats: seats.kpd || 0, before: before};
   };
 
@@ -362,10 +361,6 @@
       total += res.seats[p];
     }
     Q.state_id = id;
-    Q.prov_ready = Q.prov_month == Q.time ? 0 : 1;
-    Q.state_left_gov = s.left;
-    Q.state_spd_gov = (Q['st_' + id + '_govparty'] || s.govParty) == 'spd' ? 1 : 0;
-    Q.state_kpd_seats = res.seats.kpd || 0;
     Q.st_view = '<div class="rf-state">' +
         '<p class="rf-state-note">' + esc(s.note) + '</p>' +
         '<p><b>Government:</b> ' + esc(RF.stateGov(Q, id)) + '</p>' +
@@ -374,26 +369,4 @@
         shareList(res) + '</div>';
   };
 
-  // The list of states on the Provinces card (Q.states_view, HTML).
-  RF.provincesView = function(Q) {
-    Q.prov_ready = Q.prov_month == Q.time ? 0 : 1;
-    var html = '<table class="rf-table rf-states"><tr><th>State</th><th>KPD</th><th>Next vote</th></tr>';
-    for (var s of STATES) {
-      var res = RF.stateResults(Q, s.id);
-      html += '<tr><td>' + esc(s.name) + '</td><td class="rf-num">' + (res.votes.kpd || 0).toFixed(1) + '%</td><td class="rf-num">' +
-          dateText(RF.stateNext(Q, s.id)) + '</td></tr>';
-    }
-    Q.states_view = html + '</table>';
-  };
-
-  // A decision in a state: local standing and national effects, at most
-  // one a month across all states.
-  RF.stateAction = function(Q, id, local, effects) {
-    Q['st_' + id + '_mod'] = (Q['st_' + id + '_mod'] || 0) + local;
-    for (var k in effects || {}) {
-      Q[k] = (Q[k] || 0) + effects[k];
-    }
-    Q.prov_month = Q.time;
-    RF.normalize(Q);
-  };
 }());

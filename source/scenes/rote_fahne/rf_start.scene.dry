@@ -7,9 +7,6 @@ Q.time = 1;
 Q.year = 1923;
 Q.month = 1;
 Q.month_actions = 0;
-// the base game's difficulty switches; this game uses normal rules
-Q.difficulty = 0;
-Q.hand_size = 4;
 
 // factions inside the KPD. In January 1923 there are two camps: the
 // Zentrale's majority around Brandler and Thalheimer, and the Left
@@ -66,11 +63,6 @@ Q.congress_due = 1923 * 12 + 2;
 Q.congress_pending = 0;
 Q.congress_postponed = 0;
 Q.defied_moscow = 0;
-// one decision a month in the states, one from the Executive
-Q.prov_month = 0;
-Q.exec_month = 0;
-// hidden split-offs and outsider takeovers stay off until they are approved
-Q.rf_hidden_events = 0;
 // party autonomy falls with every intervention from Moscow
 Q.autonomy = 70;
 // paid functionaries loyal to the leadership
@@ -100,13 +92,9 @@ Q.spd_discredit = 0;
 // story flags
 Q.october_plan = 0;
 Q.workers_govt = 0;
-Q.chemnitz_strike = 0;
 Q.party_banned = 0;
-Q.rf_over = 0;
 Q.rf_ending = '';
 
-// countdowns: every quality named *_timer ticks down once a month
-Q.crisis_timer = 0;
 // the three advisor posts
 window.RF.advisorStart(Q);
 window.RF.normalize(Q);
