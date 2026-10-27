@@ -84,6 +84,10 @@ Leadership: <span class="f-[+ leader +]">[+ leader_name +]</span>
 
 [? if spd_news != "" : {!<p><i>!}[+ spd_news +]{!</i></p>!} ?]{!</div>!}
 
+= The other camps
+
+{!<div id="rf-camps"></div>!}
+
 @polls
 title: Polls
 new-page: true
@@ -144,6 +148,7 @@ new-page: true
 is-special: true
 on-arrival: {!
 var RF = window.RF;
+RF.openingStatus(Q);
 var base = RF.risingBase(Q);
 Q.rising_chance = Math.round(100 * Math.max(0, Math.min(1, (base + 30 - 140) / 30)));
 Q.rev_support = RF.revSupport(Q);
@@ -182,6 +187,10 @@ RF.numbers(Q);
 
 {!<span class="tooltip-text" title="Whether SPD workers would follow a call to arms. Good relations with the SPD count for a lot.">SPD workers</span>!}: [? if spd_relation >= 60 : might follow ?][? if spd_relation < 60 and spd_relation >= 35 : wary ?][? if spd_relation < 35 : would not follow ?][+ n_spd_relation +]
 
+{!<span class="tooltip-text" title="An opening for revolution needs two things at once: a state in crisis, and a party able to use it. It opens when the revolutionary situation runs high and closes when that fades. An opening that closes unused does not come back.">The opening</span>!}: [+ opening_text +]
+
+{!<span class="tooltip-text" title="The party's strength to use an opening: arms and plans, its hold on the unions, its unity and its apparatus.">The party's strength to use it</span>!}: [+ subjective : rf_level +][+ n_subjective +]
+
 {!<span class="tooltip-text" title="Readiness, the revolutionary situation, support for revolution, the unions, the SPD's workers and state repression, against a Reichswehr and police far stronger than the party.">Chance of a rising</span>!}: [+ rising_chance : rf_odds +][+ n_rising_chance +]
 
 @missions
@@ -194,3 +203,9 @@ is-special: true
 {!<p class="rf-mission-head">!}What the <span class="f-[+ leader +]">[+ leader_name +]</span> wants to achieve while it holds the Zentrale.{!</p>!}
 
 {!<div id="rf-missions"></div>!}
+
+= The record
+
+What the party has done so far.
+
+{!<div id="rf-record"></div>!}
