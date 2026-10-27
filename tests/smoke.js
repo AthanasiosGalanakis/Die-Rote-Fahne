@@ -52,6 +52,23 @@ const server = http.createServer((req, res) => {
   });
   if (missing.length) failures.push('scenes call missing RF functions: ' + missing.join(', '));
 
+  // every button in the page must call something that exists
+  const dead = await page.evaluate(() => {
+    const out = [];
+    for (const el of document.querySelectorAll('[onclick], [oninput], [onchange]')) {
+      for (const attr of ['onclick', 'oninput', 'onchange']) {
+        const code = el.getAttribute(attr);
+        if (!code) continue;
+        for (const m of code.matchAll(/(window|dendryUI)\.([A-Za-z_]+)\(/g)) {
+          const root = m[1] === 'window' ? window : window.dendryUI;
+          if (typeof root[m[2]] !== 'function') out.push(m[1] + '.' + m[2]);
+        }
+      }
+    }
+    return out;
+  });
+  if (dead.length) failures.push('buttons call missing functions: ' + [...new Set(dead)].join(', '));
+
   // title-screen pages
   for (const t of ['Credits', 'Changelog', 'Achievements']) {
     await clickLink(t);
@@ -74,6 +91,40 @@ const server = http.createServer((req, res) => {
   await page.click('#options-link'); await wait(200);
   if (!(await page.locator('#options').isVisible())) failures.push('Options did not open');
   await page.click('#options .close_button');
+
+  // the pinned cards: Provinces and each state, Executive, the advisor posts
+  const openCard = async (title) => {
+    await page.locator('#content a.card[title*="' + title + '"], #content a.card[data-title*="' + title + '"]').first().click();
+    await wait(300);
+  };
+  const back = async () => {
+    const link = page.locator('#content ul.choices li:not(.unavailable) a').last();
+    await link.click(); await wait(300);
+  };
+  await openCard('Provinces');
+  const states = await page.locator('#content ul.choices li a').count();
+  for (let i = 0; i < states - 1; i++) {
+    await page.locator('#content ul.choices li a').nth(i).click(); await wait(300);
+    if (!(await page.locator('#content svg').count())) failures.push('state page ' + i + ' shows no parliament');
+    await page.locator('#content ul.choices a', { hasText: 'Back to the states' }).click(); await wait(300);
+  }
+  await back();
+  for (const t of ['Executive', 'Organisation', 'Trade Unions', 'Military Affairs']) {
+    await openCard(t); await back();
+  }
+  if ((await engine()).scene !== 'rf_main') failures.push('did not return to the main page from the cards');
+
+  // exact numbers on and off, and the save dialog
+  page.on('dialog', d => d.accept());
+  await page.click('#options-link'); await wait(200);
+  await page.click('#numbers_yes'); await wait(300);
+  await page.click('#options .close_button');
+  for (const id of ['main_tab', 'party_tab', 'forces_tab']) { await page.click('#' + id); await wait(200); }
+  await page.click('#options-link'); await wait(200);
+  await page.click('#numbers_no'); await wait(300);
+  await page.click('#options .close_button');
+  await page.click('#save-link'); await wait(300);
+  await page.click('#save .close_button');
 
   // play: take the first available choice or card until nothing is left
   const seen = new Set();
