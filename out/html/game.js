@@ -523,7 +523,7 @@
       return tipCard({
           logo: RF.image('party:' + p) || '', badge: info.name, logoClass: 'bg-' + p,
           title: escHtml(info.full), titleClass: 'p-' + p,
-          subtitle: escHtml(info.ideology),
+          subtitle: escHtml((lead && lead.desc) || info.ideology),
           rows: rows,
           body: extra && extra != info.full ? escHtml(extra) : '',
           accent: cssVar('--c-' + p, '')
