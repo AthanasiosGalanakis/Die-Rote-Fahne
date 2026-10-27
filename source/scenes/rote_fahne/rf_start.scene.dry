@@ -97,6 +97,18 @@ Q.nationalism = 55;
 // workers' anger at the SPD's coalitions, which feeds the KPD vote
 Q.spd_discredit = 0;
 
+// the other camps, the record of the party's decisions and the opening
+// for revolution (rf_camps.js)
+Q.camps_log = '[]';
+Q.ledger = '[]';
+Q.window_open = 0;
+Q.window_since = 0;
+Q.window_used = 0;
+Q.windows_seen = 0;
+Q.windows_missed = 0;
+Q.subjective = 0;
+Q.opening_text = 'Not yet';
+
 // story flags
 Q.october_plan = 0;
 Q.workers_govt = 0;
@@ -110,6 +122,8 @@ Q.crisis_timer = 0;
 // the three advisor posts
 window.RF.advisorStart(Q);
 window.RF.normalize(Q);
+window.RF.monthlyCamps(Q);
+window.RF.openingStatus(Q);
 !}
 
 = January 1923

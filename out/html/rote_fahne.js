@@ -225,6 +225,9 @@
       Q.moscow_rebukes = 0;
       Q[Q.leader + '_dissent'] += 20;
       Q.overruled_name = NAMES[Q.leader];
+      if (RF.mark) {
+        RF.mark(Q, 'bowed');
+      }
       Q.leader = Q.demand_for;
       Q.autonomy -= 10;
       Q.moscow_overruled = 1;
@@ -244,6 +247,9 @@
       Q.open_letter = 0;
       Q.moscow_rejected = 1;
       Q.defied_moscow = (Q.defied_moscow || 0) + 1;
+      if (RF.mark) {
+        RF.mark(Q, 'defied');
+      }
       Q.moscow_demand = 0;
       RF.normalize(Q);
     },
@@ -310,6 +316,8 @@
     // An armed rising against the Reich. The Reichswehr and police set the
     // bar at 140; most historians think 1923 never came close.
     rising: function(Q) {
+      // a rising uses an opening, whether or not it wins
+      Q.window_used = 1;
       var score = Q.readiness + 0.5 * Q.rev_situation + 0.3 * Q.union_influence
           - 0.3 * Q.repression;
       if (Q.spd_relation >= 60) {
@@ -429,7 +437,7 @@
 
   // Exact numbers next to the words in the sidebar, when the player has
   // turned them on in the options. Each value V gets a string n_V.
-  var NUMBERED = ['right_strength', 'center_strength', 'left_strength', 'ultra_strength',
+  var NUMBERED = ['subjective', 'right_strength', 'center_strength', 'left_strength', 'ultra_strength',
                   'stalin_strength', 'minor_strength', 'right_dissent', 'center_dissent', 'left_dissent',
                   'ultra_dissent', 'stalin_dissent', 'minor_dissent', 'party_dissent', 'repression',
                   'autonomy', 'overrule_risk', 'readiness', 'rev_situation',
@@ -1750,6 +1758,10 @@
     RF.renderKremlin(Q);
     RF.renderForces(Q);
     RF.renderMissions(Q);
+    if (RF.renderCamps) {
+      RF.renderCamps(Q);
+      RF.renderRecord(Q);
+    }
     RF.renderReichstag();
     RF.renderPolls(Q);
   };

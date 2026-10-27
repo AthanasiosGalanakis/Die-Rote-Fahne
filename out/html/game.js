@@ -525,7 +525,7 @@
           title: escHtml(info.full), titleClass: 'p-' + p,
           subtitle: escHtml(info.ideology),
           rows: rows,
-          body: extra && extra != info.full ? escHtml(extra) : '',
+          body: (extra && extra != info.full ? escHtml(extra) : '') + (RF.campCard ? RF.campCard(p) : ''),
           accent: cssVar('--c-' + p, '')
       });
   };

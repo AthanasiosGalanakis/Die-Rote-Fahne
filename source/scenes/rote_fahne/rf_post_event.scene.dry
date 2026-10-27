@@ -51,6 +51,10 @@ if (Q.month_actions >= 1) {
     Q[Q.leader + '_strength'] += 1;
     Q[Q.leader + '_dissent'] -= 1;
     RF.monthlyParty(Q);
+    // what the other camps did this month, and whether the opening for
+    // revolution has opened or closed
+    RF.monthlyCamps(Q);
+    RF.monthlyOpening(Q);
     if (Q.party_banned) {
         Q.repression -= 2;
     }
