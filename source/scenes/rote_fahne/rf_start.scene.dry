@@ -96,6 +96,13 @@ Q.pro_republic = 50;
 Q.nationalism = 55;
 // workers' anger at the SPD's coalitions, which feeds the KPD vote
 Q.spd_discredit = 0;
+// the weight of the SPD's left wing (0-100) and the course its last
+// congress chose; see RF.monthlySpd
+Q.spd_left = 30;
+Q.spd_course = 'historical';
+Q.spd_news = '';
+Q.spd_uf_months = 0;
+Q.sapd_formed = 0;
 
 // story flags
 Q.october_plan = 0;

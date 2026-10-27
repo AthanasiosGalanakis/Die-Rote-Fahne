@@ -435,7 +435,7 @@
                   'autonomy', 'overrule_risk', 'readiness', 'rev_situation',
                   'union_influence', 'spd_relation', 'rising_chance', 'rev_support', 'uspd_relation',
                   'z_relation', 'ddp_relation', 'dvp_relation', 'dnvp_relation',
-                  'nsdap_relation'];
+                  'nsdap_relation', 'spd_left'];
   var PERCENT = {right_strength: 1, center_strength: 1, left_strength: 1, ultra_strength: 1,
                  stalin_strength: 1, minor_strength: 1, overrule_risk: 1, rising_chance: 1};
 
@@ -485,13 +485,15 @@
                     - Q.repression / 200 - 0.08 * Q.splits
                     + (Q.spd_discredit || 0) / 40 + (Q.kpd_appeal || 0) / 60
                     - Math.max(0, (Q.party_dissent || 0) - 20) / 150, 0.3, 3);
+    // a left SPD keeps its workers; a right one drives them to the KPD
+    kpd = clamp(kpd + SPD_COURSE[Q.spd_course || 'historical'].poll, 0.3, 3);
     var spd = clamp(1 + (Q.pro_republic - 50) / 150 - (Q.spd_discredit || 0) / 100
-                    - (Q.rev_situation - 45) / 200, 0.4, 2);
+                    - (Q.rev_situation - 45) / 200 - (Q.sapd_formed ? 0.08 : 0), 0.4, 2);
     var republic = clamp(1 + (Q.pro_republic - 50) / 100, 0.4, 2);
     var dnvp = clamp(1 + (Q.nationalism - 50) / 80, 0.4, 2.5);
     var nsdap = clamp(1 + (Q.nationalism - 50) / 40, 0.2, 4);
     return {kpd: kpd, spd: spd, z: 1, ddp: republic, dvp: republic,
-            dnvp: dnvp, nsdap: nsdap, other: 1,
+            dnvp: dnvp, nsdap: nsdap, other: Q.sapd_formed ? 1.15 : 1,
             // the parties that only stand in the states
             bvp: 1, agr: 1, burg: (republic + dnvp) / 2, vlk: nsdap};
   };
@@ -698,7 +700,21 @@
           ideology: 'Revolutionary Marxism, section of the Communist International.'},
     spd: {name: 'SPD', full: 'Social Democratic Party of Germany',
           ideology: 'Reformist social democracy: defend the Republic, work with the bourgeois centre. The largest party of the working class.',
-          leaders: [{until: null, name: 'Otto Wels, Hermann Müller', ideo: 'Reformist social democracy', colours: ['#c00000', '#ff5c5c']}]},
+          // the SPD's course is set at its own congresses (RF.monthlySpd)
+          leaders: [
+            {course: 'right', name: 'Otto Wels, Hermann Müller', ideo: 'Reformism, firmly with the bourgeois centre',
+             desc: 'Reformist social democracy with its right wing setting the tone: coalitions with the bourgeois parties wherever possible, and a hard hand against the Communists.',
+             colours: ['#9e1b1b', '#e06a6a']},
+            {course: 'pressure', name: 'Otto Wels, Hermann Müller; the left wing on the Executive', ideo: 'Reformism under pressure from its left',
+             desc: 'Reformist social democracy pulled to the left by its own members: wary of bourgeois cabinets, and open to joint action with Communist workers in the localities.',
+             colours: ['#d4252f', '#ff7070']},
+            {course: 'left', name: function(Q) {
+              return Q.year * 12 + Q.month < 1930 * 12 + 2 ? 'Paul Levi, Kurt Rosenfeld' : 'Kurt Rosenfeld, Max Seydewitz';
+            }, ideo: 'Left socialism',
+             desc: 'The left wing has taken the party: class struggle instead of coalitions with the bourgeoisie, and talks with the Communists about common action.',
+             colours: ['#e8433a', '#ff8a7a']},
+            {until: null, name: 'Otto Wels, Hermann Müller', ideo: 'Reformist social democracy', colours: ['#c00000', '#ff5c5c']}
+          ]},
     uspd: {name: 'USPD', full: 'Independent Social Democratic Party of Germany',
            ideology: 'Left socialists who stayed out of both the KPD (1920) and the reunited SPD (1922). A small group by now.',
            leaders: [{until: null, name: 'Georg Ledebour, Theodor Liebknecht', ideo: 'Left socialism', colours: ['#9B0000', '#ff7070']}]},
@@ -769,14 +785,21 @@
       return null;
     }
     var t = (Q.year || 1923) * 12 + (Q.month || 1);
+    var pick = info.leaders[info.leaders.length - 1];
     for (var l of info.leaders) {
-      // a leadership ends at a story flag (until) or a date (to, the month
-      // its successor takes over)
-      if (l.to ? t < l.to[0] * 12 + l.to[1] : (l.until == null || !Q[l.until])) {
-        return l;
+      // a leadership belongs to a course the party chose at its congress
+      // (course, matched against Q.<party>_course), or ends at a story flag
+      // (until) or a date (to, the month its successor takes over)
+      if (l.course ? Q[p + '_course'] == l.course :
+          l.to ? t < l.to[0] * 12 + l.to[1] : (l.until == null || !Q[l.until])) {
+        pick = l;
+        break;
       }
     }
-    return info.leaders[info.leaders.length - 1];
+    if (typeof pick.name == 'function') {
+      pick = Object.assign({}, pick, {name: pick.name(Q)});
+    }
+    return pick;
   };
 
   // Party colours live in CSS variables so every coloured name follows
@@ -790,6 +813,123 @@
         root.style.setProperty('--c-' + p + '-dark', l.colours[1]);
       }
     }
+  };
+
+  // ---- The SPD answers -----------------------------------------------------
+  // The SPD changes course only at its own party congresses, like the KPD.
+  // In between, the weight of its left wing (Q.spd_left, 0-100) moves with
+  // what the KPD does: a united-front policy hands the SPD left arguments
+  // inside its own party, a rising or "social fascist" abuse hands them to
+  // the right. The SPD's own coalitions with the bourgeoisie feed its left.
+  // The thresholds are tuning values, not historical measurements.
+  var SPD_CONGRESSES = [
+    {year: 1924, month: 6, place: 'Berlin'},
+    {year: 1925, month: 9, place: 'Heidelberg'},
+    {year: 1927, month: 5, place: 'Kiel'},
+    {year: 1929, month: 5, place: 'Magdeburg'},
+    {year: 1931, month: 5, place: 'Leipzig', split: true}
+  ];
+  RF.spdCongresses = SPD_CONGRESSES;
+
+  // How each KPD leadership's line looks from inside the SPD.
+  var SPD_POSTURE = {right: 8, center: 8, minor: 0, left: -6, ultra: -10, stalin: -2};
+
+  var SPD_COURSE = {
+    right: {name: 'right course', label: 'right wing in charge', cap: 40, poll: 0.1, repression: 8},
+    historical: {name: 'reformist course', label: 'reformist', cap: 60, poll: 0, repression: 0},
+    pressure: {name: 'course under left pressure', label: 'reformist, under left pressure', cap: 75, poll: -0.05, repression: -4},
+    left: {name: 'left course', label: 'left socialist', cap: 90, poll: -0.15, repression: -8}
+  };
+  RF.spdCourse = SPD_COURSE;
+
+  // Where the SPD left's weight is heading under the KPD's present conduct.
+  RF.spdLeftTarget = function(Q) {
+    var posture = SPD_POSTURE[Q.leader] || 0;
+    if (Q.leader == 'stalin' && Q.line == 'class_against_class') {
+      posture = -8;
+    }
+    var v = 20 + 0.4 * Q.spd_relation + posture + 0.5 * (Q.spd_discredit || 0)
+        - 0.3 * Math.max(0, Q.readiness - 30) - (Q.failed_rising ? 15 : 0);
+    return clamp(v, 0, 100);
+  };
+
+  // A word for the left wing's weight, shown in the Politics tab.
+  RF.spdLeftWord = function(Q) {
+    var v = Q.spd_left;
+    return v >= 60 ? 'dominant' : v >= 45 ? 'strong' : v >= 30 ? 'a sizeable minority' : 'weak';
+  };
+
+  RF.nextSpdCongress = function(Q) {
+    var t = Q.year * 12 + Q.month;
+    for (var c of SPD_CONGRESSES) {
+      // this month's congress has already met in the monthly step
+      if (c.year * 12 + c.month > t) {
+        return c;
+      }
+    }
+    return null;
+  };
+
+  // The congress reads the left's weight and sets the course.
+  RF.spdCongress = function(Q, c) {
+    var before = Q.spd_course || 'historical';
+    var v = Q.spd_left;
+    var course = v < 25 ? 'right' : v < 45 ? 'historical' : v < 60 ? 'pressure' : 'left';
+    // a left-led SPD needs years of a KPD that sought the united front
+    if (course == 'left' && (c.year < 1927 || (Q.spd_uf_months || 0) < 12)) {
+      course = 'pressure';
+    }
+    Q.spd_course = course;
+    Q.repression += SPD_COURSE[course].repression - SPD_COURSE[before].repression;
+    var text = 'SPD congress at ' + c.place + ': ';
+    text += course == before ? 'the party stays on its ' + SPD_COURSE[course].name + '.' :
+        course == 'right' ? 'the right wing carries the day; the Executive will govern with the bourgeois parties and keep the Communists at arm\'s length.' :
+        course == 'historical' ? 'the Executive restores its old reformist line.' :
+        course == 'pressure' ? 'the left wing wins seats on the Executive and votes against bourgeois coalitions. Communist workers are no longer turned away from every joint meeting.' :
+        'the left wing takes the leadership. ' + RF.partyLeadership(Q, 'spd').name + ' speak of class struggle and of talks with the Communists.';
+    // the split of the SPD left, which historically came in autumn 1931
+    if (c.split && !Q.sapd_formed) {
+      var hostile = (SPD_POSTURE[Q.leader] || 0) < 0 || Q.line == 'class_against_class';
+      if ((course == 'right' || course == 'historical') && v >= 20 && hostile) {
+        Q.sapd_formed = 1;
+        text += ' The Executive expels its left opposition, which founds the Socialist Workers\' Party (SAPD) between the two big workers\' parties.';
+      } else if (!hostile && v >= 45) {
+        Q.kpd_appeal = (Q.kpd_appeal || 0) + 3;
+        text += ' The left stays in the party and presses for common action; some of its members come over to the KPD.';
+      }
+    }
+    Q.spd_news = text;
+  };
+
+  // Texts for the Politics tab.
+  RF.spdStatus = function(Q) {
+    if (Q.spd_left === undefined) {
+      Q.spd_left = 30;
+      Q.spd_course = 'historical';
+    }
+    var c = RF.nextSpdCongress(Q);
+    Q.spd_course_name = SPD_COURSE[Q.spd_course].label;
+    Q.spd_left_word = RF.spdLeftWord(Q);
+    Q.spd_next_congress = c ? c.place + ', ' + MONTHS[c.month] + ' ' + c.year : 'none planned';
+  };
+
+  // Called once a month.
+  RF.monthlySpd = function(Q) {
+    var t = Q.year * 12 + Q.month;
+    if (Q.spd_left === undefined) {
+      Q.spd_left = 30;
+      Q.spd_course = 'historical';
+    }
+    Q.spd_left += (RF.spdLeftTarget(Q) - Q.spd_left) * 0.1;
+    Q.spd_left = Math.round(clamp(Q.spd_left, 0, 100) * 10) / 10;
+    Q.spd_uf_months = (SPD_POSTURE[Q.leader] || 0) > 0 ? (Q.spd_uf_months || 0) + 1 : 0;
+    for (var c of SPD_CONGRESSES) {
+      if (c.year * 12 + c.month == t) {
+        RF.spdCongress(Q, c);
+      }
+    }
+    // no course lets relations with the KPD rise past its limit
+    Q.spd_relation = Math.min(Q.spd_relation, SPD_COURSE[Q.spd_course].cap);
   };
 
   // ---- Data files: images and achievements --------------------------------

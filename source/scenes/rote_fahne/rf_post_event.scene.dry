@@ -56,6 +56,9 @@ if (Q.month_actions >= 1) {
     }
     // Comintern plenums and party congresses on their historical dates
     RF.monthlyMoscow(Q);
+    // the SPD's left wing moves with the KPD's conduct; its congresses
+    // set the party's course
+    RF.monthlySpd(Q);
     // state elections and their campaigns
     RF.monthlyStates(Q);
     window.RF.checkAchievements(Q, 'anytime');
