@@ -477,7 +477,8 @@
     RF.normalize(Q);
   };
   // ---- People of the congress ----------------------------------------------
-  // KPD leaders and Comintern envoys who appear at Leipzig (class m-<id>).
+  // KPD leaders, Comintern envoys and others who appear in the 1923 events
+  // (class m-<id>).
   Object.assign(RF.people, {
     brandler: {name: 'Heinrich Brandler', party: 'kpd', role: [[1923, 1, 'Leader of the Zentrale\'s majority'], [1923, 2, 'Chairman of the Zentrale']],
                text: [[1923, 1, 'A mason from Chemnitz, union organiser and old Spartacist, back from Moscow with Radek\'s confidence. He believes the German workers must be won before they can be led, and that the party is not yet strong enough to fight alone.']]},
@@ -491,6 +492,8 @@
               text: [[1923, 1, 'Twenty-seven, Viennese, a founder of the Austrian party and now the voice of Berlin-Brandenburg. A dazzling speaker who calls the Zentrale opportunist to its face and is cheered for it in every working-class district of Berlin.']]},
     maslow: {name: 'Arkadi Maslow', party: 'kpd', role: 'Theorist of the Left',
              text: [[1923, 1, 'Born in Russia, trained as a pianist and a mathematician, Ruth Fischer\'s partner and the Left\'s sharpest mind. Many in the Zentrale distrust him as a man from nowhere.']]},
+    zeigner: {name: 'Erich Zeigner', party: 'spd', role: 'Minister-President of Saxony',
+              text: [[1923, 1, 'A Leipzig lawyer on the left of the SPD. He governs Saxony with Communist votes and has made enemies in the army by exposing the Black Reichswehr.']]},
     kolarov: {name: 'Vasil Kolarov', party: 'comintern', role: 'Secretary of the International',
               text: [[1923, 1, 'A Bulgarian lawyer and the International\'s General Secretary, sent to Leipzig with Radek. He speaks for the Executive and says less than Radek does.']]}
   });

@@ -1,0 +1,53 @@
+title: The Cuno Strike
+subtitle: A strike wave brings down the government.
+new-page: true
+tags: rf_event
+view-if: year = 1923 and month >= 8 and month <= 9 and rf_over = 0
+max-visits: 1
+priority: 3
+
+#The Reich committee of factory councils, led by Communists, called a
+#general strike on 10-11 August 1923 after the printers at the Reich
+#mint walked out. Cuno resigned on 12 August; Stresemann formed a grand
+#coalition with the SPD on 13 August. Spine: the Cuno strike switch.
+
+= The Cuno Strike
+
+In August the dollar buys millions of marks, then hundreds of millions. When the printers at the Reich mint walk out, the money itself runs short. The Reich committee of factory councils, which the party leads, calls a general strike against the Cuno government. Berlin stops. The strike spreads to the Ruhr, to Hamburg and to the shipyards of the coast, and in many factories the Social Democrats on the councils vote for it with the Communists.
+
+On 12 August Cuno resigns. The next day Gustav Stresemann, of the industrialists' People's Party, forms a grand coalition with the Centre, the Democrats and the <span class="p-spd">SPD</span>. The <span class="p-spd">SPD</span>'s executive tells its members that the strike has won and they should go back to work.
+
+The strike committees are still in session, and they look to the party.
+
+- @gains
+- @political
+
+@gains
+title: Bank what the strike has won and send the workers back.
+subtitle: Wage indexing, bread and the government's head. The councils stay in being for the next round, and the Social Democratic ministers must now answer to their own strikers.
+on-arrival: {!
+var RF = window.RF;
+RF.lean(Q, {right: 2, minor: 1, left: -2});
+Q.union_influence += 5;
+Q.spd_discredit += 3;
+Q.rev_situation += 2;
+RF.normalize(Q);
+!}
+
+The strike ends with wage indexing in several industries and a promise of food supplies. The factory councils keep meeting. In the works canteens Social Democratic workers ask why their ministers now sit beside Stresemann.
+
+@political
+title: Turn the strike against the new coalition: a political general strike.
+subtitle: Keep the committees on the streets while they still stand, and force the question of power before the new government finds its feet.
+on-arrival: {!
+var RF = window.RF;
+RF.lean(Q, {left: 4, ultra: 2, right: -3});
+Q.rev_situation += 10;
+Q.readiness += 4;
+Q.repression += 6;
+Q.spd_relation -= 5;
+Q.spd_left -= 3;
+RF.normalize(Q);
+!}
+
+The committees call on the workers to stay out against the grand coalition. In Berlin and the Ruhr many do, for some days longer. The police fire on demonstrators in several towns, and the <span class="p-spd">SPD</span>, now in government, denounces the strike as a Communist adventure. The country is in a ferment it has not known since 1920.

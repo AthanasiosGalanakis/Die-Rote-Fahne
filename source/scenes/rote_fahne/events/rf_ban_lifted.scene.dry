@@ -1,0 +1,18 @@
+title: Legal Again
+subtitle: The state of emergency ends, and with it the ban.
+new-page: true
+tags: rf_event
+view-if: party_banned = 1 and ban_done = 1 and rf_over = 0 and (year > 1924 or (year = 1924 and month >= 3))
+max-visits: 1
+priority: 3
+on-arrival: {!
+Q.party_banned = 0;
+window.RF.normalize(Q);
+!}
+
+#The ban was lifted on 1 March 1924, when the military state of emergency
+#ended. Reichstag elections were set for 4 May. Spine: reaction.
+
+= Legal Again
+
+On 1 March the military state of emergency ends, and with it the ban. The *Rote Fahne* is back on the streets, the offices are reopened, and the party's members, fewer than before, come out of hiding to find a country that has changed in four months. The mark is stable. Prices no longer move by the hour. The Reichstag will be elected in May, and the party congress can meet at last.

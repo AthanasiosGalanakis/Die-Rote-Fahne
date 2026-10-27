@@ -1,0 +1,71 @@
+title: The Party Congress
+subtitle: The delegates meet to elect a new Zentrale.
+new-page: true
+tags: rf_event
+view-if: congress_pending = 1 and party_banned = 0 and rf_over = 0
+priority: 3
+on-arrival: {!
+var RF = window.RF;
+RF.normalize(Q);
+Q.congress_title = RF.congressName(Q) + ', ' + RF.congressPlace(Q);
+Q.congress_frankfurt = Q.congress_number == 9 ? 1 : 0;
+RF.congressVote(Q);
+var d = JSON.parse(Q.delegates);
+Q.congress_delegates = RF.delegateHemicycle(d, 150);
+Q.congress_legend = RF.factionLegend(d);
+!}
+
+#A congress that has fallen due (RF.monthlyCongress). The Ninth, at
+#Frankfurt in April 1924, gets its own opening. Restored from
+#archive/v0.10 with the choices reworded to say what they mean.
+
+= [+ congress_title +]
+
+[? if congress_frankfurt = 1 : Frankfurt am Main, April 1924. The party meets legally for the first time since the autumn, smaller, poorer and angrier. The districts that went with Brandler a year ago have sent new delegates, and the Berlin of <span class="m-fischer rf-person">Ruth Fischer</span> and <span class="m-maslow rf-person">Arkadi Maslow</span> comes to settle accounts for October. Moscow's representatives sit in the front row. ?][? if congress_frankfurt = 0 : The districts have elected their delegates, and the factions count their votes. ?]
+
+{!<div class="rf-delegates">!}[+ congress_delegates +]{!<div class="rf-legend">!}[+ congress_legend +]{!</div></div>!}
+
+[? if congress_compromise = 1 : No faction can command a majority. The delegates settle on the <span class="f-center">Middle Group</span> as a compromise. ?][? if congress_compromise = 0 : The delegates give the <span class="f-[+ congress_winner +]">[+ congress_winner_name +]</span> the majority. ?]
+
+[? if moscow_demand = 1 : Then the International's representatives take the floor. Moscow will not accept the result: it wants the <span class="f-[+ demand_for +]">[+ demand_for_name +]</span> to lead the party. ?]
+
+- @accept
+- @reject
+- @done
+
+@accept
+title: Bow to the International.
+subtitle: Moscow's candidates take the Zentrale against the delegates' vote. The faction the congress chose will not forget it.
+view-if: moscow_demand = 1
+on-arrival: {!
+window.RF.acceptDemand(Q);
+window.RF.congressDone(Q);
+!}
+go-to: outcome
+
+@reject
+title: Stand by the delegates' vote.
+subtitle: The party keeps the leadership its congress chose, and Moscow counts the refusal against it.
+view-if: moscow_demand = 1
+choose-if: can_reject = 1
+unavailable-subtitle: The winners are too weak, or the party too dependent, to defy Moscow.
+on-arrival: {!
+window.RF.rejectDemand(Q);
+window.RF.congressDone(Q);
+!}
+go-to: outcome
+
+@done
+title: The new Zentrale takes office.
+view-if: moscow_demand = 0
+on-arrival: {! window.RF.congressDone(Q); !}
+go-to: outcome
+
+@outcome
+new-page: true
+
+= The New Zentrale
+
+[+ congress_news +]
+
+The <span class="p-kpd">KPD</span> is now led by the <span class="f-[+ leader +]">[+ leader_name +]</span>. The next congress is due in about a year.

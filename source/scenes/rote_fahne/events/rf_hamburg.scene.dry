@@ -1,0 +1,29 @@
+title: Hamburg Rises Alone
+subtitle: The order to stand down does not reach the waterfront.
+new-page: true
+tags: rf_event
+view-if: chemnitz_choice = "off" and october_plan = 1 and hamburg_done = 0 and rf_over = 0
+max-visits: 1
+priority: 3
+on-arrival: {!
+var RF = window.RF;
+Q.hamburg_done = 1;
+Q.readiness -= 8;
+Q.repression += 6;
+Q.spd_relation -= 3;
+Q.left_dissent += 5;
+RF.lean(Q, {left: 1, right: -1});
+RF.mark(Q, 'hamburg_alone');
+RF.normalize(Q);
+!}
+
+#23-25 October 1923. Whether the Hamburg party never got the
+#cancellation or acted on its own is still disputed. A party on a war
+#footing has given its districts orders that are hard to recall, so the
+#event follows the earnest preparation. Spine: reaction.
+
+= Hamburg Rises Alone
+
+Before dawn on 23 October, armed squads of the Hamburg party storm police stations in Barmbek, Schiffbek and the working-class districts by the docks. Whether the courier from Chemnitz never arrived, or the Hamburg leaders chose to act anyway, nobody can yet say. For three days a few hundred men hold barricades against the police and the marines. Nowhere else in Germany does anyone move.
+
+When it is over the dead are counted on both sides, the survivors are hunted through the tenements, and the party in Hamburg is broken for a season. In Berlin the Left calls the fighters heroes betrayed by the Zentrale. The Zentrale calls it a breach of discipline. Both are counting on the same dead.

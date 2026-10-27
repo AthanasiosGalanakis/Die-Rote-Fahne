@@ -1,0 +1,57 @@
+title: The Schlageter Summer
+subtitle: Moscow courts the nationalists, and the völkisch leagues march.
+new-page: true
+tags: rf_event
+view-if: year = 1923 and month >= 7 and month <= 9 and rf_over = 0
+max-visits: 1
+priority: 2
+
+#Radek's speech to the Third Enlarged Plenum (20 June 1923) praised
+#Schlageter as a "wanderer into the void" and invited the nationalist
+#petty bourgeoisie to the side of the workers. Through the summer the
+#Rote Fahne printed exchanges with völkisch writers such as Reventlow.
+#The KPD's Antifascist Day of 29 July was banned in Prussia, and the
+#party held it in halls there. Spine: the Schlageter course switch.
+
+= The Schlageter Summer
+
+In June, before the Executive of the International, <span class="m-radek rf-person">Karl Radek</span> spoke in memory of Albert Leo Schlageter, the Freikorps saboteur the French shot in May. He called him a wanderer into the void, and asked the nationalist youth whether they would fight beside the workers against the Entente's capital or be used by it. Since then the *Rote Fahne* has opened its pages to völkisch writers, and Communist speakers share platforms with nationalist students.
+
+The völkisch leagues answer by drilling in the woods outside every large town. The party has called an Antifascist Day for the last Sunday of July. The Prussian government has banned all open-air demonstrations for that day.
+
+[? if nationalism >= 65 : The anger of the ruined middle classes is everywhere. Clerks, small traders and students who lost their savings in a year listen to anyone who names a culprit. ?][? if nationalism < 65 : The nationalist fever has begun to cool, though the leagues still parade. ?]
+
+- @course
+- @streets
+
+@course
+title: Hold to the Schlageter course, and keep the Antifascist Day to the halls in Prussia.
+subtitle: Argue with the nationalists for the ruined middle classes. This summer the völkisch camp is a rival for the same people, not the main enemy.
+on-arrival: {!
+var RF = window.RF;
+RF.lean(Q, {left: 1, right: 1, minor: -2});
+Q.kpd_appeal += 2;
+Q.spd_relation -= 3;
+Q.spd_discredit -= 1;
+Q.spd_left -= 2;
+RF.mark(Q, 'schlageter');
+RF.normalize(Q);
+!}
+
+The debates go on into the autumn. Some nationalist students come to Communist meetings and stay to argue. The <span class="p-spd">SPD</span> press prints the party's exchanges with Count Reventlow under the headline *National Bolshevism*, and in Berlin the Antifascist Day passes in crowded halls behind closed doors.
+
+@streets
+title: Take the Antifascist Day into the streets, ban or no ban.
+subtitle: Treat the völkisch leagues as the enemy they are, and stand beside any Social Democrat who will march.
+on-arrival: {!
+var RF = window.RF;
+RF.lean(Q, {left: 3, minor: 2, right: -1});
+Q.repression += 6;
+Q.readiness += 4;
+Q.spd_relation += 3;
+Q.spd_left += 4;
+Q.nationalism -= 2;
+RF.normalize(Q);
+!}
+
+Tens of thousands march in Saxony and Thuringia, where the governments allow it, and smaller columns defy the police in Berlin and the Ruhr. There are arrests and broken heads. In several towns Social Democratic workers fall in behind the red flags, against their own executive's advice.

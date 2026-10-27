@@ -1,0 +1,31 @@
+title: The Ban
+subtitle: General von Seeckt bans the party.
+new-page: true
+tags: rf_event
+view-if: ban_done = 0 and rf_over = 0 and (year > 1923 or (year = 1923 and month >= 11))
+max-visits: 1
+priority: 3
+on-arrival: {!
+var RF = window.RF;
+Q.ban_done = 1;
+Q.ban_prepared = Q.october_plan ? 1 : 0;
+Q.party_banned = 1;
+Q.repression += Q.failed_rising ? 10 : 5;
+Q.apparatus += Q.october_plan ? 0 : -3;
+Q.union_influence -= 3;
+// a banned party cannot meet in congress: the next one waits for legality
+Q.congress_due = Math.max(Q.congress_due, 1924 * 12 + 4);
+RF.normalize(Q);
+!}
+
+#23 November 1923: General von Seeckt, holding executive power since
+#9 November, banned the KPD, the NSDAP and the DVFP. The ban was lifted
+#on 1 March 1924. Spine: reaction; how hard it bites depends on October.
+
+= The Ban
+
+On 23 November General Hans von Seeckt, who has held the executive power of the Reich since the Munich putsch, bans the Communist Party. The same decree bans Hitler's National Socialists and the German Völkisch Freedom Party. The *Rote Fahne* is shut, the party's offices are sealed and its deputies' immunity is the only legal ground it has left.
+
+[? if failed_rising = 1 : After the rising the police know whom to look for. Arrests come by the hundred, and the party's leaders move from safe house to safe house. ?][? if failed_rising = 0 and ban_prepared = 1 : The military apparatus built for October now earns its keep: couriers, false papers and hidden presses keep the party working underground. ?][? if failed_rising = 0 and ban_prepared = 0 : The party never built an apparatus for illegality. Many local groups simply stop meeting, and the Zentrale loses touch with whole districts. ?]
+
+The same week the new currency arrives, and with it the end of the inflation that fed the party's growth. The next congress must wait until the party is legal again.

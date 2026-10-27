@@ -1,0 +1,56 @@
+title: The Call from Moscow
+subtitle: The International decides that the German revolution is near.
+new-page: true
+tags: rf_event
+view-if: year = 1923 and month >= 9 and month <= 10 and rf_over = 0
+max-visits: 1
+priority: 4
+
+#On 23 August 1923 the Russian Politburo decided to back a German
+#insurrection. Brandler, Fischer, Thälmann and others were called to
+#Moscow; talks ran into early October. Trotsky pressed for a fixed date.
+#The plan: enter the Saxon government, arm the Proletarian Hundreds from
+#state arsenals, and give the signal with a general strike.
+#Spine: anchor (Moscow orders the rising); the KPD chooses how seriously.
+
+= The Call from Moscow
+
+The leaders of the party have spent weeks in Moscow. The Russian Politburo has decided that Germany is on the eve of revolution and that the German party must prepare to take power. <span class="m-trotsky rf-person">Trotsky</span> wants a date fixed; <span class="m-zinoviev rf-person">Zinoviev</span> wants the party to enter the Saxon government first and arm the workers from its arsenals. Russian officers, money and promises of grain are on their way.
+
+<span class="m-brandler rf-person">Brandler</span> has told the Russians that he is no German Lenin. <span class="m-fischer rf-person">Ruth Fischer</span> says the party has waited too long already. The plan is simple to state: the party enters the government in Dresden, the Proletarian Hundreds are armed, and a general strike gives the signal for the rising.
+
+- @earnest
+- @measured
+
+@earnest
+title: Put the whole party on a war footing.
+subtitle: Arms, couriers, a military apparatus and a date. Everything else waits. A plan made this way can be set off, and is hard to stop once the districts have their orders.
+on-arrival: {!
+var RF = window.RF;
+Q.october_plan = 1;
+Q.readiness += 15;
+Q.apparatus += 5;
+Q.union_influence -= 3;
+Q.repression += 3;
+RF.obey(Q, 6);
+RF.lean(Q, {left: 3, right: -1});
+RF.normalize(Q);
+!}
+
+Military-political leaders are named for every district. Russian officers travel under false names. Couriers carry orders to Hamburg, the Ruhr and the Erzgebirge, and the factory cells spend their evenings in the woods, learning to strip rifles they do not yet have.
+
+@measured
+title: Prepare, but keep the party's mass work first.
+subtitle: Plans in the drawer and the Hundreds trained, while the party goes on fighting for wages and bread. Moscow's emissaries will report a leadership that does not believe in its own task.
+on-arrival: {!
+var RF = window.RF;
+Q.october_plan = 0;
+Q.readiness += 6;
+Q.union_influence += 2;
+Q[Q.leader + '_moscow'] -= 6;
+RF.nudgePatron(Q, 'zinoviev', -2);
+RF.lean(Q, {right: 3, left: -3});
+RF.normalize(Q);
+!}
+
+The Zentrale accepts the International's resolution and keeps its own counsel. The Hundreds drill, the factory councils go on fighting for indexed wages, and the plan stays a plan.

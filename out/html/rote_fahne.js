@@ -314,25 +314,16 @@
     },
 
     // An armed rising against the Reich. The Reichswehr and police set the
-    // bar at 140; most historians think 1923 never came close.
+    // bar at 140; most historians think 1923 never came close. No dice: a
+    // rising needs an open opening, and then the party's strength to use it
+    // (RF.subjective) on top of arms, allies and the situation.
     rising: function(Q) {
       // a rising uses an opening, whether or not it wins
       Q.window_used = 1;
-      var score = Q.readiness + 0.5 * Q.rev_situation + 0.3 * Q.union_influence
-          - 0.3 * Q.repression;
-      if (Q.spd_relation >= 60) {
-        score += 20;
-      }
-      if (Q.workers_govt) {
-        score += 10;
-      }
-      if (Q.october_plan) {
-        score += 5;
-      }
-      score += Math.random() * 30;
+      var score = RF.risingBase(Q) + 0.3 * RF.subjective(Q);
       Q.rising_score = Math.round(score);
       Q.rising_needed = 140;
-      return score >= Q.rising_needed;
+      return Q.window_open == 1 && score >= Q.rising_needed;
     }
   };
 
